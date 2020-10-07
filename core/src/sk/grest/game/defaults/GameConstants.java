@@ -1,4 +1,4 @@
-package sk.grest.game.other;
+package sk.grest.game.defaults;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;

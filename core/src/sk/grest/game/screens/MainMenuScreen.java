@@ -1,29 +1,21 @@
 package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.InputMultiplexer;
-import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.GL20;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
-import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.defaults.ScreenDeafults;
 
-import static sk.grest.game.other.GameConstants.BACKGROUND;
+import static sk.grest.game.defaults.GameConstants.BACKGROUND;
 
 public class MainMenuScreen implements Screen {
 
@@ -88,7 +80,7 @@ public class MainMenuScreen implements Screen {
 
     @Override
     public void render(float delta) {
-        clear();
+        ScreenDeafults.clear();
 
         // START OF RENDERING SPRITES
         batch.begin();
@@ -112,13 +104,6 @@ public class MainMenuScreen implements Screen {
         batch.dispose();
         stage.dispose();
     }
-
-    // CLEARING SCREEN
-    private void clear(){
-        Gdx.gl.glClearColor(0,0,0,1);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
-
 
     @Override
     public void show() {}
