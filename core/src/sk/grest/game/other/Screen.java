@@ -1,4 +1,4 @@
-package sk.grest.game;
+package sk.grest.game.other;
 
 public enum Screen {
     MAIN_MENU_SCREEN,

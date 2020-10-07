@@ -5,59 +5,84 @@ import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
-import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.other.Background;
 
-public class MainMenuScreen implements Screen, InputProcessor {
+import static sk.grest.game.other.GameConstants.BACKGROUND;
 
-    private Background background;
+public class MainMenuScreen implements Screen {
+
+    private Stage stage;
+
     private SpriteBatch batch;
 
-    final Stage stage = new Stage(new ScreenViewport());
-
-    private Skin btnSkin;
-
     public MainMenuScreen(InterstellarMining game){
+        this.stage = new Stage(new ScreenViewport());
         this.batch = game.getBatch();
-        this.background = new Background(batch);
 
-        TextureAtlas atlas = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-        btnSkin = new Skin(Gdx.files.internal("uiskin.json"));
-        btnSkin.addRegions(atlas);
+        // MENU BUTTONS INITIALIZATION
 
-        final TextButton btn = new TextButton("PLAY", btnSkin, "default");
-        btn.setHeight(50);
-        btn.setWidth(200);
-        Gdx.app.log("BTN", "Btn loaded");
+        Skin btnSkin = new Skin(Gdx.files.internal("uiskin.json"));
 
-        final Dialog dialog = new Dialog("The Game", btnSkin);
-
-        btn.addListener(new ClickListener(){
+        TextButton playBtn = new TextButton("PLAY", btnSkin, "default");
+        playBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                dialog.show(stage);
+                Gdx.app.log("INPUT", "Play button clicked!");
             }
         });
 
-        stage.addActor(btn);
+        TextButton optionsBtn = new TextButton("OPTIONS", btnSkin, "default");
+        optionsBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("INPUT", "Options button clicked!");
+            }
+        });
 
-        InputMultiplexer inputMultiplexer = new InputMultiplexer(stage, this);
-        Gdx.input.setInputProcessor(inputMultiplexer);
-    }
+        TextButton exitBtn = new TextButton("EXIT", btnSkin, "default");
+        exitBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                Gdx.app.log("INPUT", "Exit button clicked!");
+                System.exit(0);
+            }
+        });
 
-    @Override
-    public void show() {
+        // MENU LAYOUT INTIALIZED
+
+        Table table = new Table();
+        table.align(Align.center);
+        table.setWidth(Gdx.graphics.getWidth());
+        table.setHeight(Gdx.graphics.getHeight());
+
+        table.add(playBtn).height(50).width(500);
+        table.row();
+
+        table.add(optionsBtn).height(50).width(500);
+        table.row();
+
+        table.add(exitBtn).height(50).width(500);
+        table.row();
+
+        stage.addActor(table);
+
+        Gdx.input.setInputProcessor(stage);
 
     }
 
@@ -68,9 +93,14 @@ public class MainMenuScreen implements Screen, InputProcessor {
         // START OF RENDERING SPRITES
         batch.begin();
 
-        background.render();
+        // STAGE RENDERING
+        stage.act(delta);
+        stage.getBatch().begin();
 
-        stage.act(Gdx.graphics.getDeltaTime());
+        // BACKGROUND RENDERING
+        stage.getBatch().draw(BACKGROUND, 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+
+        stage.getBatch().end();
         stage.draw();
 
         // END OF RENDERING SPRITES
@@ -78,72 +108,35 @@ public class MainMenuScreen implements Screen, InputProcessor {
     }
 
     @Override
+    public void dispose() {
+        batch.dispose();
+        stage.dispose();
+    }
+
+    // CLEARING SCREEN
+    private void clear(){
+        Gdx.gl.glClearColor(0,0,0,1);
+        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+    }
+
+
+    @Override
+    public void show() {}
+    @Override
     public void resize(int width, int height) {
 
     }
-
     @Override
     public void pause() {
 
     }
-
     @Override
     public void resume() {
 
     }
-
     @Override
     public void hide() {
 
     }
 
-    @Override
-    public void dispose() {
-        batch.dispose();
-    }
-
-    // CLEARING SCREEN
-    private void clear(){
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-    }
-
-    @Override
-    public boolean keyDown(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyUp(int keycode) {
-        return false;
-    }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDragged(int screenX, int screenY, int pointer) {
-        return false;
-    }
-
-    @Override
-    public boolean mouseMoved(int screenX, int screenY) {
-        return false;
-    }
-
-    @Override
-    public boolean scrolled(int amount) {
-        return false;
-    }
 }
