@@ -5,9 +5,12 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.ImageButton;
+import com.badlogic.gdx.scenes.scene2d.ui.ImageButton.ImageButtonStyle;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -17,27 +20,24 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
 
 public class MainMenuScreen implements Screen {
 
     private InterstellarMining game;
-
     private Stage stage;
 
     public MainMenuScreen(final InterstellarMining game){
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
-        //SKIN AND ATLAS INITIALIZATION
-
-        TextureAtlas area = new TextureAtlas(Gdx.files.internal("uiskin.atlas"));
-        Skin btnSkin = new Skin(Gdx.files.internal("uiskin.json"), area);
-
         // MENU BUTTONS INITIALIZATION
 
-        TextButton playBtn = new TextButton("PLAY", btnSkin, "default");
-        playBtn.addListener(new ClickListener(){
+        Image title = new Image(game.getBtnSkin(), "title");
+
+        Button btnPlay = new Button(game.getBtnSkin(), "play_up", "play_over");
+        btnPlay.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("INPUT", "Play button clicked!");
@@ -46,16 +46,17 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        TextButton optionsBtn = new TextButton("OPTIONS", btnSkin, "default");
-        optionsBtn.addListener(new ClickListener(){
+        Button btnOptions = new Button(game.getBtnSkin(), "options_up", "options_over");
+        btnOptions.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // OPENS OPTIONS WINDOW
                 Gdx.app.log("INPUT", "Options button clicked!");
             }
         });
 
-        TextButton exitBtn = new TextButton("EXIT", btnSkin, "default");
-        exitBtn.addListener(new ClickListener(){
+        Button btnExit = new Button(game.getBtnSkin(), "exit_up","exit_over");
+        btnExit.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Gdx.app.log("INPUT", "Exit button clicked!");
@@ -63,27 +64,35 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        // MENU LAYOUT INTIALIZED
-
-        ImageButton button = new ImageButton(btnSkin);
-        button.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/10f);
-        button.getStyle().imageUp = new TextureRegionDrawable(new TextureRegion(new Texture("play.png")));
-        button.getStyle().imageDown = new TextureRegionDrawable(new TextureRegion(new Texture("play_hover.png")));
+        // MAIN MENU LAYOUT INTIALIZED
 
         Table table = new Table();
-        table.align(Align.center);
+        table.align(Align.top);
         table.setWidth(Gdx.graphics.getWidth());
         table.setHeight(Gdx.graphics.getHeight());
 
-        table.add(button).height(50).width(500);
-        table.row();
+        float btnPad = Gdx.graphics.getHeight() / 30f;
 
-        table.add(optionsBtn).height(50).width(500);
-        table.row();
-
-        table.add(exitBtn).height(50).width(500);
-        table.row();
-
+        table.padTop(Gdx.graphics.getHeight() / 12f);
+        table.add(title)
+                .width(Gdx.graphics.getWidth() / 1.5f)
+                .padBottom(btnPad * 4)
+                .row();
+        table.add(btnPlay.getButton())
+                .width(Gdx.graphics.getWidth() / 4.5f)
+                .height(Gdx.graphics.getHeight() / 8f)
+                .padBottom(btnPad)
+                .row();
+        table.add(btnOptions.getButton())
+                .width(Gdx.graphics.getWidth() / 4.5f)
+                .height(Gdx.graphics.getHeight() / 8f)
+                .padBottom(btnPad)
+                .row();
+        table.add(btnExit.getButton())
+                .width(Gdx.graphics.getWidth() / 4.5f)
+                .height(Gdx.graphics.getHeight() / 8f)
+                .padBottom(btnPad)
+                .row();
         stage.addActor(table);
 
         Gdx.input.setInputProcessor(stage);
@@ -120,20 +129,12 @@ public class MainMenuScreen implements Screen {
     @Override
     public void show() {}
     @Override
-    public void resize(int width, int height) {
-
-    }
+    public void resize(int width, int height) {}
     @Override
-    public void pause() {
-
-    }
+    public void pause() {}
     @Override
-    public void resume() {
-
-    }
+    public void resume() {}
     @Override
-    public void hide() {
-
-    }
+    public void hide() {}
 
 }

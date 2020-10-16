@@ -1,8 +1,12 @@
 package sk.grest.game.entities;
 
-public class Company {
+import java.util.ArrayList;
 
-    public static final float MULTIPLIER = 1.65f;
+import sk.grest.game.defaults.GameConstants;
+
+import static sk.grest.game.defaults.GameConstants.*;
+
+public class Company {
 
     private String name;
     private long netWorth;
@@ -10,18 +14,13 @@ public class Company {
     // LEVEL
     private int rank;
 
-    // UPGRADABLES
-    private int shipsOwned;
-    private int shipSpeed;
-    private int shipCapacity;
+    private ArrayList<Ship> ships;
 
     public Company(String name) {
+        this.ships = new ArrayList<>();
         this.name = name; // Name specified by a player
-        this.netWorth = 50000000; // 50 Billion
+        this.netWorth = (long) (50 * BILLION); // 50 Billion
         this.rank = 1;
-        this.shipsOwned = 1;
-        this.shipSpeed = 20000; // KPH
-        this.shipCapacity = 5000; // tonnes
     }
 
     public String getName() {
@@ -40,27 +39,7 @@ public class Company {
         this.rank++;
     }
 
-    public int getShipsOwned() {
-        return shipsOwned++;
-    }
-
-    public void setShipsOwned(int shipsOwned) {
-        this.shipsOwned *= MULTIPLIER;
-    }
-
-    public int getShipSpeed() {
-        return shipSpeed *= MULTIPLIER;
-    }
-
-    public void setShipSpeed(int shipSpeed) {
-        this.shipSpeed = shipSpeed;
-    }
-
-    public int getShipCapacity() {
-        return shipCapacity;
-    }
-
-    public void setShipCapacity(int shipCapacity) {
-        this.shipCapacity = shipCapacity;
+    public ArrayList<Ship> getShips() {
+        return ships;
     }
 }

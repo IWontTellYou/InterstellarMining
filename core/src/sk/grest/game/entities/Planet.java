@@ -23,4 +23,23 @@ public class Planet {
                 "Mass: " + mass + "\n" +
                 "Resources: " + resources.toString();
     }
+
+    public int getID() {
+        return ID;
+    }
+    public String getName() {
+        return name;
+    }
+    public float getMass() {
+        return mass;
+    }
+    public float getDistance() {
+        return distance;
+    }
+    public ArrayList<Resource> getResources() {
+        return resources;
+    }
+
+
+
 }

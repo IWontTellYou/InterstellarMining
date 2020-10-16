@@ -1,5 +1,8 @@
 package sk.grest.game.entities;
 
+import sk.grest.game.entities.enums.ResourceRarity;
+import sk.grest.game.entities.enums.ResourceState;
+
 public class Substance {
 
     private ResourceState state;

@@ -1,0 +1,117 @@
+
+sprite.png
+format: RGBA8888
+filter: Nearest,Nearest
+repeat: none
+mars
+  rotate: false
+  xy: 1, 959
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
+moon
+  rotate: false
+  xy: 1, 120
+  size: 843, 837
+  orig: 843, 837
+  offset: 0, 0
+  index: -1
+earth
+  rotate: false
+  xy: 1923, 1207
+  size: 832, 832
+  orig: 832, 832
+  offset: 0, 0
+  index: -1
+title
+  rotate: false
+  xy: 846, 678
+  size: 1351, 279
+  orig: 1351, 279
+  offset: 0, 0
+  index: -1
+left_panel
+  rotate: false
+  xy: 2757, 1419
+  size: 175, 620
+  orig: 175, 620
+  offset: 0, 0
+  index: -1
+right_panel
+  rotate: false
+  xy: 2934, 1422
+  size: 174, 617
+  orig: 174, 617
+  offset: 0, 0
+  index: -1
+options_over
+  rotate: false
+  xy: 1, 1
+  size: 474, 117
+  orig: 474, 117
+  offset: 0, 0
+  index: -1
+options_up
+  rotate: false
+  xy: 846, 559
+  size: 474, 117
+  orig: 474, 117
+  offset: 0, 0
+  index: -1
+play_over
+  rotate: false
+  xy: 1923, 1091
+  size: 306, 114
+  orig: 306, 114
+  offset: 0, 0
+  index: -1
+play_up
+  rotate: false
+  xy: 3110, 1925
+  size: 306, 114
+  orig: 306, 114
+  offset: 0, 0
+  index: -1
+exit_over
+  rotate: false
+  xy: 477, 4
+  size: 246, 114
+  orig: 246, 114
+  offset: 0, 0
+  index: -1
+exit_up
+  rotate: false
+  xy: 846, 443
+  size: 246, 114
+  orig: 246, 114
+  offset: 0, 0
+  index: -1
+left_bottom_button
+  rotate: false
+  xy: 2757, 1257
+  size: 162, 160
+  orig: 162, 160
+  offset: 0, 0
+  index: -1
+left_top_button
+  rotate: false
+  xy: 3110, 1762
+  size: 160, 161
+  orig: 160, 161
+  offset: 0, 0
+  index: -1
+right_bottom_button
+  rotate: false
+  xy: 846, 281
+  size: 161, 160
+  orig: 161, 160
+  offset: 0, 0
+  index: -1
+right_top_button
+  rotate: false
+  xy: 3110, 1602
+  size: 159, 158
+  orig: 159, 158
+  offset: 0, 0
+  index: -1
