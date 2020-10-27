@@ -34,9 +34,9 @@ public class MainMenuScreen implements Screen {
 
         // MENU BUTTONS INITIALIZATION
 
-        Image title = new Image(game.getBtnSkin(), "title");
+        Image title = new Image(game.getSpriteSkin(), "title");
 
-        Button btnPlay = new Button(game.getBtnSkin(), "play_up", "play_over");
+        Button btnPlay = new Button(game.getSpriteSkin(), "play_up", "play_over");
         btnPlay.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -46,7 +46,7 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        Button btnOptions = new Button(game.getBtnSkin(), "options_up", "options_over");
+        Button btnOptions = new Button(game.getSpriteSkin(), "options_up", "options_over");
         btnOptions.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -55,7 +55,7 @@ public class MainMenuScreen implements Screen {
             }
         });
 
-        Button btnExit = new Button(game.getBtnSkin(), "exit_up","exit_over");
+        Button btnExit = new Button(game.getSpriteSkin(), "exit_up","exit_over");
         btnExit.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

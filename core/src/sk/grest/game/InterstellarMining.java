@@ -14,7 +14,8 @@ public class InterstellarMining extends Game {
 	private Texture background;
 	private SpriteBatch batch;
 
-	private Skin btnSkin;
+	private Skin spriteSkin;
+	private Skin uiskin;
 	
 	@Override
 	public void create () {
@@ -23,7 +24,10 @@ public class InterstellarMining extends Game {
 		batch = new SpriteBatch();
 
 		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprite.atlas"));
-		btnSkin = new Skin(area);
+		spriteSkin = new Skin(area);
+
+		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiskin.atlas"));
+		uiskin = new Skin(Gdx.files.internal("skins\\uiskin.json"), uiarea);
 
 		setScreen(new MainMenuScreen(this));
 	}
@@ -44,7 +48,9 @@ public class InterstellarMining extends Game {
 	public Texture getBackground() {
 		return background;
 	}
-	public Skin getBtnSkin() {
-		return btnSkin;
+
+	public Skin getUISkin() {
+		return uiskin;
 	}
+	public Skin getSpriteSkin() {return spriteSkin;}
 }

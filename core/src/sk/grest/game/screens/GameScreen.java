@@ -1,15 +1,20 @@
 package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
+import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -48,7 +53,7 @@ public class GameScreen implements Screen {
 
         stage = new Stage(new ScreenViewport());
 
-        final Button backToMenu = new Button(game.getBtnSkin(), "left_top_button", null);
+        final Button backToMenu = new Button(game.getSpriteSkin(), "left_top_button", null);
         backToMenu.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -58,7 +63,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        Button systemsList = new Button(game.getBtnSkin(), "right_top_button", null);
+        Button systemsList = new Button(game.getSpriteSkin(), "right_top_button", null);
         systemsList.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -70,7 +75,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        Button leftDown = new Button(game.getBtnSkin(), "left_bottom_button", null);
+        Button leftDown = new Button(game.getSpriteSkin(), "left_bottom_button", null);
         leftDown.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -82,7 +87,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        Button rightDown = new Button(game.getBtnSkin(), "right_bottom_button", null);
+        Button rightDown = new Button(game.getSpriteSkin(), "right_bottom_button", null);
         rightDown.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -94,21 +99,36 @@ public class GameScreen implements Screen {
             }
         });
 
-        Button leftPanel = new Button(game.getBtnSkin(), "left_panel", null);
+        Button leftPanel = new Button(game.getSpriteSkin(), "left_panel", null);
         leftPanel.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
             }
         });
 
-        Button rightPanel = new Button(game.getBtnSkin(), "right_panel", null);
+        Button rightPanel = new Button(game.getSpriteSkin(), "right_panel", null);
         rightPanel.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                BitmapFont font = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
+                Drawable background = new TextureRegionDrawable(new TextureRegion(game.getBackground()));
+
+                Window.WindowStyle wStyle = new Window.WindowStyle(font, Color.WHITE, background);
+
+                Dialog dialog = new Dialog("Warning", game.getUISkin(), "default");
+                dialog.setSize(720, 480);
+                dialog.align(Align.center);
+                dialog.text("Are you sure you want to quit?");
+                dialog.button("Yes", true); //sends "true" as the result
+                dialog.button("No", false);  //sends "false" as the result
+                dialog.key(Input.Keys.ENTER, true); //sends "true" when the ENTER key is pressed
+                dialog.show(stage);
+
             }
         });
 
-        final Button planet = new Button(game.getBtnSkin(), "earth", null);
+        final Button planet = new Button(game.getSpriteSkin(), "earth", null);
         planet.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
