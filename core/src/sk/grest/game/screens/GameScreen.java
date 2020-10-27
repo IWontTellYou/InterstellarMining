@@ -21,9 +21,13 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
+import sk.grest.game.defaults.GameConstants;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Company;
 import sk.grest.game.entities.Ship;
+
+import static sk.grest.game.defaults.ScreenDeafults.DEFAULT_DIALOG_HEIGHT;
+import static sk.grest.game.defaults.ScreenDeafults.DEFAULT_DIALOG_WIDTH;
 
 public class GameScreen implements Screen {
 
@@ -114,16 +118,14 @@ public class GameScreen implements Screen {
                 BitmapFont font = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
                 Drawable background = new TextureRegionDrawable(new TextureRegion(game.getBackground()));
 
-                Window.WindowStyle wStyle = new Window.WindowStyle(font, Color.WHITE, background);
-
-                Dialog dialog = new Dialog("Warning", game.getUISkin(), "default");
-                dialog.setSize(720, 480);
-                dialog.align(Align.center);
+                Dialog dialog = new Dialog("", game.getUISkin(), "default");
+                dialog.setSize(DEFAULT_DIALOG_WIDTH, DEFAULT_DIALOG_HEIGHT);
+                dialog.setPosition(Gdx.graphics.getWidth()/2f - DEFAULT_DIALOG_WIDTH/2,Gdx.graphics.getHeight()/2f - DEFAULT_DIALOG_HEIGHT/2);
                 dialog.text("Are you sure you want to quit?");
                 dialog.button("Yes", true); //sends "true" as the result
                 dialog.button("No", false);  //sends "false" as the result
                 dialog.key(Input.Keys.ENTER, true); //sends "true" when the ENTER key is pressed
-                dialog.show(stage);
+                stage.addActor(dialog);
 
             }
         });

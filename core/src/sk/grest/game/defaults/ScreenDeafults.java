@@ -12,6 +12,9 @@ public class ScreenDeafults {
     public static final Vector2 TOP_RIGHT = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     public static final Vector2 MIDDLE = new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
 
+    public static final float DEFAULT_DIALOG_WIDTH = Gdx.graphics.getWidth()/1.75f;
+    public static final float DEFAULT_DIALOG_HEIGHT = Gdx.graphics.getHeight()/1.5f;
+
     // CLEARING SCREEN
     public static void clear(){
         Gdx.gl.glClearColor(0,0,0,1);
