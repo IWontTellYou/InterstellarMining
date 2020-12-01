@@ -6,12 +6,19 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
+import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
@@ -19,13 +26,22 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
+
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.GameConstants;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Company;
+import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.Ship;
+import sk.grest.game.entities.enums.ResourceRarity;
+import sk.grest.game.entities.enums.ResourceState;
+import sk.grest.game.other.PlanetStats;
+import sk.grest.game.popups.PopUpWindow;
 
+import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
 import static sk.grest.game.defaults.ScreenDeafults.DEFAULT_DIALOG_HEIGHT;
 import static sk.grest.game.defaults.ScreenDeafults.DEFAULT_DIALOG_WIDTH;
 
@@ -38,6 +54,8 @@ public class GameScreen implements Screen {
 
     private Company company;
 
+    private PlanetStats planetStats;
+
     public GameScreen(final InterstellarMining game) {
 
         this.game = game;
@@ -49,11 +67,28 @@ public class GameScreen implements Screen {
         table.setFillParent(true);
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        // table.setDebug(true);
-        // table.debug(Table.Debug.all);
+        ArrayList<Resource> resources = new ArrayList<>();
+        resources.add(new Resource(0, "Silicon", ResourceState.SOLID, ResourceRarity.COMMON, 0.28f));
+        resources.add(new Resource(0, "Aluminium", ResourceState.SOLID, ResourceRarity.COMMON, 0.08f));
+        resources.add(new Resource(0, "Iron", ResourceState.SOLID, ResourceRarity.COMMON, 0.05f));
+
+        Planet planet = new Planet(0, "Earth", "6.6 sextillion tons", resources);
+        planetStats = new PlanetStats(game, planet);
+
+
+        table.setDebug(true);
+        //table.debug(Table.Debug.all);
 
 
         // MENU LAYOUT INITIALIZED
+
+        //PLANET STATS INITIALIZED
+
+  //      TooltipManager tooltipManager = new TooltipManager();
+ //       final Tooltip<Table> stats = new Tooltip<>(planetStats);
+ //       tooltipManager.enter(stats);
+ //       tooltipManager.instant();
+
 
         stage = new Stage(new ScreenViewport());
 
@@ -67,6 +102,7 @@ public class GameScreen implements Screen {
             }
         });
 
+
         Button systemsList = new Button(game.getSpriteSkin(), "right_top_button", null);
         systemsList.getButton().addListener(new ClickListener(){
             @Override
@@ -74,7 +110,7 @@ public class GameScreen implements Screen {
                 Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
                 if(mouse.dst(ScreenDeafults.TOP_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth()){
                     // ADD ACTION
-                    game.setScreen(new MainMenuScreen(game));
+
                 }
             }
         });
@@ -86,7 +122,7 @@ public class GameScreen implements Screen {
                 Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
                 if(mouse.dst(ScreenDeafults.BOTTOM_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth()){
                     // ADD ACTION
-                    game.setScreen(new MainMenuScreen(game));
+
                 }
             }
         });
@@ -98,7 +134,7 @@ public class GameScreen implements Screen {
                 Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
                 if(mouse.dst(ScreenDeafults.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth()){
                     // ADD ACTION
-                    game.setScreen(new MainMenuScreen(game));
+
                 }
             }
         });
@@ -107,6 +143,8 @@ public class GameScreen implements Screen {
         leftPanel.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                // ADD ACTION
+
             }
         });
 
@@ -114,38 +152,46 @@ public class GameScreen implements Screen {
         rightPanel.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
-                BitmapFont font = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
-                Drawable background = new TextureRegionDrawable(new TextureRegion(game.getBackground()));
-
-                Dialog dialog = new Dialog("", game.getUISkin(), "default");
-                dialog.setSize(DEFAULT_DIALOG_WIDTH, DEFAULT_DIALOG_HEIGHT);
-                dialog.setPosition(Gdx.graphics.getWidth()/2f - DEFAULT_DIALOG_WIDTH/2,Gdx.graphics.getHeight()/2f - DEFAULT_DIALOG_HEIGHT/2);
-                dialog.text("Are you sure you want to quit?");
-                dialog.button("Yes", true); //sends "true" as the result
-                dialog.button("No", false);  //sends "false" as the result
-                dialog.key(Input.Keys.ENTER, true); //sends "true" when the ENTER key is pressed
-                stage.addActor(dialog);
+                // ADD ACTION
 
             }
         });
 
-        final Button planet = new Button(game.getSpriteSkin(), "earth", null);
-        planet.getButton().addListener(new ClickListener(){
+        final Button planetBtn = new Button(game.getSpriteSkin(), "earth", null);
+        planetBtn.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(new Vector2(event.getStageX(), event.getStageY()).dst(ScreenDeafults.MIDDLE)
-                        < planet.getButton().getWidth()/2){
-                    game.setScreen(new MainMenuScreen(game));
+                        < planetBtn.getButton().getWidth()/2){
+                    /*
+                    Dialog stats = new Dialog("", game.getUISkin());
+                    stats.add(planetStats);
+
+                    //stats.setDebug(true);
+
+                    game.getUISkin().getFont("default-font").getData().setScale(1.5f);
+                    game.getUISkin().getFont("default-font").getColor().set(Color.BLACK);
+
+                    stats.show(stage, sequence(Actions.alpha(0), Actions.fadeIn(0.4f, Interpolation.fade)));
+                    stats.setPosition(Gdx.graphics.getWidth()/2f-stats.getWidth()/2f, 10);
+                    stage.addActor(stats);
+                    */
                 }
             }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+
+
+            }
         });
+        //planet.getButton().addListener(stats);
 
         float planetSize = Gdx.graphics.getWidth() / 3f;
 
-        planet.getButton().align(Align.center);
-        planet.getButton().setWidth(planetSize);
-        planet.getButton().setHeight(planetSize);
+        planetBtn.getButton().align(Align.center);
+        planetBtn.getButton().setWidth(planetSize);
+        planetBtn.getButton().setHeight(planetSize);
 
         float btnWidth = Gdx.graphics.getWidth() / 12f;
         float btnHeight = Gdx.graphics.getHeight() / 6.25f;
@@ -156,8 +202,14 @@ public class GameScreen implements Screen {
         table.add(backToMenu.getButton())
                 .expandX().align(Align.topLeft)
                 .width(btnWidth)
-                .height(btnHeight)
-                .colspan(2);
+                .height(btnHeight);
+
+        Label planetName = new Label(planet.getName(), game.getUISkin());
+        planetName.setAlignment(Align.center);
+        table.add(planetName)
+                .align(Align.top)
+                .width(btnWidth)
+                .height(btnHeight);
 
         systemsList.getButton().align(Align.topRight);
         table.add(systemsList.getButton())
@@ -174,7 +226,7 @@ public class GameScreen implements Screen {
                 .width(Gdx.graphics.getWidth() / 4f)
                 .height(Gdx.graphics.getHeight() / 1.5f);
 
-        table.add(planet.getButton())
+        table.add(planetBtn.getButton())
                 .expand().align(Align.center)
                 .width(planetSize)
                 .height(planetSize);
@@ -190,14 +242,17 @@ public class GameScreen implements Screen {
 
         leftDown.getButton().align(Align.bottomLeft);
         table.add(leftDown.getButton())
-                .expand().align(Align.bottomLeft)
+                .align(Align.bottomLeft)
                 .width(btnWidth)
-                .height(btnHeight)
-                .colspan(2);
+                .height(btnHeight);
+
+        planetStats.getTable().align(Align.center);
+        table.add(planetStats.getTable())
+                .align(Align.bottom);
 
         rightDown.getButton().align(Align.bottomRight);
         table.add(rightDown.getButton())
-                .expand().align(Align.bottomRight)
+                .align(Align.bottomRight)
                 .width(btnWidth)
                 .height(btnHeight)
                 .row();

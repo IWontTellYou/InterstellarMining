@@ -2,7 +2,11 @@ package sk.grest.game.defaults;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 public class ScreenDeafults {
 
@@ -14,6 +18,10 @@ public class ScreenDeafults {
 
     public static final float DEFAULT_DIALOG_WIDTH = Gdx.graphics.getWidth()/1.75f;
     public static final float DEFAULT_DIALOG_HEIGHT = Gdx.graphics.getHeight()/1.5f;
+
+    public static Drawable textureToDrawable(Texture texture){
+        return new TextureRegionDrawable(new TextureRegion(texture));
+    }
 
     // CLEARING SCREEN
     public static void clear(){
