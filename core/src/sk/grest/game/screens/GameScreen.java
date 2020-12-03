@@ -1,27 +1,17 @@
 package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Interpolation;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
-import com.badlogic.gdx.scenes.scene2d.actions.Actions;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
-import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
-import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
-import com.badlogic.gdx.scenes.scene2d.ui.Window;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
@@ -30,7 +20,6 @@ import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
-import sk.grest.game.defaults.GameConstants;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Company;
 import sk.grest.game.entities.Planet;
@@ -39,11 +28,6 @@ import sk.grest.game.entities.Ship;
 import sk.grest.game.entities.enums.ResourceRarity;
 import sk.grest.game.entities.enums.ResourceState;
 import sk.grest.game.other.PlanetStats;
-import sk.grest.game.popups.PopUpWindow;
-
-import static com.badlogic.gdx.scenes.scene2d.actions.Actions.sequence;
-import static sk.grest.game.defaults.ScreenDeafults.DEFAULT_DIALOG_HEIGHT;
-import static sk.grest.game.defaults.ScreenDeafults.DEFAULT_DIALOG_WIDTH;
 
 public class GameScreen implements Screen {
 
@@ -74,9 +58,10 @@ public class GameScreen implements Screen {
 
         Planet planet = new Planet(0, "Earth", "6.6 sextillion tons", resources);
         planetStats = new PlanetStats(game, planet);
+        planetStats.getTable().setVisible(false);
 
 
-        table.setDebug(true);
+        //table.setDebug(true);
         //table.debug(Table.Debug.all);
 
 
@@ -181,8 +166,12 @@ public class GameScreen implements Screen {
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                planetStats.getTable().setVisible(true);
+            }
 
-
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                planetStats.getTable().setVisible(false);
             }
         });
         //planet.getButton().addListener(stats);

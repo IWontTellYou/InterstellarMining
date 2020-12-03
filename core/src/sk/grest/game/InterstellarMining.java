@@ -6,10 +6,25 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
+
+/*
+import com.google.api.core.ApiFuture;
+import com.google.auth.oauth2.GoogleCredentials;
+import com.google.cloud.firestore.DocumentReference;
+import com.google.cloud.firestore.Firestore;
+import com.google.cloud.firestore.WriteResult;
+import com.google.cloud.firestore.v1.FirestoreAdminClient;
+import com.google.cloud.firestore.v1.FirestoreClient;
+import com.google.firebase.FirebaseApp;
+import com.google.firebase.FirebaseOptions;
+import com.google.firestore.v1.CreateDocumentRequest;
+*/
+
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import sk.grest.game.screens.MainMenuScreen;
 
@@ -25,6 +40,42 @@ public class InterstellarMining extends Game {
 
 	@Override
 	public void create () {
+
+		/*
+
+		FirebaseApp firebaseApp = null;
+		FileInputStream serviceAccount = null;
+		try {
+			serviceAccount = new FileInputStream(String.valueOf(Gdx.files.internal("service_key\\service_key.json")));
+		FirebaseOptions options = new FirebaseOptions.Builder()
+				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
+				.setDatabaseUrl("https://interstellarmining-e052e.firebaseio.com")
+				.build();
+		firebaseApp = FirebaseApp.initializeApp(options);
+
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		FirestoreClient client;
+		Firestore
+
+		client.createDocument(new CreateDocumentRequest());
+		DocumentReference docRef = db.collection("users").document("alovelace");
+
+		// Add document data  with id "alovelace" using a hashmap
+		Map<String, Object> data = new HashMap<>();
+		data.put("first", "Ada");
+		data.put("last", "Lovelace");
+		data.put("born", 1815);
+		//asynchronously write data
+		ApiFuture<WriteResult> result = docRef.set(data);
+		// ...
+		// result.get() blocks on response
+		System.out.println("Update time : " + result.get().getUpdateTime());
+
+
+		 */
 
 		background = new Texture(Gdx.files.internal("sprites\\background.png"));
 

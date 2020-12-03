@@ -9,7 +9,7 @@ buildscript {
         google()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.0.1'
+        classpath 'com.android.tools.build:gradle:4.0.2'
         classpath 'com.mobidevelop.robovm:robovm-gradle-plugin:2.3.8'
     }
 }
@@ -19,7 +19,8 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Interstellar Mining"
-        gdxVersion = '1.9.10'
+        gdxVersion = '1.9.12'
+        //gdxFireappVersion = '1.4.3'
         roboVMVersion = '2.3.8'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -60,6 +61,9 @@ project(":android") {
 
     dependencies {
         implementation project(":core")
+
+        //implementation "pl.mk5.gdx-fireapp:gdx-fireapp-android:$gdxFireappVersion"
+
         api "com.badlogicgames.gdx:gdx-backend-android:$gdxVersion"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi"
         natives "com.badlogicgames.gdx:gdx-platform:$gdxVersion:natives-armeabi-v7a"
@@ -91,6 +95,9 @@ project(":ios") {
 
     dependencies {
         implementation project(":core")
+
+        //implementation "pl.mk5.gdx-fireapp:gdx-fireapp-ios-moe:$gdxFireappVersion"
+
         api "com.mobidevelop.robovm:robovm-rt:$roboVMVersion"
         api "com.mobidevelop.robovm:robovm-cocoatouch:$roboVMVersion"
         api "com.badlogicgames.gdx:gdx-backend-robovm:$gdxVersion"
@@ -105,12 +112,21 @@ project(":core") {
     apply plugin: "java-library"
 
     dependencies {
+
+        //implementation "pl.mk5.gdx-fireapp:gdx-fireapp-core:$gdxFireappVersion"
+
+        // https://mvnrepository.com/artifact/com.google.firebase/firebase-admin
+        //implementation group: 'com.google.firebase', name: 'firebase-admin', version: '7.0.1'
+
         // https://mvnrepository.com/artifact/com.google.code.gson/gson
-        implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+        //implementation group: 'com.google.code.gson', name: 'gson', version: '2.8.6'
+
         api "com.badlogicgames.gdx:gdx:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-box2d:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
+
+        //compile group:'mysql', name:'mysql-connector-java', version:'8.0.22'
         
     }
 }

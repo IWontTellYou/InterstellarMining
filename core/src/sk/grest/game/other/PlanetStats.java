@@ -20,6 +20,8 @@ public class PlanetStats {
         this.massLabel = new Label(planet.getMass(), game.getUISkin());
         this.resourcesLabel = new Label(planet.getResourcesString(), game.getUISkin());
 
+        game.getUISkin().getFont("default-font").getData().scale(0.25f);
+
         this.planetStats = new Table();
 
         float cellWidth = Gdx.graphics.getWidth()/5f;
