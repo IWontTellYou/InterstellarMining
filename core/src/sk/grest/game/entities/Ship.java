@@ -13,9 +13,14 @@ public class Ship {
     private String name;
 
     // UPGRADABLES
-    private int miningSpeed;
-    private int travelSpeed;
-    private int resourceCapacity;
+    private float miningSpeed;
+    private float travelSpeed;
+    private float resourceCapacity;
+    private float fuelCapacity;
+    private float fuelEficiency;
+
+    //
+    private float price;
 
     // TRAVELING
     private Planet currentDestination;
@@ -23,12 +28,18 @@ public class Ship {
     private float travelTime;
     private float miningTime;
 
-    public Ship(String name, int miningSpeed, int travelSpeed, int resourceCapacity) {
+    public Ship(String name, float miningSpeed, float travelSpeed, float resourceCapacity, float fuelCapacity, float fuelEficiency, float price, Planet currentDestination, ShipState state, float travelTime, float miningTime) {
         this.name = name;
         this.miningSpeed = miningSpeed;
         this.travelSpeed = travelSpeed;
         this.resourceCapacity = resourceCapacity;
-        this.state = ShipState.AT_THE_BASE;
+        this.fuelCapacity = fuelCapacity;
+        this.fuelEficiency = fuelEficiency;
+        this.price = price;
+        this.currentDestination = currentDestination;
+        this.state = state;
+        this.travelTime = travelTime;
+        this.miningTime = miningTime;
     }
 
     public void update(float delta){

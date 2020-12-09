@@ -2,11 +2,9 @@ package sk.grest.game.entities;
 
 import java.util.ArrayList;
 
-import sk.grest.game.defaults.GameConstants;
-
 import static sk.grest.game.defaults.GameConstants.*;
 
-public class Company {
+public class Player {
 
     private String name;
     private long netWorth;
@@ -16,7 +14,7 @@ public class Company {
 
     private ArrayList<Ship> ships;
 
-    public Company(String name) {
+    public Player(String name) {
         this.ships = new ArrayList<>();
         this.name = name; // Name specified by a player
         this.netWorth = (long) (50 * BILLION); // 50 Billion

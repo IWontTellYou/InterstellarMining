@@ -14,8 +14,8 @@ class DatabaseConnection {
     private Thread taskThread;
     private Connection connection;
     private static DatabaseConnection instance;
-    private static final String DATABASE_NAME = "";
-    private static final String DATABASE_USERNAME = "";
+    private static final String DATABASE_NAME = "interstellar_mining";
+    private static final String DATABASE_USERNAME = "root";
     private static final String DATABASE_PASSWORD = "";
 
     private DatabaseConnection(){}
@@ -88,6 +88,32 @@ class DatabaseConnection {
                     keyNames.deleteCharAt(keyNames.length() - 1);
                     keyNames.deleteCharAt(keyNames.length() - 1);
                     String sql = "INSERT INTO " + tableName + "(" + keyNames.toString() + ") VALUE (" + keyValues.toString() + ")";
+                    stm.executeQuery(sql);
+                    eventListener.onUpdateSuccess(requestCode);
+                } catch (Exception e) {
+                    eventListener.onResultFailed(requestCode, e.getMessage());
+                }
+            }
+        });
+        taskThread.setDaemon(true);
+        taskThread.start();
+    }
+
+    void updateRow(final int requestCode, final int id, final String tableName, final Map<String, Object> data, final ConnectorEvent eventListener) {
+        taskThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Statement stm = connection.createStatement();
+                    StringBuilder keyNames = new StringBuilder();
+                    StringBuilder keyValues = new StringBuilder();
+                    for (String s : data.keySet()) {
+                        keyNames.append(s).append(",");
+                        keyValues.append(data.get(s)).append(",");
+                    }
+                    keyNames.deleteCharAt(keyNames.length() - 1);
+                    keyNames.deleteCharAt(keyNames.length() - 1);
+                    String sql = "UPDATE " + tableName + " SET (" + keyNames.toString() + ") VALUE (" + keyValues.toString() + ") WHERE id = " + id;
                     stm.executeQuery(sql);
                     eventListener.onUpdateSuccess(requestCode);
                 } catch (Exception e) {
