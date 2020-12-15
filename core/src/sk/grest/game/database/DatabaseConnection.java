@@ -1,5 +1,7 @@
 package sk.grest.game.database;
 
+import com.badlogic.gdx.Gdx;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -8,7 +10,9 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-class DatabaseConnection {
+import static sk.grest.game.database.DatabaseConstants.*;
+
+public class DatabaseConnection {
 
     private Thread connectionThread;
     private Thread taskThread;
@@ -18,7 +22,7 @@ class DatabaseConnection {
     private static final String DATABASE_USERNAME = "root";
     private static final String DATABASE_PASSWORD = "";
 
-    private DatabaseConnection(){}
+    public DatabaseConnection(){}
 
     public static DatabaseConnection getInstance() {
         if (instance == null)
@@ -63,7 +67,44 @@ class DatabaseConnection {
                         }
                         requestData.add(rowData);
                     }
-                    eventListener.onFetchSuccess(requestCode, requestData);
+                    eventListener.onFetchSuccess(requestCode, tableName, requestData);
+                } catch (Exception e) {
+                    eventListener.onResultFailed(requestCode, e.getMessage());
+                }
+            }
+        });
+        taskThread.setDaemon(true);
+        taskThread.start();
+    }
+
+    void verifyPlayer(final int requestCode, final String tableName, final String username, final String password, final ConnectorEvent eventListener){
+        taskThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Statement statement = connection.createStatement();
+                    String sql = "SELECT * FROM " + tableName + " WHERE "
+                            + PlayerTable.NAME + " = '" + username + "' AND "
+                            + PlayerTable.PASSWORD + " = '" + password + "'";
+                    ResultSet result = statement.executeQuery(sql);
+
+                    Gdx.app.log("SQL_QUERRY", sql);
+
+                    ArrayList<Map<String, Object>> requestData = new ArrayList();
+
+                    while (result.next()) {
+                        Map<String, Object> rowData = new HashMap<>();
+                        for (int i = 1; i < result.getMetaData().getColumnCount(); i++) {
+                            rowData.put(result.getMetaData().getColumnName(i), result.getObject(i));
+                        }
+                        requestData.add(rowData);
+                    }
+
+                    Gdx.app.log("LIST_OF_PLAYERS", requestData.toString());
+
+                    eventListener.onFetchSuccess(requestCode, tableName, requestData);
+
                 } catch (Exception e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
                 }
@@ -137,15 +178,11 @@ class DatabaseConnection {
         }
     }
 
-    interface ConnectorEvent {
-        void onFetchSuccess(int requestCode, ArrayList<Map<String, Object>> tableData);
-
+    public interface ConnectorEvent {
+        void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData);
         void onUpdateSuccess(int requestCode);
-
         void onConnect();
-
         void onConnectionFailed();
-
         void onResultFailed(int requestCode, String message);
     }
 }

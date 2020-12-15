@@ -24,8 +24,13 @@ public class DatabaseConstants {
 
     public static final class PlanetTable {
         public static final String TABLE_NAME = "planet";
+        public static final String NAME = "name";
         public static final String ID = "id";
         public static final String PLANET_SYSTEM_ID = "planet_system_id";
+        public static final String SIZE = "size";
+        public static final String INFO = "info";
+        public static final String DISTANCE = "distance";
+        public static final String HABITABLE = "habitable";
         public static final String UNLOCKED = "unlocked";
     }
 
@@ -62,23 +67,49 @@ public class DatabaseConstants {
     }
 
     public static final class StateTable {
-        public static final String STATE_TABLE = "state";
+        public static final String TABLE_NAME = "resource_state";
         public static final String ID = "id";
         public static final String NAME = "name";
     }
 
-    public static final class Rarity {
-        public static final String STATE_TABLE = "rarity";
+    public static final class RarityTable {
+        public static final String TABLE_NAME = "resource_rarity";
         public static final String ID = "id";
         public static final String NAME = "name";
     }
 
+    public static final class ShipTable{
+        public static final String TABLE_NAME = "ship";
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String MINING_SPEED = "mining_speed";
+        public static final String TRAVEL_SPEED = "speed";
+        public static final String RESOURCE_CAPACITY = "capacity";
+        public static final String FUEL_CAPACITY = "fuel_capacity";
+        public static final String FUEL_EFFICIENCY = "fuel_efficiency";
+        public static final String PRICE = "price";
+    }
 
+    public static final class ColonyTable{
+        public static final String TABLE_NAME = "colony";
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String SHIPS_CAPACITY = "ships_capacity";
+    }
 
-    public static final String SHIP_TABLE = "ship";
-    public static final String COLONY_TABLE = "colony";
-    public static final String SHIP_FLEET_TABLE = "ship_fleet";
+    public static final String SHIP_FLEET_TABLE = "ship_in_fleet";
     public static final String RESOURCE_IN_SHIP_TABLE = "resource_in_ship";
+
+    public static final class ResearchTable{
+        public static final String TABLE_NAME = "research";
+        public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String INFO = "info";
+        public static final String EFFECT = "effect";
+        public static final String LEVEL_REQUIRED = "research_level";
+        public static final String UPGRADE_TIME = "upgrade_time";
+        public static final String PRICE = "research_price";
+    }
 
     public static final String RESEARCH_TABLE = "ship";
     public static final String RESEARCH_TREE_TABLE = "ship";

@@ -126,7 +126,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
-        //compile group:'mysql', name:'mysql-connector-java', version:'8.0.22'
+        compile group:'mysql', name:'mysql-connector-java', version:'8.0.22'
         
     }
 }

@@ -18,13 +18,11 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
-import sk.grest.game.database.
-
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
-import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.Ship;
 import sk.grest.game.entities.enums.ResourceRarity;
@@ -58,11 +56,11 @@ public class GameScreen implements Screen {
         resources.add(new Resource(0, "Aluminium", ResourceState.SOLID, ResourceRarity.COMMON, 0.08f));
         resources.add(new Resource(0, "Iron", ResourceState.SOLID, ResourceRarity.COMMON, 0.05f));
 
-        /*
-        Planet planet = new Planet(0, "Earth", "6.6 sextillion tons", true, "", resources);
+
+        Planet planet = new Planet("Earth", 1, 0, true, "", resources);
         planetStats = new PlanetStats(game, planet);
         planetStats.getTable().setVisible(false);
-        */
+
 
         //table.setDebug(true);
         //table.debug(Table.Debug.all);
@@ -169,12 +167,12 @@ public class GameScreen implements Screen {
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                planetStats.getTable().setVisible(true);
+                //planetStats.getTable().setVisible(true);
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                planetStats.getTable().setVisible(false);
+                //planetStats.getTable().setVisible(false);
             }
         });
         //planet.getButton().addListener(stats);
@@ -196,15 +194,12 @@ public class GameScreen implements Screen {
                 .width(btnWidth)
                 .height(btnHeight);
 
-        /*
-
         Label planetName = new Label(planet.getName(), game.getUISkin());
         planetName.setAlignment(Align.center);
         table.add(planetName)
                 .align(Align.top)
                 .width(btnWidth)
                 .height(btnHeight);
-        */
 
         systemsList.getButton().align(Align.topRight);
         table.add(systemsList.getButton())
@@ -293,6 +288,8 @@ public class GameScreen implements Screen {
 
     }
 
+    //
+
     @Override
     public void show() {}
     @Override
@@ -309,5 +306,4 @@ public class GameScreen implements Screen {
         game.getBatch().dispose();
 
     }
-
 }

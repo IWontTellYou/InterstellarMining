@@ -10,6 +10,8 @@ import static sk.grest.game.entities.enums.ShipState.TRAVELLING_OUT;
 
 public class Ship {
 
+    private int id;
+
     private String name;
 
     // UPGRADABLES
@@ -28,7 +30,10 @@ public class Ship {
     private float travelTime;
     private float miningTime;
 
-    public Ship(String name, float miningSpeed, float travelSpeed, float resourceCapacity, float fuelCapacity, float fuelEficiency, float price, Planet currentDestination, ShipState state, float travelTime, float miningTime) {
+    public Ship(int id, String name, float miningSpeed, float travelSpeed, float resourceCapacity,
+                float fuelCapacity, float fuelEficiency, float price, Planet currentDestination,
+                ShipState state, float travelTime, float miningTime) {
+        this.id = id;
         this.name = name;
         this.miningSpeed = miningSpeed;
         this.travelSpeed = travelSpeed;

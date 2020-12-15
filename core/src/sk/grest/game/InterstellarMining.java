@@ -8,27 +8,27 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 
-/*
-import com.google.api.core.ApiFuture;
-import com.google.auth.oauth2.GoogleCredentials;
-import com.google.cloud.firestore.DocumentReference;
-import com.google.cloud.firestore.Firestore;
-import com.google.cloud.firestore.WriteResult;
-import com.google.cloud.firestore.v1.FirestoreAdminClient;
-import com.google.cloud.firestore.v1.FirestoreClient;
-import com.google.firebase.FirebaseApp;
-import com.google.firebase.FirebaseOptions;
-import com.google.firestore.v1.CreateDocumentRequest;
-*/
-
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.sql.SQLClientInfoException;
+import java.sql.SQLDataException;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import sk.grest.game.database.DatabaseConnection;
+import sk.grest.game.database.DatabaseHandler;
+import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.entities.Research;
+import sk.grest.game.entities.Ship;
+import sk.grest.game.screens.GameScreen;
 import sk.grest.game.screens.MainMenuScreen;
 
-public class InterstellarMining extends Game {
+import static sk.grest.game.database.DatabaseConstants.*;
+
+public class InterstellarMining extends Game implements DatabaseConnection.ConnectorEvent {
+
+	private DatabaseHandler handler;
+	private DatabaseConnection connection;
 
 	private Texture background;
 
@@ -38,44 +38,18 @@ public class InterstellarMining extends Game {
 	private Skin spriteSkin;
 	private Skin uiskin;
 
+	private ArrayList<Ship> shipsShop;
+	private ArrayList<PlanetSystem> planetSystems;
+	private ArrayList<Research> researches;
+
 	@Override
 	public void create () {
 
-		/*
+		shipsShop = null;
+		planetSystems = null;
+		researches = null;
 
-		FirebaseApp firebaseApp = null;
-		FileInputStream serviceAccount = null;
-		try {
-			serviceAccount = new FileInputStream(String.valueOf(Gdx.files.internal("service_key\\service_key.json")));
-		FirebaseOptions options = new FirebaseOptions.Builder()
-				.setCredentials(GoogleCredentials.fromStream(serviceAccount))
-				.setDatabaseUrl("https://interstellarmining-e052e.firebaseio.com")
-				.build();
-		firebaseApp = FirebaseApp.initializeApp(options);
-
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-
-		FirestoreClient client;
-		Firestore
-
-		client.createDocument(new CreateDocumentRequest());
-		DocumentReference docRef = db.collection("users").document("alovelace");
-
-		// Add document data  with id "alovelace" using a hashmap
-		Map<String, Object> data = new HashMap<>();
-		data.put("first", "Ada");
-		data.put("last", "Lovelace");
-		data.put("born", 1815);
-		//asynchronously write data
-		ApiFuture<WriteResult> result = docRef.set(data);
-		// ...
-		// result.get() blocks on response
-		System.out.println("Update time : " + result.get().getUpdateTime());
-
-
-		 */
+		handler = new DatabaseHandler(DatabaseConnection.getInstance(), this);
 
 		background = new Texture(Gdx.files.internal("sprites\\background.png"));
 
@@ -112,4 +86,71 @@ public class InterstellarMining extends Game {
 		return uiskin;
 	}
 	public Skin getSpriteSkin() {return spriteSkin;}
+
+	public DatabaseHandler getHandler() {
+		return handler;
+	}
+
+	// ConnectionEvent methods
+
+	@Override
+	public void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData) {
+		/*
+
+		switch (tableName){
+			case ShipTable.TABLE_NAME:
+				for (Map<String, Object> data : tableData) {
+					Ship ship = new Ship(
+							(Integer) data.get(ShipTable.ID),
+							(String) data.get(ShipTable.NAME),
+							(Float) data.get(ShipTable.MINING_SPEED),
+							(Float) data.get(ShipTable.TRAVEL_SPEED),
+							(Float) data.get(ShipTable.RESOURCE_CAPACITY),
+							(Float) data.get(ShipTable.FUEL_CAPACITY),
+							(Float) data.get(ShipTable.FUEL_EFFICIENCY),
+							(Float) data.get(ShipTable.PRICE),
+							null,
+							null,
+							0,
+							0
+					);
+					shipsShop.add(ship);
+				}
+				break;
+			case PlanetTable.TABLE_NAME:
+				Map<Integer, Planet> pSystem = new HashMap<>();
+				for (Map<String, Object> data : tableData) {
+					Planet p = new Planet(
+							(int) data.get(PlanetTable.ID),
+							null,
+							(String) data.get(PlanetTable.NAME),
+							(float) data.get(PlanetTable.SIZE),
+							(float) data.get(PlanetTable.DISTANCE),
+							(boolean) data.get(PlanetTable.HABITABLE),
+							(String) data.get(PlanetTable.INFO),
+
+					);
+					pSystem.put((Integer) data.get(PlanetTable.PLANET_SYSTEM_ID), )
+				}
+				break;
+			case ResearchTable.TABLE_NAME:
+
+				break;
+		}
+		*/
+	}
+	@Override
+	public void onUpdateSuccess(int requestCode) {
+	}
+	@Override
+	public void onConnect() {
+		Gdx.app.log("DATABASE", "Database successfully connected!");
+	}
+	@Override
+	public void onConnectionFailed() {
+		Gdx.app.log("DATABASE", "Database could not be connected!");
+	}
+	@Override
+	public void onResultFailed(int requestCode, String message) {
+	}
 }
