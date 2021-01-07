@@ -8,6 +8,8 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.sql.SQLClientInfoException;
 import java.sql.SQLDataException;
@@ -43,8 +45,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 	private DatabaseHandler handler;
 	private DatabaseInitalization dataInit;
 
-	private Texture background;
-
 	private SpriteBatch batch;
 	private BitmapFont defaultFont;
 
@@ -71,8 +71,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 		researches = new ArrayList<>();
 		planets = new ArrayList<>();
 
-		background = new Texture(Gdx.files.internal("sprites\\background.png"));
-
 		defaultFont = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
 		batch = new SpriteBatch();
 
@@ -95,7 +93,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 		batch.dispose();
 		uiskin.dispose();
 		spriteSkin.dispose();
-		background.dispose();
 		handler.getConnection().disconnect();
 	}
 
@@ -107,8 +104,8 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 	public SpriteBatch getBatch() {
 		return batch;
 	}
-	public Texture getBackground() {
-		return background;
+	public Drawable getBackground() {
+		return spriteSkin.getDrawable("background");
 	}
 	public Skin getUISkin() {
 		return uiskin;
@@ -265,16 +262,21 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 				break;
 			case PlanetTable.TABLE_NAME:
 				for (Map<String, Object> data : tableData) {
-					Planet planet = new Planet(
-							(int) data.get(PlanetTable.ID),
-							(String) data.get(PlanetTable.NAME),
-							(String) data.get(PlanetTable.ASSET_ID),
-							(float) data.get(PlanetTable.DISTANCE),
-							(boolean) data.get(PlanetTable.HABITABLE),
-							(String) data.get(PlanetTable.INFO),
-							new ArrayList<Resource>()
-					);
-					planets.add(planet);
+					for (PlanetSystem pS : planetSystems) {
+						Planet planet = new Planet(
+								(int) data.get(PlanetTable.ID),
+								(String) data.get(PlanetTable.NAME),
+								(String) data.get(PlanetTable.ASSET_ID),
+								(float) data.get(PlanetTable.DISTANCE),
+								(boolean) data.get(PlanetTable.HABITABLE),
+								(String) data.get(PlanetTable.INFO),
+								new ArrayList<Resource>()
+						);
+						planets.add(planet);
+
+						if(pS.getId() == (Integer) data.get(PlanetTable.PLANET_SYSTEM_ID))
+							pS.getPlanets().add(planet);
+					}
 				}
 
 				Gdx.app.log(PlanetTable.TABLE_NAME, "INITIALIZATION DONE!");

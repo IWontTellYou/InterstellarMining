@@ -19,8 +19,7 @@ allprojects {
     version = '1.0'
     ext {
         appName = "Interstellar Mining"
-        gdxVersion = '1.9.12'
-        //gdxFireappVersion = '1.4.3'
+        gdxVersion = '1.9.13'
         roboVMVersion = '2.3.8'
         box2DLightsVersion = '1.4'
         ashleyVersion = '1.7.0'
@@ -126,7 +125,7 @@ project(":core") {
         api "com.badlogicgames.gdx:gdx-controllers:$gdxVersion"
         api "com.badlogicgames.gdx:gdx-freetype:$gdxVersion"
 
-        compile group:'mysql', name:'mysql-connector-java', version:'8.0.22'
+        implementation group:'mysql', name:'mysql-connector-java', version:'8.0.22'
         
     }
 }

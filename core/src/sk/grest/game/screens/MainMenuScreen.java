@@ -70,6 +70,8 @@ public class MainMenuScreen implements Screen {
         table.setWidth(Gdx.graphics.getWidth());
         table.setHeight(Gdx.graphics.getHeight());
 
+        table.setBackground(game.getBackground());
+
         float btnPad = Gdx.graphics.getHeight() / 30f;
 
         table.padTop(Gdx.graphics.getHeight() / 12f);
@@ -110,7 +112,7 @@ public class MainMenuScreen implements Screen {
         stage.getBatch().begin();
 
         // BACKGROUND RENDERING
-        stage.getBatch().draw(game.getBackground(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+        //stage.getBatch().draw(game.getBackground(), 0, 0, Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
         stage.getBatch().end();
         stage.draw();

@@ -3,7 +3,6 @@ package sk.grest.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -12,30 +11,27 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.ArrayList;
-
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.listeners.OnPlanetChangedListener;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Planet;
-import sk.grest.game.entities.Player;
-import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.Ship;
-import sk.grest.game.entities.enums.ResourceRarity;
-import sk.grest.game.entities.enums.ResourceState;
 import sk.grest.game.other.PlanetStats;
 
-public class GameScreen implements Screen {
+public class GameScreen implements Screen, OnPlanetChangedListener {
 
     private InterstellarMining game;
     private Stage stage;
 
-    BitmapFont font;
+    private BitmapFont font;
+
     private PlanetStats planetStats;
+
+    private Button planetBtn;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -45,17 +41,18 @@ public class GameScreen implements Screen {
 
         // LAYOUT DEFINING
 
-        final Table table = new Table();
+        final Table table = new Table(game.getUISkin());
         table.setFillParent(true);
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        planetStats = new PlanetStats(game, game.getPlanetByID(1));
+        int planetSystemId = 0;
+
+        planetStats = new PlanetStats(game, this, game.getPlanetSystemByID(1).getPlanets());
         planetStats.getTable().setVisible(false);
 
 
         //table.setDebug(true);
         //table.debug(Table.Debug.all);
-
 
         // MENU LAYOUT INITIALIZED
 
@@ -69,26 +66,54 @@ public class GameScreen implements Screen {
 
         stage = new Stage(new ScreenViewport());
 
-        final Button backToMenu = new Button(game.getSpriteSkin(), "left_top_button", null);
+        final Button backToMenu = new Button(game.getSpriteSkin(), "left_top_button", "left_top_button_pressed");
         backToMenu.getButton().addListener(new ClickListener(){
+
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
-                if(mouse.dst(ScreenDeafults.TOP_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth())
+
+                Gdx.app.log("IS_OVER", Boolean.toString(isOver()));
+
+                if(isOver()){
                     game.setScreen(new MainMenuScreen(game));
+                }
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if(isOver()){
+
+                }
+            }
+
+            @Override
+            public boolean isOver(Actor actor, float x, float y) {
+                Vector2 mouse = new Vector2(x, y);
+                return mouse.dst(ScreenDeafults.TOP_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
         });
 
-
-        Button systemsList = new Button(game.getSpriteSkin(), "right_top_button", null);
+        final Button systemsList = new Button(game.getSpriteSkin(), "right_top_button", "right_top_button_pressed");
         systemsList.getButton().addListener(new ClickListener(){
+
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
-                if(mouse.dst(ScreenDeafults.TOP_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth()){
+                if(isOver()){
                     // ADD ACTION
+                }
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if(isOver()){
 
                 }
+            }
+
+            @Override
+            public boolean isOver(Actor actor, float x, float y) {
+                Vector2 mouse = new Vector2(x, y);
+                return mouse.dst(ScreenDeafults.TOP_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
         });
 
@@ -97,10 +122,22 @@ public class GameScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
-                if(mouse.dst(ScreenDeafults.BOTTOM_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth()){
-                    // ADD ACTION
+                if(isOver()){
+                    planetStats.previousPlanet();
+                }
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if(isOver()){
 
                 }
+            }
+
+            @Override
+            public boolean isOver(Actor actor, float x, float y) {
+                Vector2 mouse = new Vector2(x, y);
+                return mouse.dst(ScreenDeafults.BOTTOM_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
         });
 
@@ -110,9 +147,24 @@ public class GameScreen implements Screen {
             public void clicked(InputEvent event, float x, float y) {
                 Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
                 if(mouse.dst(ScreenDeafults.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth()){
-                    // ADD ACTION
+                    planetStats.nextPlanet();
+                }
+            }
+
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                if(isOver()){
 
                 }
+            }
+
+            @Override
+            public boolean isOver(Actor actor, float x, float y) {
+                Vector2 mouse = new Vector2(x, y);
+                if(mouse.dst(ScreenDeafults.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth()){
+                    return true;
+                }
+                return false;
             }
         });
 
@@ -134,7 +186,7 @@ public class GameScreen implements Screen {
             }
         });
 
-        final Button planetBtn = new Button(game.getSpriteSkin(), "earth", null);
+        planetBtn = new Button(game.getSpriteSkin(), planetStats.getPlanetImage(), null);
         planetBtn.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -238,7 +290,7 @@ public class GameScreen implements Screen {
                 .height(btnHeight)
                 .row();
 
-        table.setBackground(new TextureRegionDrawable(new TextureRegion(game.getBackground())));
+        table.setBackground(game.getBackground());
 
         Container<Table> container = new Container<>(table);
         container.fillX();
@@ -297,5 +349,10 @@ public class GameScreen implements Screen {
         stage.dispose();
         game.getBatch().dispose();
 
+    }
+
+    @Override
+    public void onPlanetChanged(Planet planet) {
+        planetBtn.setImageUp(planet.getAssetId());
     }
 }

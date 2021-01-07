@@ -53,7 +53,7 @@ public class LogInScreen implements Screen {
         table.add(inputName).height(80).width(200).align(Align.center).row();
         table.add(inputPassword).height(80).width(200).align(Align.center).row();
         table.add(submit).height(80).width(200).align(Align.center).row();
-        table.setBackground(new TextureRegionDrawable(new TextureRegion(game.getBackground())));
+        table.setBackground(game.getBackground());
 
         stage.addActor(table);
 
