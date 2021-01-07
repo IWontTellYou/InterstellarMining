@@ -6,38 +6,69 @@ import static sk.grest.game.defaults.GameConstants.*;
 
 public class Player {
 
+    private int ID;
     private String name;
-    private long netWorth;
-
-    // LEVEL
-    private int rank;
+    private String password;
+    private String email;
+    private int level;
+    private int experience;
 
     private ArrayList<Ship> ships;
+    private ArrayList<PlanetSystem> systemsDiscovered;
 
-    public Player(String name) {
+    public Player(int ID, String name, String password, String email, int level, int experience) {
+        this.ID = ID;
+        this.name = name;
+        this.password = password;
+        this.email = email;
+        this.level = level;
+        this.experience = experience;
+
         this.ships = new ArrayList<>();
-        this.name = name; // Name specified by a player
-        this.netWorth = (long) (50 * BILLION); // 50 Billion
-        this.rank = 1;
+        this.systemsDiscovered = new ArrayList<>();
+    }
+
+    public ArrayList<Ship> getShips() {
+        return ships;
+    }
+
+    public ArrayList<PlanetSystem> getSystemsDiscovered() {
+        return systemsDiscovered;
+    }
+
+    public int getID() {
+        return ID;
     }
 
     public String getName() {
         return name;
     }
 
-    public long getNetWorth() {
-        return netWorth;
+    public String getPassword() {
+        return password;
     }
 
-    public int getRank() {
-        return rank;
+    public String getEmail() {
+        return email;
     }
 
-    public void addRank() {
-        this.rank++;
+    public int getLevel() {
+        return level;
     }
 
-    public ArrayList<Ship> getShips() {
-        return ships;
+    public int getExperience() {
+        return experience;
+    }
+
+    @Override
+    public String toString() {
+        return "Player{" +
+                "ID=" + ID +
+                ", name='" + name + '\'' +
+                ", password='" + password + '\'' +
+                ", email='" + email + '\'' +
+                ", level=" + level +
+                ", experience=" + experience +
+                '}';
     }
 }

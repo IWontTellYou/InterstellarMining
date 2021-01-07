@@ -19,4 +19,23 @@ public class Resource{
         this.price = price;
     }
 
+    public int getID() {
+        return ID;
+    }
+
+    public ResourceState getState() {
+        return state;
+    }
+
+    public ResourceRarity getRarity() {
+        return rarity;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public float getPrice() {
+        return price;
+    }
 }

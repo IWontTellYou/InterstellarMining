@@ -22,13 +22,12 @@ import sk.grest.game.database.DatabaseConstants;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Ship;
 
-public class LogInScreen implements Screen, DatabaseConnection.ConnectorEvent {
+public class LogInScreen implements Screen {
 
     private InterstellarMining game;
     private Stage stage;
 
     public LogInScreen(final InterstellarMining game) {
-
         Gdx.app.log("SCREEN_CHANGE", "Screen changed to LogIn");
 
         this.game = game;
@@ -39,13 +38,10 @@ public class LogInScreen implements Screen, DatabaseConnection.ConnectorEvent {
         inputPassword.setPasswordMode(true);
         Button submit = new Button(game.getUISkin());
 
-        Gdx.app.log("DEBUG", "Not here");
-
-        final LogInScreen screen = this;
         submit.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.getHandler().verifyPlayer(inputName.getText(), inputPassword.getText(), screen);
+                game.getHandler().verifyPlayer(inputName.getText(), inputPassword.getText(), game);
             }
         });
 
@@ -114,43 +110,4 @@ public class LogInScreen implements Screen, DatabaseConnection.ConnectorEvent {
 
     }
 
-    @Override
-    public void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData) {
-        switch (tableName) {
-            case DatabaseConstants.PlayerTable.TABLE_NAME:
-                if (tableData.size() == 1) {
-                    Gdx.app.postRunnable(new Runnable() {
-                        @Override
-                        public void run() {
-                            game.setScreen(new GameScreen(game));
-                        }
-                    });
-                }else if (tableData.size() == 0) {
-                    Gdx.app.log("SQL_DATA_ERROR", "No players with the same credentials");
-                }else {
-                    Gdx.app.log("SQL_DATA_ERROR", "Multiple players with the same credentials");
-                }
-                break;
-        }
-    }
-
-    @Override
-    public void onResultFailed(int requestCode, String message) {
-        Gdx.app.log("LOGIN_EXCEPTION", message);
-    }
-
-    @Override
-    public void onUpdateSuccess(int requestCode) {
-
-    }
-
-    @Override
-    public void onConnect() {
-
-    }
-
-    @Override
-    public void onConnectionFailed() {
-
-    }
 }

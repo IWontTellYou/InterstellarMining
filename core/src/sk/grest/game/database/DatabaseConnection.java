@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -30,7 +31,7 @@ public class DatabaseConnection {
         return instance;
     }
 
-    void connect(final ConnectorEvent eventListener) {
+    public void connect(final ConnectorEvent eventListener) {
         connectionThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -42,7 +43,7 @@ public class DatabaseConnection {
                             DATABASE_PASSWORD
                     );
                     eventListener.onConnect();
-                } catch (Exception e) {
+                } catch (SQLException | ClassNotFoundException e) {
                     eventListener.onConnectionFailed();
                 }
             }
@@ -51,24 +52,36 @@ public class DatabaseConnection {
         connectionThread.start();
     }
 
-    void getTable(final int requestCode, final String tableName, final ConnectorEvent eventListener) {
+    public void verifyPlayer(final int requestCode, final String username, final String password, final ConnectorEvent eventListener){
         taskThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
+
                     Statement statement = connection.createStatement();
-                    String sql = "SELECT * FROM " + tableName;
+                    String sql = "SELECT * FROM " + PlayerTable.TABLE_NAME + " WHERE "
+                            + PlayerTable.NAME + " = '" + username + "' AND " + PlayerTable.PASSWORD +
+                            " = '" + password + "'";
                     ResultSet result = statement.executeQuery(sql);
-                    ArrayList<Map<String, Object>> requestData = new ArrayList();
+                    ArrayList<Map<String, Object>> requestData = new ArrayList<>();
+
                     while (result.next()) {
                         Map<String, Object> rowData = new HashMap<>();
-                        for (int i = 0; i < result.getMetaData().getColumnCount(); i++) {
+                        for (int i = 1; i < result.getMetaData().getColumnCount()+1; i++) {
                             rowData.put(result.getMetaData().getColumnName(i), result.getObject(i));
                         }
                         requestData.add(rowData);
                     }
-                    eventListener.onFetchSuccess(requestCode, tableName, requestData);
-                } catch (Exception e) {
+
+                    // Gdx.app.log("SQL_QUERRY", requestData.get(0).toString());
+
+                    eventListener.
+                            onFetchSuccess
+                                    (requestCode,
+                                            PlayerTable.TABLE_NAME,
+                                            requestData);
+
+                } catch (SQLException e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
                 }
             }
@@ -77,7 +90,37 @@ public class DatabaseConnection {
         taskThread.start();
     }
 
-    void verifyPlayer(final int requestCode, final String tableName, final String username, final String password, final ConnectorEvent eventListener){
+    public void getTable(final int requestCode, final String tableName, final ConnectorEvent eventListener) {
+        taskThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Statement statement = connection.createStatement();
+                    String sql = "SELECT * FROM " + tableName;
+
+                    //Gdx.app.log("SQL_QUERRY", sql);
+
+                    ResultSet result = statement.executeQuery(sql);
+                    ArrayList<Map<String, Object>> requestData = new ArrayList<>();
+                    while (result.next()) {
+                        Map<String, Object> rowData = new HashMap<>();
+                        for (int i = 1; i < result.getMetaData().getColumnCount()+1; i++) {
+                            rowData.put(result.getMetaData().getColumnName(i), result.getObject(i));
+                        }
+                        requestData.add(rowData);
+                    }
+                    eventListener.onFetchSuccess(requestCode, tableName, requestData);
+                } catch (SQLException e) {
+                    // eventListener.onResultFailed(requestCode, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+        taskThread.setDaemon(true);
+        taskThread.start();
+    }
+
+    public void getTableWherePlayer(final int requestCode, final String tableName, final int playerID, final ConnectorEvent eventListener){
         taskThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -85,27 +128,21 @@ public class DatabaseConnection {
 
                     Statement statement = connection.createStatement();
                     String sql = "SELECT * FROM " + tableName + " WHERE "
-                            + PlayerTable.NAME + " = '" + username + "' AND "
-                            + PlayerTable.PASSWORD + " = '" + password + "'";
+                            + DatabaseConstants.PLAYER_ID + " = " + playerID;
                     ResultSet result = statement.executeQuery(sql);
-
-                    Gdx.app.log("SQL_QUERRY", sql);
-
-                    ArrayList<Map<String, Object>> requestData = new ArrayList();
+                    ArrayList<Map<String, Object>> requestData = new ArrayList<>();
 
                     while (result.next()) {
                         Map<String, Object> rowData = new HashMap<>();
-                        for (int i = 1; i < result.getMetaData().getColumnCount(); i++) {
+                        for (int i = 1; i < result.getMetaData().getColumnCount()+1; i++) {
                             rowData.put(result.getMetaData().getColumnName(i), result.getObject(i));
                         }
                         requestData.add(rowData);
                     }
 
-                    Gdx.app.log("LIST_OF_PLAYERS", requestData.toString());
-
                     eventListener.onFetchSuccess(requestCode, tableName, requestData);
 
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
                 }
             }
@@ -114,7 +151,7 @@ public class DatabaseConnection {
         taskThread.start();
     }
 
-    void addRow(final int requestCode, final String tableName, final Map<String, Object> data, final ConnectorEvent eventListener) {
+    public void addRow(final int requestCode, final String tableName, final Map<String, Object> data, final ConnectorEvent eventListener) {
         taskThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -126,12 +163,15 @@ public class DatabaseConnection {
                         keyNames.append(s).append(",");
                         keyValues.append(data.get(s)).append(",");
                     }
-                    keyNames.deleteCharAt(keyNames.length() - 1);
-                    keyNames.deleteCharAt(keyNames.length() - 1);
-                    String sql = "INSERT INTO " + tableName + "(" + keyNames.toString() + ") VALUE (" + keyValues.toString() + ")";
-                    stm.executeQuery(sql);
+                    keyNames = new StringBuilder(keyNames.substring(0, keyNames.length() - 1));
+                    keyValues = new StringBuilder(keyValues.substring(0, keyValues.length() - 1));
+                    String sql = "INSERT INTO " + tableName + "(" + keyNames + ") VALUE (" + keyValues + ")";
+
+                    Gdx.app.log("SQL_QUERRY", sql);
+
+                    stm.executeUpdate(sql);
                     eventListener.onUpdateSuccess(requestCode);
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
                 }
             }
@@ -140,7 +180,7 @@ public class DatabaseConnection {
         taskThread.start();
     }
 
-    void updateRow(final int requestCode, final int id, final String tableName, final Map<String, Object> data, final ConnectorEvent eventListener) {
+    public void updateRow(final int requestCode, final int id, final String tableName, final Map<String, Object> data, final ConnectorEvent eventListener) {
         taskThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -157,7 +197,7 @@ public class DatabaseConnection {
                     String sql = "UPDATE " + tableName + " SET (" + keyNames.toString() + ") VALUE (" + keyValues.toString() + ") WHERE id = " + id;
                     stm.executeQuery(sql);
                     eventListener.onUpdateSuccess(requestCode);
-                } catch (Exception e) {
+                } catch (SQLException e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
                 }
             }
@@ -166,15 +206,15 @@ public class DatabaseConnection {
         taskThread.start();
     }
 
-    void disconnect() {
+    public void disconnect() {
         try {
             if (taskThread.isAlive())
                 taskThread.interrupt();
             if (connectionThread.isAlive())
                 taskThread.interrupt();
             connection.close();
-        } catch (Exception e) {
-
+        } catch (SQLException e) {
+            Gdx.app.log("SQL_ERROR", e.getMessage());
         }
     }
 

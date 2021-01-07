@@ -5,28 +5,17 @@ import java.util.ArrayList;
 public class Planet {
 
     private int ID;
-    private PlanetSystem system;
     private String name;
-    private float size;
     private float distance;
     private boolean habitable;
     private String info;
     private ArrayList<Resource> resources;
+    private String assetId;
 
-    public Planet(int ID, PlanetSystem system, String name, float size, float distance, boolean habitable, String info, ArrayList<Resource> resources) {
+    public Planet(int ID, String name, String assetId, float distance, boolean habitable, String info, ArrayList<Resource> resources) {
         this.ID = ID;
-        this.system = system;
         this.name = name;
-        this.size = size;
-        this.distance = distance;
-        this.habitable = habitable;
-        this.info = info;
-        this.resources = resources;
-    }
-
-    public Planet(String name, float size, float distance, boolean habitable, String info, ArrayList<Resource> resources) {
-        this.name = name;
-        this.size = size;
+        this.assetId = assetId;
         this.distance = distance;
         this.habitable = habitable;
         this.info = info;
@@ -37,16 +26,12 @@ public class Planet {
         return ID;
     }
 
-    public PlanetSystem getSystem() {
-        return system;
-    }
-
     public String getName() {
         return name;
     }
 
-    public float getSize() {
-        return size;
+    public String getAssetId() {
+        return assetId;
     }
 
     public float getDistance() {

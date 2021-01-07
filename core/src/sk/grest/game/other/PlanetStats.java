@@ -18,7 +18,7 @@ public class PlanetStats {
     public PlanetStats(InterstellarMining game, Planet planet) {
 
         this.nameLabel = new Label(planet.getName(), game.getUISkin());
-        this.massLabel = new Label(String.valueOf(planet.getSize()), game.getUISkin());
+        this.massLabel = new Label(planet.getAssetId(), game.getUISkin());
         this.resourcesLabel = new Label(planet.toString(), game.getUISkin());
 
         game.getUISkin().getFont("default-font").getData().scale(0.25f);

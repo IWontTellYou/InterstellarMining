@@ -35,15 +35,13 @@ public class GameScreen implements Screen {
     private Stage stage;
 
     BitmapFont font;
-
-    private Player player;
-
     private PlanetStats planetStats;
 
     public GameScreen(final InterstellarMining game) {
 
         this.game = game;
-        this.player = new Player("STELLARIS");
+
+        Gdx.app.log("SCREEN_CHANGE", "Screen changed to Game");
 
         // LAYOUT DEFINING
 
@@ -51,14 +49,7 @@ public class GameScreen implements Screen {
         table.setFillParent(true);
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        ArrayList<Resource> resources = new ArrayList<>();
-        resources.add(new Resource(0, "Silicon", ResourceState.SOLID, ResourceRarity.COMMON, 0.28f));
-        resources.add(new Resource(0, "Aluminium", ResourceState.SOLID, ResourceRarity.COMMON, 0.08f));
-        resources.add(new Resource(0, "Iron", ResourceState.SOLID, ResourceRarity.COMMON, 0.05f));
-
-
-        Planet planet = new Planet("Earth", 1, 0, true, "", resources);
-        planetStats = new PlanetStats(game, planet);
+        planetStats = new PlanetStats(game, game.getPlanetByID(1));
         planetStats.getTable().setVisible(false);
 
 
@@ -194,7 +185,7 @@ public class GameScreen implements Screen {
                 .width(btnWidth)
                 .height(btnHeight);
 
-        Label planetName = new Label(planet.getName(), game.getUISkin());
+        Label planetName = new Label(game.getPlanetByName("Earth").getName(), game.getUISkin());
         planetName.setAlignment(Align.center);
         table.add(planetName)
                 .align(Align.top)
@@ -267,25 +258,26 @@ public class GameScreen implements Screen {
     public void render(float delta) {
         ScreenDeafults.clear();
 
-        for (Ship s : player.getShips()) {
-            s.update(delta);
+        if(game.isDatabaseInitialized()) {
+            for (Ship s : game.getPlayer().getShips()) {
+                s.update(delta);
+            }
+
+            // START OF RENDERING SPRITES
+            game.getBatch().begin();
+
+            // STAGE RENDERING
+            stage.act(delta);
+            stage.draw();
+
+            /*
+            font.setColor(Color.WHITE);
+            font.draw(game.getBatch(), Gdx.input.getX() + " " + Gdx.input.getY(), Gdx.graphics.getWidth()/2f, 100);
+            */
+
+            // END OF RENDERING SPRITES
+            game.getBatch().end();
         }
-
-        // START OF RENDERING SPRITES
-        game.getBatch().begin();
-
-        // STAGE RENDERING
-        stage.act(delta);
-        stage.draw();
-
-        /*
-        font.setColor(Color.WHITE);
-        font.draw(game.getBatch(), Gdx.input.getX() + " " + Gdx.input.getY(), Gdx.graphics.getWidth()/2f, 100);
-        */
-
-        // END OF RENDERING SPRITES
-        game.getBatch().end();
-
     }
 
     //

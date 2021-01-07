@@ -33,6 +33,8 @@ public class MainMenuScreen implements Screen {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
+        Gdx.app.log("SCREEN_CHANGE", "Screen changed to MainMenu");
+
         // MENU BUTTONS INITIALIZATION
 
         Image title = new Image(game.getSpriteSkin(), "title");
@@ -41,9 +43,7 @@ public class MainMenuScreen implements Screen {
         btnPlay.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("INPUT", "Play button clicked!");
                 game.setScreen(new LogInScreen(game));
-                Gdx.app.log("SCREEN_CHANGE", "Screen changed from MainMenu to LogIn");
             }
         });
 
@@ -52,7 +52,6 @@ public class MainMenuScreen implements Screen {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // OPENS OPTIONS WINDOW
-                Gdx.app.log("INPUT", "Options button clicked!");
             }
         });
 
@@ -60,7 +59,6 @@ public class MainMenuScreen implements Screen {
         btnExit.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("INPUT", "Exit button clicked!");
                 System.exit(0);
             }
         });
@@ -125,6 +123,7 @@ public class MainMenuScreen implements Screen {
     public void dispose() {
         game.getBatch().dispose();
         stage.dispose();
+
     }
 
     @Override
