@@ -30,6 +30,7 @@ import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
 import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.Ship;
+import sk.grest.game.entities.TravelPlan;
 import sk.grest.game.entities.enums.ResourceRarity;
 import sk.grest.game.entities.enums.ResourceState;
 import sk.grest.game.entities.enums.ShipState;
@@ -37,6 +38,7 @@ import sk.grest.game.screens.GameScreen;
 import sk.grest.game.screens.MainMenuScreen;
 
 import static sk.grest.game.database.DatabaseConstants.*;
+import static sk.grest.game.entities.enums.ShipState.*;
 
 public class InterstellarMining extends Game implements DatabaseConnection.ConnectorEvent {
 
@@ -213,7 +215,7 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 
 				dataInit.setPlayerTable();
 				if(dataInit.isPlanetResourceTable())
-					handler.getTable(ShipInFleetTable.TABLE_NAME, this);
+					handler.getTableWherePlayer(ShipInFleetTable.TABLE_NAME, player.getID(),this);
 				break;
 			case ShipTable.TABLE_NAME:
 				for (Map<String, Object> data : tableData) {
@@ -333,10 +335,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 					else
 						destination = null;
 
-					Timestamp taskTime = null;
-					if(data.get(ShipInFleetTable.TASK_TIME) != null)
-						taskTime = new Timestamp((Long) data.get(ShipInFleetTable.TASK_TIME));
-
 					Ship ship = new Ship(
 							s.getId(),
 							s.getName(),
@@ -348,12 +346,37 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 							s.getFuelEficiency(),
 							s.getPrice(),
 							destination,
-							ShipState.getState((Integer) data.get(ShipInFleetTable.STATE_ID)),
-							taskTime,
+							getState((Integer) data.get(ShipInFleetTable.STATE_ID)),
+							null,
 							(Integer) data.get(ShipInFleetTable.UPGRADE_LEVEL)
 					);
 
+					Gdx.app.log("SHIP", (Long) Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME + ""))+"");
+
+					Timestamp taskTime = null;
+					if (data.get(ShipInFleetTable.TASK_TIME) != null && destination != null) {
+						taskTime = new Timestamp(Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME)));
+						TravelPlan plan = new TravelPlan(destination, ship, taskTime);
+
+						switch (plan.getCurrentState()){
+							case AT_THE_BASE:
+								ship.resetDestination();
+								break;
+							case TRAVELLING_OUT:
+								ship.setState(TRAVELLING_OUT);
+								break;
+							case MINING:
+								ship.setState(MINING);
+								break;
+							case TRAVELLING_BACK:
+								ship.setState(TRAVELLING_BACK);
+								break;
+						}
+					}
 					player.getShips().add(ship);
+
+					Gdx.app.log(ship.getName(), ship.getTaskTime() + " " + ship.getState() + " " + ship.getCurrentDestination());
+
 				}
 
 				Gdx.app.log(ShipInFleetTable.TABLE_NAME, "INITIALIZATION DONE!");

@@ -38,4 +38,15 @@ public class Resource{
     public float getPrice() {
         return price;
     }
+
+    @Override
+    public String toString() {
+        return "Resource{" +
+                "ID=" + ID +
+                ", state=" + state +
+                ", rarity=" + rarity +
+                ", name='" + name + '\'' +
+                ", price=" + price +
+                '}';
+    }
 }

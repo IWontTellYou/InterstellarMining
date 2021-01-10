@@ -1,11 +1,12 @@
 package sk.grest.game.entities;
 
+import com.badlogic.gdx.scenes.scene2d.Stage;
+
 import java.sql.Time;
 import java.sql.Timestamp;
 
 import sk.grest.game.entities.enums.ShipState;
 
-import static sk.grest.game.defaults.GameConstants.DEFAULT_MINING_TIME;
 import static sk.grest.game.entities.enums.ShipState.AT_THE_BASE;
 import static sk.grest.game.entities.enums.ShipState.MINING;
 import static sk.grest.game.entities.enums.ShipState.TRAVELLING_BACK;
@@ -33,11 +34,13 @@ public class Ship {
     private Planet currentDestination;
     private ShipState state;
 
-    private Timestamp taskTime;
+    private Timestamp taskStart;
+
+    private TravelPlan travelPlan;
 
     public Ship(int id, String name, Resource carriage, float miningSpeed, float travelSpeed, float resourceCapacity,
                 float fuelCapacity, float fuelEficiency, float price, Planet currentDestination,
-                ShipState state, Timestamp taskTime, float upgradeLevel) {
+                ShipState state, Timestamp taskStart, float upgradeLevel) {
         this.id = id;
         this.name = name;
         this.carriage = carriage;
@@ -49,43 +52,63 @@ public class Ship {
         this.price = price;
         this.currentDestination = currentDestination;
         this.state = state;
-        this.taskTime = taskTime;
+        this.taskStart = taskStart;
         this.upgradeLevel = upgradeLevel;
+
+        if(currentDestination != null && taskStart != null)
+            this.travelPlan = new TravelPlan(currentDestination, this, taskStart);
+        else
+            this.travelPlan = null;
+
     }
 
     public void update(float delta){
 
-        switch (state){
+ /*       switch (travelPlan.getCurrentState()){
 
             case AT_THE_BASE:
                 break;
 
             case TRAVELLING_OUT:
-                if (taskTime.before(new Timestamp(System.currentTimeMillis()))){
+                if (taskStart.before(new Timestamp(System.currentTimeMillis()))){
                     state = MINING;
-                    taskTime = new Timestamp(System.currentTimeMillis() + (long) (resourceCapacity * DEFAULT_MINING_TIME / miningSpeed));
+                    taskStart = new Timestamp(System.currentTimeMillis() + (long) (resourceCapacity * DEFAULT_MINING_TIME / miningSpeed));
                 }
                 break;
 
             case MINING:
-                if(taskTime.before(new Timestamp(System.currentTimeMillis()))) {
+                if(taskStart.before(new Timestamp(System.currentTimeMillis()))) {
                     state = TRAVELLING_BACK;
-                    taskTime = new Timestamp(System.currentTimeMillis() + (long) (currentDestination.getDistance() / travelSpeed));
+                    taskStart = new Timestamp(System.currentTimeMillis() + (long) (currentDestination.getDistance() / travelSpeed));
                 }
                 break;
 
             case TRAVELLING_BACK:
-                if(taskTime.before(new Timestamp(System.currentTimeMillis()))){
+                if(taskStart.before(new Timestamp(System.currentTimeMillis()))){
                     state = AT_THE_BASE;
                 }
                 break;
         }
+
+
+  */
+
     }
 
     public void setDestination(Planet destination){
         currentDestination = destination;
-        taskTime = new Timestamp(System.currentTimeMillis() + (long) (destination.getDistance() / travelSpeed));
+        taskStart = new Timestamp(System.currentTimeMillis() + (long) (destination.getDistance() / travelSpeed));
         state = TRAVELLING_OUT;
+    }
+
+    public void resetDestination(){
+        currentDestination = null;
+        taskStart = null;
+        state = AT_THE_BASE;
+    }
+
+    public void setState(ShipState state){
+        this.state = state;
     }
 
     public void upgrade(){
@@ -142,7 +165,7 @@ public class Ship {
     }
 
     public Timestamp getTaskTime() {
-        return taskTime;
+        return taskStart;
     }
 
     public float getUpgradeLevel() {

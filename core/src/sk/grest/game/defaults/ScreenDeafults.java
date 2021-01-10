@@ -8,7 +8,12 @@ import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
+import java.text.SimpleDateFormat;
+import java.util.Locale;
+
 public class ScreenDeafults {
+
+    public static final SimpleDateFormat timeLeftFormat = new SimpleDateFormat("hh:MM:ss", Locale.getDefault());
 
     public static final Vector2 BOTTOM_LEFT = new Vector2(0, 0);
     public static final Vector2 TOP_LEFT = new Vector2(0, Gdx.graphics.getHeight());

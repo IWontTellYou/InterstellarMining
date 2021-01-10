@@ -2,7 +2,6 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -14,24 +13,39 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.util.ArrayList;
+
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.listeners.OnPlanetChangedListener;
+import sk.grest.game.dialogs.ShipListDialog;
+import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Planet;
 import sk.grest.game.entities.Ship;
 import sk.grest.game.other.PlanetStats;
 
-public class GameScreen implements Screen, OnPlanetChangedListener {
+public class GameScreen implements Screen, OnStatsChangedListener {
+
+    // TODO REGISTER SCREEN
+    // TODO SHIP LIST + UPGRADE WINDOW
+    // TODO SHIP SHOP
+    // TODO SEND SHIP AWAY WINDOW (BY CLICKING ON THE PLANET)
+    // TODO PLANET SYSTEM LIST
+    // TODO FIX PLANET STATS VIEW
+    // TODO FIX FONT SIZE (KEEPS GETTING BIGGER ALSO IS LOW QUALITY)
+
+    private static final String BASE_PLANET_NAME = "Earth";
 
     private InterstellarMining game;
     private Stage stage;
 
-    private BitmapFont font;
-
     private PlanetStats planetStats;
 
     private Button planetBtn;
+    private Label planetName;
+
+    private Planet base;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -45,24 +59,22 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
         table.setFillParent(true);
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        int planetSystemId = 0;
+        planetStats = new PlanetStats(game, this, game.getPlanetSystemByID(1));
+        // planetStats.getTable().setVisible(false);
 
-        planetStats = new PlanetStats(game, this, game.getPlanetSystemByID(1).getPlanets());
-        planetStats.getTable().setVisible(false);
-
+        base = game.getPlanetByName(BASE_PLANET_NAME);
 
         //table.setDebug(true);
         //table.debug(Table.Debug.all);
 
         // MENU LAYOUT INITIALIZED
 
-        //PLANET STATS INITIALIZED
+        // PLANET STATS INITIALIZED
 
-  //      TooltipManager tooltipManager = new TooltipManager();
- //       final Tooltip<Table> stats = new Tooltip<>(planetStats);
- //       tooltipManager.enter(stats);
- //       tooltipManager.instant();
-
+        // TooltipManager tooltipManager = new TooltipManager();
+        // final Tooltip<Table> stats = new Tooltip<>(planetStats);
+        // tooltipManager.enter(stats);
+        // tooltipManager.instant();
 
         stage = new Stage(new ScreenViewport());
 
@@ -71,26 +83,23 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
-                Gdx.app.log("IS_OVER", Boolean.toString(isOver()));
-
-                if(isOver()){
+                if(isOver(event.getStageX(), event.getStageY())){
                     game.setScreen(new MainMenuScreen(game));
                 }
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if(isOver()){
-
+                if(isOver(event.getStageX(), event.getStageY())){
+                    // ACTION
                 }
             }
 
-            @Override
-            public boolean isOver(Actor actor, float x, float y) {
+            public boolean isOver(float x, float y){
                 Vector2 mouse = new Vector2(x, y);
                 return mouse.dst(ScreenDeafults.TOP_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
+
         });
 
         final Button systemsList = new Button(game.getSpriteSkin(), "right_top_button", "right_top_button_pressed");
@@ -121,50 +130,44 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
         leftDown.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
-                if(isOver()){
+                if(isOver(event.getStageX(), event.getStageY())){
                     planetStats.previousPlanet();
                 }
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if(isOver()){
-
+                if(isOver(event.getStageX(), event.getStageY())){
+                    // ACTION
                 }
             }
 
-            @Override
-            public boolean isOver(Actor actor, float x, float y) {
+            public boolean isOver(float x, float y) {
                 Vector2 mouse = new Vector2(x, y);
                 return mouse.dst(ScreenDeafults.BOTTOM_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
+
         });
 
         Button rightDown = new Button(game.getSpriteSkin(), "right_bottom_button", null);
         rightDown.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Vector2 mouse = new Vector2(event.getStageX(), event.getStageY());
-                if(mouse.dst(ScreenDeafults.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth()){
+                if(isOver(event.getStageX(), event.getStageY())){
                     planetStats.nextPlanet();
                 }
             }
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                if(isOver()){
-
+                if(isOver(event.getStageX(), event.getStageY())){
+                    // ACTION
                 }
             }
 
-            @Override
-            public boolean isOver(Actor actor, float x, float y) {
+            public boolean isOver(float x, float y) {
                 Vector2 mouse = new Vector2(x, y);
-                if(mouse.dst(ScreenDeafults.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth()){
-                    return true;
-                }
-                return false;
+                return mouse.dst(ScreenDeafults.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
         });
 
@@ -173,7 +176,9 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // ADD ACTION
-
+                ShipListDialog shipListDialog =
+                        new ShipListDialog("", game.getUISkin(), game.getPlayer().getShips());
+                shipListDialog.show(stage);
             }
         });
 
@@ -182,7 +187,6 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // ADD ACTION
-
             }
         });
 
@@ -190,8 +194,7 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
         planetBtn.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(new Vector2(event.getStageX(), event.getStageY()).dst(ScreenDeafults.MIDDLE)
-                        < planetBtn.getButton().getWidth()/2){
+                if(isOver(event.getStageX(), event.getStageY())){
                     /*
                     Dialog stats = new Dialog("", game.getUISkin());
                     stats.add(planetStats);
@@ -210,13 +213,23 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
 
             @Override
             public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
-                //planetStats.getTable().setVisible(true);
+                if(isOver(event.getStageX(), event.getStageY())){
+
+                }
             }
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                //planetStats.getTable().setVisible(false);
+                if(isOver(event.getStageX(), event.getStageY())){
+
+                }
             }
+
+            public boolean isOver(float x, float y){
+                Vector2 mouse = new Vector2(x, y);
+                return mouse.dst(ScreenDeafults.MIDDLE) < planetBtn.getButton().getWidth()/2;
+            }
+
         });
         //planet.getButton().addListener(stats);
 
@@ -237,7 +250,7 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
                 .width(btnWidth)
                 .height(btnHeight);
 
-        Label planetName = new Label(game.getPlanetByName("Earth").getName(), game.getUISkin());
+        planetName = new Label(planetStats.getSystemName(), game.getUISkin());
         planetName.setAlignment(Align.center);
         table.add(planetName)
                 .align(Align.top)
@@ -299,9 +312,6 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
 
         stage.addActor(container);
 
-        font = new BitmapFont(Gdx.files.internal("fonts\\space.fnt"),
-                Gdx.files.internal("fonts\\space.png"), false);
-
         Gdx.input.setInputProcessor(stage);
 
     }
@@ -354,5 +364,10 @@ public class GameScreen implements Screen, OnPlanetChangedListener {
     @Override
     public void onPlanetChanged(Planet planet) {
         planetBtn.setImageUp(planet.getAssetId());
+    }
+
+    @Override
+    public void onPlanetSystemChanged(PlanetSystem system) {
+        planetName.setText(system.getName());
     }
 }

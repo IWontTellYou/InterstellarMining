@@ -3,41 +3,77 @@ package sk.grest.game.other;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.listeners.OnPlanetChangedListener;
+import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.entities.Resource;
+import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.entities.Planet;
 
 public class PlanetStats {
 
     private Table planetStats;
+
     private String planetImage;
+    private String systemName;
 
     private Label nameLabel;
-    private Label resourcesLabel;
+    private Label[] resourcesLabel;
 
     private ArrayList<Planet> planetSystem;
     private int currentPlanetIndex;
 
-    private OnPlanetChangedListener listener;
+    private InterstellarMining game;
+    private OnStatsChangedListener listener;
 
-    public PlanetStats(InterstellarMining game, OnPlanetChangedListener listener, ArrayList<Planet> planetSystem, int currentPlanetIndex) {
+    public PlanetStats(InterstellarMining game, OnStatsChangedListener listener, PlanetSystem system, int currentPlanetIndex) {
+
+        this.game = game;
+        this.listener = listener;
 
         this.currentPlanetIndex = currentPlanetIndex;
-        this.planetSystem = planetSystem;
+        this.planetSystem = system.getPlanets();
 
-        this.nameLabel = new Label(planetSystem.get(currentPlanetIndex).getName(), game.getUISkin());
-        this.resourcesLabel = new Label(planetSystem.get(currentPlanetIndex).toString(), game.getUISkin());
+        this.systemName = system.getName();
+
+        this.nameLabel = new Label("", game.getUISkin());
+
+        // TODO IF SCALED, MAKES TEXT BIGGER EVERYTIME I RELOGIN (FIX)
+        game.getUISkin().getFont("default-font").getData();
+
+        planetStats = new Table();
+        resetTable();
+
         this.planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
 
-        game.getUISkin().getFont("default-font").getData().scale(0.25f);
+    }
+    public PlanetStats(InterstellarMining game, OnStatsChangedListener listener, PlanetSystem system) {
+        this(game, listener, system, 0);
+    }
 
-        this.planetStats = new Table();
+    public void changePlanetSystem(PlanetSystem system){
+        changePlanetSystem(system, 0);
+    }
+    public void changePlanetSystem(PlanetSystem system, int currentPlanetIndex){
+        this.planetSystem = system.getPlanets();
+        this.systemName = system.getName();
+        this.currentPlanetIndex = currentPlanetIndex;
+        resetTable();
+        planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
+    }
+
+    public void resetTable(){
 
         float cellWidth = Gdx.graphics.getWidth()/5f;
         float cellHeight = Gdx.graphics.getHeight()/20f;
+
+        planetStats.clearChildren();
+
+        this.nameLabel.setText(planetSystem.get(currentPlanetIndex).getName());
 
         planetStats.add(new Label("Name:", game.getUISkin()))
                 .width(cellWidth).height(cellHeight);
@@ -46,56 +82,53 @@ public class PlanetStats {
 
         planetStats.add(new Label("Resources:", game.getUISkin()))
                 .width(cellWidth).height(cellHeight);
-        planetStats.add(resourcesLabel)
-                .width(cellWidth).height(cellHeight).row();
 
-    }
-    public PlanetStats(InterstellarMining game, OnPlanetChangedListener listener, ArrayList<Planet> planetSystem) {
-        this(game, listener, planetSystem, 0);
+        ArrayList<Resource> resources = planetSystem.get(currentPlanetIndex).getResources();
+        this.resourcesLabel = new Label[resources.size()];
+
+        resourcesLabel[0] = new Label(resources.get(0).getName(), game.getUISkin());
+        planetStats.add(resourcesLabel[0])
+                .width(cellWidth).height(cellHeight).
+                row();
+
+        for (int i = 1; i < resourcesLabel.length; i++) {
+            resourcesLabel[i] = new Label(resources.get(i).getName(), game.getUISkin());
+            planetStats.add(resourcesLabel[i])
+                    .width(cellWidth).height(cellHeight).
+                    align(Align.right).
+                    colspan(2).row();
+        }
     }
 
-    public void changePlanetSystem(ArrayList<Planet> planetSystem){
-        changePlanetSystem(planetSystem, 0);
+    public Table getTable(){
+        return planetStats;
     }
-    public void changePlanetSystem(ArrayList<Planet> planetSystem, int currentPlanetIndex){
-        this.currentPlanetIndex = currentPlanetIndex;
-        nameLabel.setText(planetSystem.get(currentPlanetIndex).getName());
-        resourcesLabel.setText(planetSystem.get(currentPlanetIndex).getResources().toString());
-        planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
+
+    public String getSystemName(){
+        return systemName;
     }
 
     public void nextPlanet(){
         if(currentPlanetIndex+1 < planetSystem.size()){
             currentPlanetIndex++;
-            nameLabel.setText(planetSystem.get(currentPlanetIndex).getName());
-            resourcesLabel.setText(planetSystem.get(currentPlanetIndex).getResources().toString());
             planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
             listener.onPlanetChanged(planetSystem.get(currentPlanetIndex));
-
-            Gdx.app.log("PLANET", planetSystem.get(currentPlanetIndex).getName());
+            resetTable();
         }
     }
     public void previousPlanet(){
         if(currentPlanetIndex-1 >= 0){
             currentPlanetIndex--;
-            nameLabel.setText(planetSystem.get(currentPlanetIndex).getName());
-            resourcesLabel.setText(planetSystem.get(currentPlanetIndex).getResources().toString());
             planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
             listener.onPlanetChanged(planetSystem.get(currentPlanetIndex));
-
-            Gdx.app.log("PLANET", planetSystem.get(currentPlanetIndex).getName());
+            resetTable();
         }
     }
 
     public String getName() {
         return nameLabel.getText().toString();
     }
-    public String getResources() {
-        return resourcesLabel.getText().toString();
-    }
-    public Table getTable(){
-        return planetStats;
-    };
+
     public String getPlanetImage() {
         return planetImage;
     }
