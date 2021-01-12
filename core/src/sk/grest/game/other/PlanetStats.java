@@ -18,7 +18,7 @@ public class PlanetStats {
 
     private Table planetStats;
 
-    private String planetImage;
+    private Planet currentPlanet;
     private String systemName;
 
     private Label nameLabel;
@@ -48,7 +48,7 @@ public class PlanetStats {
         planetStats = new Table();
         resetTable();
 
-        this.planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
+        this.currentPlanet = planetSystem.get(currentPlanetIndex);
 
     }
     public PlanetStats(InterstellarMining game, OnStatsChangedListener listener, PlanetSystem system) {
@@ -63,7 +63,7 @@ public class PlanetStats {
         this.systemName = system.getName();
         this.currentPlanetIndex = currentPlanetIndex;
         resetTable();
-        planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
+        currentPlanet = planetSystem.get(currentPlanetIndex);
     }
 
     public void resetTable(){
@@ -111,7 +111,7 @@ public class PlanetStats {
     public void nextPlanet(){
         if(currentPlanetIndex+1 < planetSystem.size()){
             currentPlanetIndex++;
-            planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
+            currentPlanet = planetSystem.get(currentPlanetIndex);
             listener.onPlanetChanged(planetSystem.get(currentPlanetIndex));
             resetTable();
         }
@@ -119,7 +119,7 @@ public class PlanetStats {
     public void previousPlanet(){
         if(currentPlanetIndex-1 >= 0){
             currentPlanetIndex--;
-            planetImage = planetSystem.get(currentPlanetIndex).getAssetId();
+            currentPlanet = planetSystem.get(currentPlanetIndex);
             listener.onPlanetChanged(planetSystem.get(currentPlanetIndex));
             resetTable();
         }
@@ -129,7 +129,7 @@ public class PlanetStats {
         return nameLabel.getText().toString();
     }
 
-    public String getPlanetImage() {
-        return planetImage;
+    public Planet getCurrentPlanet() {
+        return currentPlanet;
     }
 }

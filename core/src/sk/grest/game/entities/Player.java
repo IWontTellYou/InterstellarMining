@@ -1,6 +1,9 @@
 package sk.grest.game.entities;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
+
+import sk.grest.game.entities.enums.ShipState;
 
 import static sk.grest.game.defaults.GameConstants.*;
 
@@ -15,6 +18,7 @@ public class Player {
 
     private ArrayList<Ship> ships;
     private ArrayList<PlanetSystem> systemsDiscovered;
+    private ArrayList<Resource> resourcesAtBase;
 
     public Player(int ID, String name, String password, String email, int level, int experience) {
         this.ID = ID;
@@ -26,14 +30,28 @@ public class Player {
 
         this.ships = new ArrayList<>();
         this.systemsDiscovered = new ArrayList<>();
+        this.resourcesAtBase = new ArrayList<>();
     }
 
     public ArrayList<Ship> getShips() {
         return ships;
     }
-
     public ArrayList<PlanetSystem> getSystemsDiscovered() {
         return systemsDiscovered;
+    }
+    public ArrayList<Resource> getResourcesAtBase() {
+        return resourcesAtBase;
+    }
+
+    public ArrayList<Ship> getShipsAtBase(){
+        ArrayList<Ship> ships = new ArrayList<>();
+
+        for (Ship s : this.ships) {
+            if(s.getState().equals(ShipState.AT_THE_BASE))
+                ships.add(s);
+        }
+
+        return ships;
     }
 
     public int getID() {
@@ -71,4 +89,11 @@ public class Player {
                 ", experience=" + experience +
                 '}';
     }
+
+    public void update(float delta){
+        for (Ship s : ships) {
+            s.update(delta);
+        }
+    }
+
 }

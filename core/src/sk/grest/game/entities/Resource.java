@@ -1,5 +1,7 @@
 package sk.grest.game.entities;
 
+import com.badlogic.gdx.Gdx;
+
 import sk.grest.game.entities.enums.ResourceRarity;
 import sk.grest.game.entities.enums.ResourceState;
 
@@ -10,8 +12,9 @@ public class Resource{
     private ResourceRarity rarity;
     private String name;
     private float price;
+    private float amount;
 
-    public Resource(int ID, String name, ResourceState state, ResourceRarity rarity, float price) {
+    public Resource(int ID, String name, ResourceState state, ResourceRarity rarity, float price, float amount) {
         this.ID = ID;
         this.state = state;
         this.rarity = rarity;
@@ -39,14 +42,26 @@ public class Resource{
         return price;
     }
 
+    public void addAmount(Resource resource){
+        if(resource.name.equals(this.name)){
+            this.amount += resource.amount;
+            resource.amount = 0;
+        }else
+            Gdx.app.log("ERROR", "Cant add up two different resources");
+    }
+
+    public void subtractAmount(float amount){
+        this.amount -= amount;
+    }
+
+    public void setAmount(float amount){
+        this.amount = amount;
+    }
+
     @Override
     public String toString() {
-        return "Resource{" +
-                "ID=" + ID +
-                ", state=" + state +
-                ", rarity=" + rarity +
-                ", name='" + name + '\'' +
-                ", price=" + price +
-                '}';
+
+        return name + " (" + rarity.toString() + ")";
+
     }
 }

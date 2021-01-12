@@ -34,5 +34,16 @@ public class ScreenDeafults {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
     }
 
+    public static String getTimeFormat(long time){
+        time /= 1000;
+        int hours = (int) time / 3600;
+        int remainder = (int) time - hours * 3600;
+        int mins = remainder / 60;
+        remainder = remainder - mins * 60;
+        int secs = remainder;
+
+        return ((hours<10) ? "0" : "") + hours + ":" + ((mins<10) ? "0" : "") + mins + ":" + ((secs<10) ? "0" : "") +secs;
+    }
+
 
 }

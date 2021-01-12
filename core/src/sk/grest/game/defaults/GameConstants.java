@@ -9,8 +9,7 @@ public class GameConstants {
 
     // TIME CONSTANTS
 
-    public static final float MILISECOND = 1000f;
-    public static final float SECOND = 1f * MILISECOND;
+    public static final float SECOND = 1000f;
     public static final float MINUTE = 60f * SECOND;
     public static final float HOUR = 60f * MINUTE;
     public static final float DAY = 24f * HOUR;

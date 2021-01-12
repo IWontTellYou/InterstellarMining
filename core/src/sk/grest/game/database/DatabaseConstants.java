@@ -99,10 +99,30 @@ public class DatabaseConstants {
         public static final String ID = "id";
         public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
         public static final String SHIP_ID = "ship_id";
+        public static final String RESOURCE_ID = "resource_id";
         public static final String UPGRADE_LEVEL = "upgrade_level";
         public static final String TASK_TIME = "task_time";
         public static final String DESTINATION_ID = "destination_id";
         public static final String STATE_ID = "state_id";
+        public static final String AMOUNT = "amount";
+    }
+
+    /*
+    public static final class ResourceInShipTable{
+        public static final String TABLE_NAME = "resource_in_ship";
+        public static final String ID = "id";
+        public static final String SHIP_ID = "ship_fleet_id";
+        public static final String RESOURCE_ID = "resource_id";
+        public static final String AMOUNT = "amount";
+    }
+    */
+
+    public static final class ResourceAtBase{
+        public static final String TABLE_NAME = "resource_at_base";
+        public static final String ID = "id";
+        public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
+        public static final String RESOURCE_ID = "resource_id";
+        public static final String AMOUNT = "amount";
     }
 
     public static final class ResearchTable{

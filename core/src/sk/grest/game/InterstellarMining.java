@@ -152,6 +152,13 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 		}
 		return null;
 	}
+	public Resource getResourceByID(int id){
+		for (Resource r : resources) {
+			if(r.getID() == id)
+				return r;
+		}
+		return null;
+	}
 
 	// Get by name methods
 	public Ship getShipByName(String name){
@@ -182,7 +189,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 	public void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData) {
 		switch (tableName){
 			case PlayerTable.TABLE_NAME:
-
 				Gdx.app.log("LOGIN", "Login succesfull");
 
 				if (tableData.size() == 1) {
@@ -295,7 +301,8 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 							(String) data.get(ResourceTable.NAME),
 							ResourceState.getState((Integer) data.get(ResourceTable.STATE_ID)),
 							ResourceRarity.getRarity((Integer) data.get(ResourceTable.RARITY_ID)),
-							(Float) data.get(ResourceTable.PRICE)
+							(Float) data.get(ResourceTable.PRICE),
+							0
 					);
 					resources.add(resource);
 				}
@@ -351,39 +358,34 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 							(Integer) data.get(ShipInFleetTable.UPGRADE_LEVEL)
 					);
 
-					Gdx.app.log("SHIP", (Long) Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME + ""))+"");
-
 					Timestamp taskTime = null;
 					if (data.get(ShipInFleetTable.TASK_TIME) != null && destination != null) {
 						taskTime = new Timestamp(Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME)));
 						TravelPlan plan = new TravelPlan(destination, ship, taskTime);
+						Resource resource = getResourceByID((Integer) data.get(ShipInFleetTable.RESOURCE_ID));
+						resource.setAmount((Float) data.get(ShipInFleetTable.AMOUNT));
+						ship.setTravelPlan(plan, resource);
 
-						switch (plan.getCurrentState()){
-							case AT_THE_BASE:
-								ship.resetDestination();
-								break;
-							case TRAVELLING_OUT:
-								ship.setState(TRAVELLING_OUT);
-								break;
-							case MINING:
-								ship.setState(MINING);
-								break;
-							case TRAVELLING_BACK:
-								ship.setState(TRAVELLING_BACK);
-								break;
-						}
+						// TODO FIX - TIME IS NOT BEING UPDATED INTO OBJECT OF SHIP (TESTING)
 					}
 					player.getShips().add(ship);
-
-					Gdx.app.log(ship.getName(), ship.getTaskTime() + " " + ship.getState() + " " + ship.getCurrentDestination());
 
 				}
 
 				Gdx.app.log(ShipInFleetTable.TABLE_NAME, "INITIALIZATION DONE!");
 				dataInit.setShipFleetTable();
 
-				handler.getTableWherePlayer(DiscoveredSystemsTable.TABLE_NAME, player.getID(), this);
+				handler.getTableWherePlayer(ResourceAtBase.TABLE_NAME, player.getID(), this);
 
+				break;
+
+			case ResourceAtBase.TABLE_NAME:
+				for (Map<String, Object> data : tableData) {
+					Resource r = getResourceByID((Integer) data.get(ResourceAtBase.RESOURCE_ID));
+					r.setAmount((Float) data.get(ResourceAtBase.AMOUNT));
+					player.getResourcesAtBase().add(r);
+				}
+				handler.getTableWherePlayer(DiscoveredSystemsTable.TABLE_NAME, player.getID(), this);
 				break;
 
 			case DiscoveredSystemsTable.TABLE_NAME:

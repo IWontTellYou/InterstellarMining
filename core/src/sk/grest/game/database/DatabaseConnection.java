@@ -38,7 +38,7 @@ public class DatabaseConnection {
                 try {
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     connection = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3306/" + DATABASE_NAME + "?serverTimezone=CET",
+                            "jdbc:mysql://localhost:3307/" + DATABASE_NAME + "?serverTimezone=CET",
                             DATABASE_USERNAME,
                             DATABASE_PASSWORD
                     );
@@ -57,7 +57,6 @@ public class DatabaseConnection {
             @Override
             public void run() {
                 try {
-
                     Statement statement = connection.createStatement();
                     String sql = "SELECT * FROM " + PlayerTable.TABLE_NAME + " WHERE "
                             + PlayerTable.NAME + " = '" + username + "' AND " + PlayerTable.PASSWORD +
@@ -207,6 +206,7 @@ public class DatabaseConnection {
     }
 
     public void disconnect() {
+        Gdx.app.log("DISCONECT", "Disconected");
         try {
             if (taskThread.isAlive())
                 taskThread.interrupt();

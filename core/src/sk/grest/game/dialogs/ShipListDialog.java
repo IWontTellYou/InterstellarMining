@@ -2,9 +2,16 @@ package sk.grest.game.dialogs;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.sql.Time;
@@ -13,14 +20,24 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Locale;
 
+import sk.grest.game.defaults.GameConstants;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Planet;
 import sk.grest.game.entities.Ship;
+import sk.grest.game.entities.enums.ShipState;
 
 public class ShipListDialog extends Dialog {
 
+    private float timeLeft;
+    private ArrayList<Label> toUpdate;
+    private ArrayList<Ship> ships;
+
     public ShipListDialog(String title, Skin skin, ArrayList<Ship> ships) {
         super(title, skin);
+
+        this.timeLeft = 1;
+        this.toUpdate = new ArrayList<>();
+        this.ships = ships;
 
         setWidth(ScreenDeafults.DEFAULT_DIALOG_WIDTH);
         setHeight(ScreenDeafults.DEFAULT_DIALOG_HEIGHT);
@@ -33,38 +50,59 @@ public class ShipListDialog extends Dialog {
         float cellHeight = Gdx.graphics.getHeight()/25f;
 
         // CONTENT TABLE
+
+        //
+        // HEADER
+        //
+
         getContentTable().clearChildren();
 
+        Table contentTable = new Table(skin);
+
         Label imageLabel = new Label("", skin);
-        getContentTable().add(imageLabel).
+        contentTable.add(imageLabel).
                 align(Align.center).
                 width(imageCellWidth).height(cellHeight);
 
         Label nameLabel = new Label("NAME", skin);
-        getContentTable().add(nameLabel).
+        contentTable.add(nameLabel).
                 align(Align.center).
                 width(nameCellWidth).height(cellHeight);
 
         Label destinationLabel = new Label("DESTINATION", skin);
-        getContentTable().add(destinationLabel).
+        contentTable.add(destinationLabel).
                 align(Align.center).
                 width(destinationCellWidth).height(cellHeight);
 
         Label timeToArriveLabel = new Label("ARRIVAL TIME", skin);
-        getContentTable().add(timeToArriveLabel).
+        contentTable.add(timeToArriveLabel).
+                align(Align.center).
+                width(timeToArriveCellWidth).height(cellHeight);
+
+        Label stateLabel = new Label("STATE", skin);
+        contentTable.add(stateLabel).
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight).
                 row();
 
+        //
+        // END OF HEADER
+        //
+
+
+        //
+        // TABLE DATA
+        //
+
         for (Ship s : ships) {
 
             Label shipImage = new Label("img", skin);
-            getContentTable().add(shipImage).
+            contentTable.add(shipImage).
                     align(Align.center).
                     width(imageCellWidth).height(cellHeight);
 
             Label shipName = new Label(s.getName(), skin);
-            getContentTable().add(shipName).
+            contentTable.add(shipName).
                     align(Align.center).
                     width(nameCellWidth).height(cellHeight);
 
@@ -74,36 +112,76 @@ public class ShipListDialog extends Dialog {
             else
                 shipDestination = new Label(s.getCurrentDestination().getName(), skin);
 
-            getContentTable().add(shipDestination).
+            toUpdate.add(shipDestination);
+
+            contentTable.add(shipDestination).
                     align(Align.center).
                     width(destinationCellWidth).height(cellHeight);
 
             Label shipTimeToArrive;
-            if(s.getTaskTime() == null){
+
+            long timeLeft = s.getTimeLeft().getTime();
+            if(s.getTimeLeft().getTime() == 0){
                 shipTimeToArrive = new Label("00:00:00", skin);
             }else{
-                long timeLeft = s.getTaskTime().getTime() - System.currentTimeMillis();
-                shipTimeToArrive = new Label(ScreenDeafults.timeLeftFormat.format(new Timestamp(timeLeft)), skin);
+                shipTimeToArrive = new Label(ScreenDeafults.getTimeFormat(timeLeft), skin);
             }
 
-            getContentTable().add(shipTimeToArrive).
+            contentTable.add(shipTimeToArrive).
+                    align(Align.center).
+                    width(timeToArriveCellWidth).height(cellHeight);
+
+            toUpdate.add(shipTimeToArrive);
+
+            Label shipState = new Label(s.getState().toString(), skin);
+
+            contentTable.add(shipState).
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight).
                     row();
+
+            toUpdate.add(shipState);
         }
+
+        ScrollPane scrollPane = new ScrollPane(contentTable);
+
+        getContentTable().add(scrollPane);
 
         // BUTTON TABLE
         getButtonTable().clearChildren();
 
+        final ShipListDialog listDialog = this;
+
+        TextButton closeBtn = new TextButton("CLOSE", skin);
+        closeBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                listDialog.hide();
+            }
+        });
+        getButtonTable().add(closeBtn);
+
     }
 
-    /* public ShipListDialog(String title, Skin skin, String windowStyleName,  ArrayList<Ship> ships) {
-        super(title, skin, windowStyleName);
-    }
+    public void update(float delta){
+        if(timeLeft < 0){
+            int shipIndex = 0;
+            for (int i = 0; i < toUpdate.size(); i+=3) {
+                if(ships.get(shipIndex).getState() != ShipState.AT_THE_BASE) {
+                    toUpdate.get(i).setText(ships.get(shipIndex).getCurrentDestination().getName());
+                    toUpdate.get(i + 1).setText(ScreenDeafults.getTimeFormat(ships.get(shipIndex).getTimeLeft().getTime()));
+                    toUpdate.get(i + 2).setText(ships.get(shipIndex).getState().toString());
+                }else {
+                    toUpdate.get(i).setText("NONE");
+                    toUpdate.get(i+1).setText("00:00:00");
+                    toUpdate.get(i+2).setText(ShipState.AT_THE_BASE.toString());
+                }
 
-    public ShipListDialog(String title, WindowStyle windowStyle,  ArrayList<Ship> ships) {
-        super(title, windowStyle);
+                shipIndex++;
+            }
+            timeLeft = 1;
+        }else
+            timeLeft -= delta;
     }
-     */
 
 }

@@ -13,11 +13,14 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.dialogs.ShipListDialog;
+import sk.grest.game.dialogs.TravelSettingDialog;
 import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.entities.TravelPlan;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
@@ -47,9 +50,14 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
     private Planet base;
 
+    private ShipListDialog shipListDialog;
+    private TravelSettingDialog travelSettingDialog;
+
     public GameScreen(final InterstellarMining game) {
 
         this.game = game;
+        this.travelSettingDialog = null;
+        this.shipListDialog = null;
 
         Gdx.app.log("SCREEN_CHANGE", "Screen changed to Game");
 
@@ -175,9 +183,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         leftPanel.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // ADD ACTION
-                ShipListDialog shipListDialog =
-                        new ShipListDialog("", game.getUISkin(), game.getPlayer().getShips());
+                shipListDialog = new ShipListDialog("", game.getUISkin(), game.getPlayer().getShips());
                 shipListDialog.show(stage);
             }
         });
@@ -190,11 +196,28 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-        planetBtn = new Button(game.getSpriteSkin(), planetStats.getPlanetImage(), null);
+        planetBtn = new Button(game.getSpriteSkin(), planetStats.getCurrentPlanet().getAssetId(), null);
         planetBtn.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(isOver(event.getStageX(), event.getStageY())){
+
+                    final Planet destination = planetStats.getCurrentPlanet();
+
+                    travelSettingDialog = new TravelSettingDialog(game, destination, "TRAVEL", game.getUISkin());
+                    travelSettingDialog.show(stage);
+
+                    travelSettingDialog.getStartBtn().addListener(new ClickListener(){
+                        @Override
+                        public void clicked(InputEvent event, float x, float y) {
+                            TravelPlan travelPlan = new TravelPlan(
+                                            destination,
+                                            travelSettingDialog.getShipToTravel(),
+                                            new Timestamp(System.currentTimeMillis()));
+                            travelSettingDialog.getShipToTravel().setTravelPlan(travelPlan, travelSettingDialog.getResourceToMine());
+                        }
+                    });
+
                     /*
                     Dialog stats = new Dialog("", game.getUISkin());
                     stats.add(planetStats);
@@ -319,6 +342,12 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     @Override
     public void render(float delta) {
         ScreenDeafults.clear();
+
+        game.getPlayer().update(delta);
+
+        if(shipListDialog != null){
+            shipListDialog.update(delta);
+        }
 
         if(game.isDatabaseInitialized()) {
             for (Ship s : game.getPlayer().getShips()) {
