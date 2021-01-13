@@ -207,6 +207,7 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 
 				Map<String, Object> playerData = tableData.get(0);
 				this.player = new Player(
+						this,
 						(Integer) playerData.get(PlayerTable.ID),
 						(String) playerData.get(PlayerTable.NAME),
 						(String) playerData.get(PlayerTable.PASSWORD),
@@ -228,17 +229,14 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 					Ship ship = new Ship(
 							(Integer) data.get(ShipTable.ID),
 							(String) data.get(ShipTable.NAME),
-							null,
+							player,
 							(Float) data.get(ShipTable.MINING_SPEED),
 							(Float) data.get(ShipTable.TRAVEL_SPEED),
 							(Float) data.get(ShipTable.RESOURCE_CAPACITY),
 							(Float) data.get(ShipTable.FUEL_CAPACITY),
 							(Float) data.get(ShipTable.FUEL_EFFICIENCY),
 							(Float) data.get(ShipTable.PRICE),
-							null,
-							null,
-							null,
-							1
+							0
 					);
 					shipsShop.add(ship);
 				}
@@ -345,26 +343,23 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 					Ship ship = new Ship(
 							s.getId(),
 							s.getName(),
-							null,
+							player,
 							s.getMiningSpeed(),
 							s.getTravelSpeed(),
 							s.getResourceCapacity(),
 							s.getFuelCapacity(),
 							s.getFuelEficiency(),
 							s.getPrice(),
-							destination,
-							getState((Integer) data.get(ShipInFleetTable.STATE_ID)),
-							null,
 							(Integer) data.get(ShipInFleetTable.UPGRADE_LEVEL)
 					);
 
 					Timestamp taskTime = null;
 					if (data.get(ShipInFleetTable.TASK_TIME) != null && destination != null) {
 						taskTime = new Timestamp(Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME)));
-						TravelPlan plan = new TravelPlan(destination, ship, taskTime);
 						Resource resource = getResourceByID((Integer) data.get(ShipInFleetTable.RESOURCE_ID));
 						resource.setAmount((Float) data.get(ShipInFleetTable.AMOUNT));
-						ship.setTravelPlan(plan, resource);
+						TravelPlan plan = new TravelPlan(destination, ship, resource, taskTime);
+						ship.setTravelPlan(plan);
 
 						// TODO FIX - TIME IS NOT BEING UPDATED INTO OBJECT OF SHIP (TESTING)
 					}
@@ -376,7 +371,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 				dataInit.setShipFleetTable();
 
 				handler.getTableWherePlayer(ResourceAtBase.TABLE_NAME, player.getID(), this);
-
 				break;
 
 			case ResourceAtBase.TABLE_NAME:
@@ -413,7 +407,10 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 		}
 	}
 	@Override
-	public void onUpdateSuccess(int requestCode) {
+	public void onUpdateSuccess(int requestCode, String tableName) {
+		if(tableName.equals(ShipInFleetTable.TABLE_NAME)){
+			Gdx.app.log("SHIP_UPDATE", "UPDATE ENDED SUCCESSFULLY");
+		}
 	}
 	@Override
 	public void onConnect() {

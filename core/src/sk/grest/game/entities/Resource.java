@@ -54,8 +54,13 @@ public class Resource{
         this.amount -= amount;
     }
 
-    public void setAmount(float amount){
+    public Resource setAmount(float amount){
         this.amount = amount;
+        return this;
+    }
+
+    public float getAmount() {
+        return amount;
     }
 
     @Override

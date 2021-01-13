@@ -17,9 +17,11 @@ import java.sql.Timestamp;
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.TravelSettingDialog;
 import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.TravelPlan;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
@@ -52,6 +54,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
     private ShipListDialog shipListDialog;
     private TravelSettingDialog travelSettingDialog;
+    private ResourceInventoryDialog resourceInventoryDialog;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -193,6 +196,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // ADD ACTION
+                resourceInventoryDialog = new ResourceInventoryDialog("Inventory", game.getUISkin(), game.getPlayer());
+                resourceInventoryDialog.show(stage);
             }
         });
 
@@ -210,27 +215,12 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                     travelSettingDialog.getStartBtn().addListener(new ClickListener(){
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
-                            TravelPlan travelPlan = new TravelPlan(
-                                            destination,
-                                            travelSettingDialog.getShipToTravel(),
-                                            new Timestamp(System.currentTimeMillis()));
-                            travelSettingDialog.getShipToTravel().setTravelPlan(travelPlan, travelSettingDialog.getResourceToMine());
+                            travelSettingDialog.getShipToTravel().setDestination(
+                                            planetStats.getCurrentPlanet(),
+                                            travelSettingDialog.getResourceToMine()
+                                    );
                         }
                     });
-
-                    /*
-                    Dialog stats = new Dialog("", game.getUISkin());
-                    stats.add(planetStats);
-
-                    //stats.setDebug(true);
-
-                    game.getUISkin().getFont("default-font").getData().setScale(1.5f);
-                    game.getUISkin().getFont("default-font").getColor().set(Color.BLACK);
-
-                    stats.show(stage, sequence(Actions.alpha(0), Actions.fadeIn(0.4f, Interpolation.fade)));
-                    stats.setPosition(Gdx.graphics.getWidth()/2f-stats.getWidth()/2f, 10);
-                    stage.addActor(stats);
-                    */
                 }
             }
 
@@ -348,6 +338,11 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         if(shipListDialog != null){
             shipListDialog.update(delta);
         }
+
+        if(resourceInventoryDialog != null){
+            resourceInventoryDialog.update(delta);
+        }
+
 
         if(game.isDatabaseInitialized()) {
             for (Ship s : game.getPlayer().getShips()) {

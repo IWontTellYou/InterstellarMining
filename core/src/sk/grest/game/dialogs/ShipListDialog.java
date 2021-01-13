@@ -39,9 +39,6 @@ public class ShipListDialog extends Dialog {
         this.toUpdate = new ArrayList<>();
         this.ships = ships;
 
-        setWidth(ScreenDeafults.DEFAULT_DIALOG_WIDTH);
-        setHeight(ScreenDeafults.DEFAULT_DIALOG_HEIGHT);
-
         float imageCellWidth = Gdx.graphics.getWidth()/20f;
         float nameCellWidth = Gdx.graphics.getWidth()/10f;
         float destinationCellWidth = Gdx.graphics.getWidth()/8f;
@@ -54,8 +51,6 @@ public class ShipListDialog extends Dialog {
         //
         // HEADER
         //
-
-        getContentTable().clearChildren();
 
         Table contentTable = new Table(skin);
 
@@ -143,12 +138,9 @@ public class ShipListDialog extends Dialog {
             toUpdate.add(shipState);
         }
 
-        ScrollPane scrollPane = new ScrollPane(contentTable);
-
-        getContentTable().add(scrollPane);
+        getContentTable().add(contentTable);
 
         // BUTTON TABLE
-        getButtonTable().clearChildren();
 
         final ShipListDialog listDialog = this;
 

@@ -26,7 +26,7 @@ import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.Ship;
 
-public class TravelSettingDialog extends Dialog {
+public class TravelSettingDialog extends CustomDialog {
 
     // TODO WHEN USING HIDE, IT WILL NOT REFRESH
 
@@ -43,11 +43,6 @@ public class TravelSettingDialog extends Dialog {
 
         this.shipToTravel = shipsAtBase.get(0);
         this.resourceToMine = planet.getResources().get(0);
-
-        setWidth(ScreenDeafults.DEFAULT_DIALOG_WIDTH);
-        setHeight(ScreenDeafults.DEFAULT_DIALOG_HEIGHT);
-
-        getContentTable().clearChildren();
 
         float defaultActorWidth = getWidth()/2f;
         float defaultActorHeight = getHeight()/2f;
@@ -105,8 +100,6 @@ public class TravelSettingDialog extends Dialog {
         getContentTable().add(resourceListSelect)
                 .width(defaultSelectBoxWidth)
                 .height(defaultSelectBoxHeight);
-
-        getButtonTable().clearChildren();
 
         // BUTTON TABLE
 

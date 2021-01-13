@@ -19,6 +19,7 @@ import javax.xml.crypto.Data;
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.PlanetSystem;
 import sk.grest.game.entities.Ship;
+import sk.grest.game.listeners.DatabaseChangeListener;
 
 import static sk.grest.game.database.DatabaseConstants.*;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.EMAIL;
@@ -77,8 +78,25 @@ public class DatabaseHandler {
 
     }
 
-    public void updatePlanet(int id, PlanetSystem system, String name, float size, float distance,
-                             boolean habitable, String info, ArrayList<Resource> resources){
+    public void updateResourceAtBase(int playerId, int resourceId, float amount, DatabaseConnection.ConnectorEvent listener){
+        Map<String, Object> data = new HashMap<>();
+        data.put(ResourceAtBase.RESOURCE_ID, resourceId);
+        data.put(ResourceAtBase.AMOUNT, amount);
+        connection.updateRow(resourceId++, playerId, resourceId, ResourceAtBase.TABLE_NAME, data, listener);
+    }
+
+    public void updateShipInFleet(int playerId, int shipId, int destinationId, int resourceId,
+                                  float amount, long taskTime, int stateId, DatabaseConnection.ConnectorEvent listener){
+        Map<String, Object> data = new HashMap<>();
+        data.put(ShipInFleetTable.DESTINATION_ID, destinationId);
+        data.put(ShipInFleetTable.RESOURCE_ID, resourceId);
+        data.put(ShipInFleetTable.AMOUNT, amount);
+        data.put(ShipInFleetTable.TASK_TIME, taskTime);
+        data.put(ShipInFleetTable.STATE_ID, stateId);
+        connection.updateRow(requestCode++, playerId, shipId, ShipInFleetTable.TABLE_NAME, data, listener);
+    }
+
+    public void updateTable(String tableName, int id, Map<String, Object> data, DatabaseConnection.ConnectorEvent listener){
     }
 
     public void getTable(String tableName, DatabaseConnection.ConnectorEvent listener){

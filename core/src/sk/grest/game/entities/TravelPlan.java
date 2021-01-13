@@ -7,6 +7,8 @@ import java.sql.Timestamp;
 import java.util.Arrays;
 
 import sk.grest.game.entities.enums.ShipState;
+import sk.grest.game.listeners.DatabaseChangeListener;
+import sk.grest.game.listeners.TravelListener;
 
 import static sk.grest.game.defaults.GameConstants.BASE_DISTANCE;
 import static sk.grest.game.defaults.GameConstants.BASE_MINING_TIME;
@@ -23,33 +25,36 @@ public class TravelPlan {
 
     private Timestamp[] schedule;
 
-    private long miningTime;
-    private long travelTime;
+    private Resource resource;
+    private float resourceAmount;
 
     private boolean resourceMined;
-    private boolean resourceAddedToInventory;
 
-    public TravelPlan(Planet destination, Ship ship, Timestamp startTime) {
+    public TravelPlan(Planet destination, Ship ship, Resource resource, Timestamp startTime) {
         this.destination = destination;
         this.ship = ship;
-        setTravel(startTime);
+        this.resource = resource;
+        this.resourceAmount = 0;
         this.resourceMined = false;
-        this.resourceAddedToInventory = false;
+        setTravel(startTime);
     }
 
-    public TravelPlan(Planet destination, Ship ship){
+    public TravelPlan(Planet destination, Ship ship, Resource resource){
         this.destination = destination;
         this.ship = ship;
+        this.resource = resource;
+        this.resourceAmount = 0;
+        this.resourceMined = false;
         setTravel(new Timestamp(System.currentTimeMillis()));
     }
 
     private void setTravel(Timestamp startTime){
 
         // IF DISTANCE == SHIP's SPEED, TRAVEL TIME WILL BE 5 MINUTES
-        travelTime = (long) (destination.getDistance() * BASE_DISTANCE / ship.getTravelSpeed());
+        long travelTime = (long) (destination.getDistance() * BASE_DISTANCE / ship.getTravelSpeed());
 
         // IF SHIP's CAPACITY == SHIP's MINING SPEED, MINING TIME WILL BE 5 MINUTES
-        miningTime = (long) (ship.getResourceCapacity() * BASE_MINING_TIME / ship.getMiningSpeed());
+        long miningTime = (long) (ship.getResourceCapacity() * BASE_MINING_TIME / ship.getMiningSpeed());
 
         this.schedule = new Timestamp[4];
         schedule[FROM_HOME] = startTime;
@@ -73,11 +78,12 @@ public class TravelPlan {
             return null;
     }
 
-    public void reset(Planet destination){
+    public void reset(Planet destination, Resource resource){
         this.destination = destination;
+        this.resource = resource;
+        resource.setAmount(0);
         setTravel(new Timestamp(System.currentTimeMillis()));
     }
-
     public void reset(){
         Arrays.fill(schedule, null);
         destination = null;
@@ -85,6 +91,18 @@ public class TravelPlan {
 
     public Planet getDestination() {
         return destination;
+    }
+    public Resource getResource() {
+        return resource;
+    }
+    public float getAmount() {
+        return resourceAmount;
+    }
+    public long getStartTime(){
+        if(getTimeLeft().getTime() != 0)
+            return schedule[FROM_HOME].getTime();
+        else
+            return 0;
     }
 
     public Timestamp getTimeLeft(){
@@ -102,10 +120,12 @@ public class TravelPlan {
             return new Timestamp(0);
     }
 
-    public void update(float delta){
+    public void update(TravelListener listener, float delta){
         if(getCurrentState() == ShipState.TRAVELLING_BACK && !resourceMined){
             resourceMined = true;
-
+            resourceAmount = ship.getResourceCapacity();
+            Gdx.app.log("SHIP_UPDATE", "SHIP UPDATED AFTER MINING ENDED");
+            listener.onShipDataChanged(ship);
         }
     }
 
