@@ -3,9 +3,7 @@ package sk.grest.game.dialogs;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -13,22 +11,14 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-import javax.swing.text.html.ImageView;
-
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.defaults.GameConstants;
-import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Planet;
-import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Resource;
-import sk.grest.game.entities.Ship;
+import sk.grest.game.entities.ship.Ship;
 
 public class TravelSettingDialog extends CustomDialog {
-
-    // TODO WHEN USING HIDE, IT WILL NOT REFRESH
 
     private TextButton closeBtn;
     private TextButton startBtn;

@@ -1,23 +1,17 @@
-package sk.grest.game.entities;
+package sk.grest.game.entities.ship;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 
-import sk.grest.game.defaults.GameConstants;
+import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.enums.ShipState;
 import sk.grest.game.listeners.TravelListener;
 
 import static sk.grest.game.entities.enums.ShipState.AT_THE_BASE;
-import static sk.grest.game.entities.enums.ShipState.MINING;
-import static sk.grest.game.entities.enums.ShipState.TRAVELLING_BACK;
-import static sk.grest.game.entities.enums.ShipState.TRAVELLING_OUT;
 
 public class Ship {
-
-    // TODO CREATE MINING PROCESS WHERE IT WOULD BE SPECIFIED WHAT RESOURCE IS BEING MINED AND WHAT AMOUNT OF IT
 
     private int id;
 
@@ -28,7 +22,7 @@ public class Ship {
     private float travelSpeed;
     private float resourceCapacity;
     private float fuelCapacity;
-    private float fuelEficiency;
+    private float fuelEfficiency;
 
     //
     private float price;
@@ -36,6 +30,7 @@ public class Ship {
 
     // TRAVELING
     private TravelPlan travelPlan;
+    private Attributes attributes;
 
     private TravelListener listener;
 
@@ -44,7 +39,7 @@ public class Ship {
     private boolean resourceAddedToInventory;
 
     public Ship(int id, String name, TravelListener listener, float miningSpeed, float travelSpeed, float resourceCapacity,
-                float fuelCapacity, float fuelEficiency, float price, float upgradeLevel) {
+                float fuelCapacity, float fuelEfficiency, float price, float upgradeLevel) {
         this.listener = listener;
         this.id = id;
         this.name = name;
@@ -52,17 +47,29 @@ public class Ship {
         this.travelSpeed = travelSpeed;
         this.resourceCapacity = resourceCapacity;
         this.fuelCapacity = fuelCapacity;
-        this.fuelEficiency = fuelEficiency;
+        this.fuelEfficiency = fuelEfficiency;
         this.price = price;
         this.upgradeLevel = upgradeLevel;
         this.travelPlan = null;
         this.resourceAddedToInventory = true;
-       // timeElapsed = 1;
+        // timeElapsed = 1;
+    }
+
+    public void setAttributes(int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl,
+                              int fuelCapacityLvl, int fuelEfficiencyLvl){
+        this.attributes = new Attributes(
+                miningSpeedLvl,
+                travelSpeedLvl,
+                resourceCapacityLvl,
+                fuelCapacityLvl,
+                fuelEfficiencyLvl
+        );
     }
 
     public void setDestination(Planet destination, Resource resource){
         if(travelPlan != null) {
             travelPlan.reset(destination, resource);
+            Gdx.app.log("RESOURCE", resourceAddedToInventory + " " + travelPlan.getCurrentState());
             resourceAddedToInventory = false;
             Gdx.app.log("SHIP_UPDATE", "SHIP UPDATE AFTER SETTING DESTINATION");
             listener.onShipDataChanged(this);
@@ -75,9 +82,14 @@ public class Ship {
         travelPlan.reset();
     }
 
+    public Attributes getAttributes() {
+        return attributes;
+    }
+
     public void setTravelPlan(TravelPlan travelPlan){
         this.travelPlan = travelPlan;
         resourceAddedToInventory = false;
+        Gdx.app.log("RESOURCE", resourceAddedToInventory + " " + travelPlan.getCurrentState());
         Gdx.app.log("SHIP_UPDATE", "SHIP UPDATE AFTER SETTING TRAVELPLAN");
         listener.onShipDataChanged(this);
     }
@@ -101,23 +113,38 @@ public class Ship {
     }
 
     public float getMiningSpeed() {
-        return miningSpeed;
+        if(attributes != null)
+            return miningSpeed + attributes.getMiningSpeedLvl();
+        else
+            return miningSpeed;
     }
 
     public float getTravelSpeed() {
-        return travelSpeed;
+        if(attributes != null)
+            return travelSpeed + attributes.getTravelSpeedLvl();
+        else
+            return travelSpeed;
     }
 
     public float getResourceCapacity() {
-        return resourceCapacity;
+        if(attributes != null)
+            return resourceCapacity + attributes.getResourceCapacityLvl();
+        else
+            return resourceCapacity;
     }
 
     public float getFuelCapacity() {
-        return fuelCapacity;
+        if(attributes != null)
+            return fuelCapacity + attributes.getFuelCapacityLvl();
+        else
+            return fuelCapacity;
     }
 
-    public float getFuelEficiency() {
-        return fuelEficiency;
+    public float getFuelEfficiency() {
+        if(attributes != null)
+            return fuelEfficiency + attributes.getFuelEfficiencyLvl();
+        else
+            return fuelEfficiency;
     }
 
     public Resource getCarriage() {
@@ -166,7 +193,7 @@ public class Ship {
         if(travelPlan != null)
             travelPlan.update(listener, delta);
 
-        if(getState() == AT_THE_BASE && !resourceAddedToInventory){
+        if(travelPlan != null && !resourceAddedToInventory){
             listener.onShipArrivedAtHome(travelPlan.getResource().setAmount(travelPlan.getAmount()));
             Gdx.app.log("SHIP_UPDATE", "SHIP UPDATE AFTER RESOURCE WAS ADDED TO INVENTORY");
             listener.onShipDataChanged(this);

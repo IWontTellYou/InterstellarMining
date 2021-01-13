@@ -1,25 +1,10 @@
 package sk.grest.game.database;
 
-import java.sql.PreparedStatement;
-import java.sql.Statement;
-import java.sql.Time;
-import java.sql.Timestamp;
-import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Locale;
 import java.util.Map;
-import java.util.Timer;
-
-import javax.annotation.Resource;
-import javax.xml.crypto.Data;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.entities.PlanetSystem;
-import sk.grest.game.entities.Ship;
-import sk.grest.game.listeners.DatabaseChangeListener;
 
 import static sk.grest.game.database.DatabaseConstants.*;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.EMAIL;
@@ -86,13 +71,19 @@ public class DatabaseHandler {
     }
 
     public void updateShipInFleet(int playerId, int shipId, int destinationId, int resourceId,
-                                  float amount, long taskTime, int stateId, DatabaseConnection.ConnectorEvent listener){
+                                  float amount, long taskTime, int travelSpeedLvl,
+                                  int miningSpeedLvl, int fuelCapacityLvl, int fuelEfficiencyLvl,
+                                  int resourceCapacityLvl, DatabaseConnection.ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
         data.put(ShipInFleetTable.DESTINATION_ID, destinationId);
         data.put(ShipInFleetTable.RESOURCE_ID, resourceId);
         data.put(ShipInFleetTable.AMOUNT, amount);
         data.put(ShipInFleetTable.TASK_TIME, taskTime);
-        data.put(ShipInFleetTable.STATE_ID, stateId);
+        data.put(ShipInFleetTable.FUEL_CAPACITY_LVL, fuelCapacityLvl);
+        data.put(ShipInFleetTable.FUEL_EFFICIENCY_LVL, fuelEfficiencyLvl);
+        data.put(ShipInFleetTable.TRAVEL_SPEED_LVL, travelSpeedLvl);
+        data.put(ShipInFleetTable.MINING_SPEED_LVL, miningSpeedLvl);
+        data.put(ShipInFleetTable.RESOURCE_CAPACITY_LVL, resourceCapacityLvl);
         connection.updateRow(requestCode++, playerId, shipId, ShipInFleetTable.TABLE_NAME, data, listener);
     }
 

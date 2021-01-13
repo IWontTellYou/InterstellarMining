@@ -1,13 +1,16 @@
-package sk.grest.game.entities;
+package sk.grest.game.entities.ship;
 
 import com.badlogic.gdx.Gdx;
 
-import java.sql.Time;
 import java.sql.Timestamp;
 import java.util.Arrays;
 
+import sk.grest.game.defaults.GameConstants;
+import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.enums.ShipState;
-import sk.grest.game.listeners.DatabaseChangeListener;
+import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.listeners.TravelListener;
 
 import static sk.grest.game.defaults.GameConstants.BASE_DISTANCE;
@@ -21,7 +24,7 @@ public class TravelPlan {
     private final static int TO_HOME = 3;
 
     private Planet destination;
-    private Ship ship;
+    private sk.grest.game.entities.ship.Ship ship;
 
     private Timestamp[] schedule;
 
@@ -30,7 +33,7 @@ public class TravelPlan {
 
     private boolean resourceMined;
 
-    public TravelPlan(Planet destination, Ship ship, Resource resource, Timestamp startTime) {
+    public TravelPlan(Planet destination, sk.grest.game.entities.ship.Ship ship, Resource resource, Timestamp startTime) {
         this.destination = destination;
         this.ship = ship;
         this.resource = resource;
@@ -61,11 +64,28 @@ public class TravelPlan {
         schedule[TO_DEST] = new Timestamp(schedule[FROM_HOME].getTime() + travelTime);
         schedule[FROM_DEST] = new Timestamp(schedule[TO_DEST].getTime() + miningTime);
         schedule[TO_HOME] = new Timestamp(schedule[FROM_DEST].getTime() + travelTime);
+
+        Timestamp currentTime = new Timestamp(System.currentTimeMillis());
+        String log = "\n[CURRENT] " + ScreenDeafults.timeLeftFormat.format(currentTime);
+        log += "\n[FROM_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[FROM_HOME]);
+        log += "\n[TO_DESTINATION] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_DEST]);
+        log += "\n[FROM_DESTINATION] " + ScreenDeafults.timeLeftFormat.format(schedule[FROM_DEST]);
+        log += "\n[TO_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_HOME]);
+        Gdx.app.log("\nTIME_TRAVEL", log + "\n");
+
     }
 
     public ShipState getCurrentState(){
         Timestamp currentTime = new Timestamp(System.currentTimeMillis());
 
+        /*
+        String log = "\n[CURRENT] " + ScreenDeafults.timeLeftFormat.format(currentTime);
+        log += "\n[FROM_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[FROM_HOME]);
+        log += "\n[TO_DESTINATION] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_DEST]);
+        log += "\n[FROM_DESTINATION] " + ScreenDeafults.timeLeftFormat.format(schedule[FROM_DEST]);
+        log += "\n[TO_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_HOME]);
+        Gdx.app.log("TIME_TRAVEL", log + "\n");
+         */
         if(schedule[TO_HOME].before(currentTime))
             return ShipState.AT_THE_BASE;
         else if(schedule[FROM_DEST].before(currentTime))

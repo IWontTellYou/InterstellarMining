@@ -2,24 +2,16 @@ package sk.grest.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
-import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
-import java.sql.SQLClientInfoException;
-import java.sql.SQLDataException;
 import java.sql.Timestamp;
 import java.util.ArrayList;
-import java.util.Calendar;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
-import java.util.TimeZone;
 
 import sk.grest.game.database.DatabaseConnection;
 import sk.grest.game.database.DatabaseHandler;
@@ -29,16 +21,15 @@ import sk.grest.game.entities.PlanetSystem;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
 import sk.grest.game.entities.Resource;
-import sk.grest.game.entities.Ship;
-import sk.grest.game.entities.TravelPlan;
+import sk.grest.game.entities.ship.Attributes;
+import sk.grest.game.entities.ship.Ship;
+import sk.grest.game.entities.ship.TravelPlan;
 import sk.grest.game.entities.enums.ResourceRarity;
 import sk.grest.game.entities.enums.ResourceState;
-import sk.grest.game.entities.enums.ShipState;
 import sk.grest.game.screens.GameScreen;
 import sk.grest.game.screens.MainMenuScreen;
 
 import static sk.grest.game.database.DatabaseConstants.*;
-import static sk.grest.game.entities.enums.ShipState.*;
 
 public class InterstellarMining extends Game implements DatabaseConnection.ConnectorEvent {
 
@@ -264,8 +255,8 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 				dataInit.setPlanetSystemTable();
 
 				handler.getTable(PlanetTable.TABLE_NAME, this);
-
 				break;
+
 			case PlanetTable.TABLE_NAME:
 				for (Map<String, Object> data : tableData) {
 					for (PlanetSystem pS : planetSystems) {
@@ -289,7 +280,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 				dataInit.setPlanetTable();
 
 				handler.getTable(ResourceTable.TABLE_NAME,this);
-
 				break;
 
 			case ResourceTable.TABLE_NAME:
@@ -309,7 +299,6 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 				dataInit.setResourcesTable();
 
 				handler.getTable(PlanetResourceTable.TABLE_NAME, this);
-
 				break;
 
 			case PlanetResourceTable.TABLE_NAME:
@@ -348,9 +337,17 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 							s.getTravelSpeed(),
 							s.getResourceCapacity(),
 							s.getFuelCapacity(),
-							s.getFuelEficiency(),
+							s.getFuelEfficiency(),
 							s.getPrice(),
 							(Integer) data.get(ShipInFleetTable.UPGRADE_LEVEL)
+					);
+
+					ship.setAttributes(
+							(Integer) data.get(ShipInFleetTable.MINING_SPEED_LVL),
+							(Integer) data.get(ShipInFleetTable.TRAVEL_SPEED_LVL),
+							(Integer) data.get(ShipInFleetTable.RESOURCE_CAPACITY_LVL),
+							(Integer) data.get(ShipInFleetTable.FUEL_CAPACITY_LVL),
+							(Integer) data.get(ShipInFleetTable.FUEL_EFFICIENCY_LVL)
 					);
 
 					Timestamp taskTime = null;
@@ -360,9 +357,8 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 						resource.setAmount((Float) data.get(ShipInFleetTable.AMOUNT));
 						TravelPlan plan = new TravelPlan(destination, ship, resource, taskTime);
 						ship.setTravelPlan(plan);
-
-						// TODO FIX - TIME IS NOT BEING UPDATED INTO OBJECT OF SHIP (TESTING)
 					}
+
 					player.getShips().add(ship);
 
 				}

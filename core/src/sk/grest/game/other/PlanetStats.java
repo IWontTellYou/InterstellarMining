@@ -42,7 +42,6 @@ public class PlanetStats {
 
         this.nameLabel = new Label("", game.getUISkin());
 
-        // TODO IF SCALED, MAKES TEXT BIGGER EVERYTIME I RELOGIN (FIX)
         game.getUISkin().getFont("default-font").getData();
 
         planetStats = new Table();

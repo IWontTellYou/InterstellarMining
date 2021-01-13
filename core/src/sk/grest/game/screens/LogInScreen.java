@@ -2,25 +2,17 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.util.ArrayList;
-import java.util.Map;
-
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.database.DatabaseConnection;
-import sk.grest.game.database.DatabaseConstants;
 import sk.grest.game.defaults.ScreenDeafults;
-import sk.grest.game.entities.Ship;
 
 public class LogInScreen implements Screen {
 
@@ -33,8 +25,8 @@ public class LogInScreen implements Screen {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
-        final TextField inputName = new TextField("username", game.getUISkin());
-        final TextField inputPassword = new TextField("password", game.getUISkin());
+        final TextField inputName = new TextField("admin", game.getUISkin());
+        final TextField inputPassword = new TextField("cisco123", game.getUISkin());
         // inputPassword.setPasswordCharacter('*');
         inputPassword.setPasswordMode(true);
 

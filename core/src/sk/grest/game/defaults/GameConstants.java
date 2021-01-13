@@ -1,10 +1,5 @@
 package sk.grest.game.defaults;
 
-import com.badlogic.gdx.Gdx;
-
-import sk.grest.game.entities.Ship;
-import sk.grest.game.entities.enums.ShipState;
-
 public class GameConstants {
 
     // TIME CONSTANTS

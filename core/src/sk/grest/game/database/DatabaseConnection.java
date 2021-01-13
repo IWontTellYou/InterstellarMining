@@ -12,6 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sk.grest.game.entities.Resource;
+import sk.grest.game.entities.ship.Ship;
 
 import static sk.grest.game.database.DatabaseConstants.*;
 
@@ -214,20 +215,28 @@ public class DatabaseConnection {
     private String getUpdateSQL(String tableName, int playerId, int objectId, Map<String, Object> data){
         String sql = "UPDATE " + tableName + " SET ";
 
-        if(tableName.equals(ShipInFleetTable.TABLE_NAME)){
-            sql += ShipInFleetTable.DESTINATION_ID + " = " + (Integer) data.get(ShipInFleetTable.DESTINATION_ID) + ", ";
-            sql += ShipInFleetTable.RESOURCE_ID + " = " + (Integer) data.get(ShipInFleetTable.RESOURCE_ID) + ", ";
-            sql += ShipInFleetTable.AMOUNT + " = " + (Float) data.get(ShipInFleetTable.AMOUNT) + ", ";
-            sql += ShipInFleetTable.TASK_TIME + " = " + (Long) data.get(ShipInFleetTable.TASK_TIME) + ", ";
-            sql += ShipInFleetTable.STATE_ID + " = " + (Integer) data.get(ShipInFleetTable.STATE_ID) + " ";
-            sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ShipInFleetTable.SHIP_ID + " = " + objectId;
-        }else if(tableName.equals(ResourceAtBase.TABLE_NAME)){
-            sql += ResourceAtBase.AMOUNT + " = " + (Float) data.get(ShipInFleetTable.AMOUNT);
-            sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ResourceAtBase.RESOURCE_ID + " = " + objectId;
-        }else if(tableName.equals(PlayerTable.TABLE_NAME)){
-            sql += PlayerTable.LEVEL + " = " + (Integer) data.get(PlayerTable.LEVEL)+ ", ";
-            sql += PlayerTable.EXPERIENCE + " = " + (Integer) data.get(PlayerTable.EXPERIENCE);
-            sql += " WHERE " + PlayerTable.ID + " = " + (Integer) data.get(PlayerTable.ID);
+        switch (tableName) {
+            case ShipInFleetTable.TABLE_NAME:
+                sql += ShipInFleetTable.DESTINATION_ID + " = " + (Integer) data.get(ShipInFleetTable.DESTINATION_ID) + ", ";
+                sql += ShipInFleetTable.RESOURCE_ID + " = " + (Integer) data.get(ShipInFleetTable.RESOURCE_ID) + ", ";
+                sql += ShipInFleetTable.AMOUNT + " = " + (Float) data.get(ShipInFleetTable.AMOUNT) + ", ";
+                sql += ShipInFleetTable.TASK_TIME + " = " + (Long) data.get(ShipInFleetTable.TASK_TIME) + ", ";
+                sql += ShipInFleetTable.FUEL_CAPACITY_LVL + " = " + (Integer) data.get(ShipInFleetTable.FUEL_CAPACITY_LVL) + ", ";
+                sql += ShipInFleetTable.FUEL_EFFICIENCY_LVL + " = " + (Integer) data.get(ShipInFleetTable.FUEL_EFFICIENCY_LVL) + ", ";
+                sql += ShipInFleetTable.RESOURCE_CAPACITY_LVL + " = " + (Integer) data.get(ShipInFleetTable.RESOURCE_CAPACITY_LVL) + ", ";
+                sql += ShipInFleetTable.TRAVEL_SPEED_LVL + " = " + (Integer) data.get(ShipInFleetTable.TRAVEL_SPEED_LVL) + ", ";
+                sql += ShipInFleetTable.MINING_SPEED_LVL + " = " + (Integer) data.get(ShipInFleetTable.MINING_SPEED_LVL) + " ";
+                sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ShipInFleetTable.SHIP_ID + " = " + objectId;
+                break;
+            case ResourceAtBase.TABLE_NAME:
+                sql += ResourceAtBase.AMOUNT + " = " + (Float) data.get(ShipInFleetTable.AMOUNT);
+                sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ResourceAtBase.RESOURCE_ID + " = " + objectId;
+                break;
+            case PlayerTable.TABLE_NAME:
+                sql += PlayerTable.LEVEL + " = " + (Integer) data.get(PlayerTable.LEVEL) + ", ";
+                sql += PlayerTable.EXPERIENCE + " = " + (Integer) data.get(PlayerTable.EXPERIENCE);
+                sql += " WHERE " + PlayerTable.ID + " = " + (Integer) data.get(PlayerTable.ID);
+                break;
         }
 
         return sql;

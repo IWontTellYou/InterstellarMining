@@ -2,17 +2,12 @@ package sk.grest.game.entities;
 
 import com.badlogic.gdx.Gdx;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
-
-import javax.xml.crypto.Data;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.enums.ShipState;
-import sk.grest.game.listeners.DatabaseChangeListener;
+import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.listeners.TravelListener;
-
-import static sk.grest.game.defaults.GameConstants.*;
 
 public class Player implements TravelListener {
 
@@ -23,7 +18,7 @@ public class Player implements TravelListener {
     private int level;
     private int experience;
 
-    private ArrayList<Ship> ships;
+    private ArrayList<sk.grest.game.entities.ship.Ship> ships;
     private ArrayList<PlanetSystem> systemsDiscovered;
     private ArrayList<Resource> resourcesAtBase;
 
@@ -43,7 +38,7 @@ public class Player implements TravelListener {
         this.resourcesAtBase = new ArrayList<>();
     }
 
-    public ArrayList<Ship> getShips() {
+    public ArrayList<sk.grest.game.entities.ship.Ship> getShips() {
         return ships;
     }
     public ArrayList<PlanetSystem> getSystemsDiscovered() {
@@ -53,10 +48,10 @@ public class Player implements TravelListener {
         return resourcesAtBase;
     }
 
-    public ArrayList<Ship> getShipsAtBase(){
-        ArrayList<Ship> ships = new ArrayList<>();
+    public ArrayList<sk.grest.game.entities.ship.Ship> getShipsAtBase(){
+        ArrayList<sk.grest.game.entities.ship.Ship> ships = new ArrayList<>();
 
-        for (Ship s : this.ships) {
+        for (sk.grest.game.entities.ship.Ship s : this.ships) {
             if(s.getState().equals(ShipState.AT_THE_BASE))
                 ships.add(s);
         }
@@ -125,23 +120,13 @@ public class Player implements TravelListener {
         for (Resource resource : getResourcesAtBase()) {
             if(resource.getID() == r.getID()){
                 resource.addAmount(r);
+                game.getHandler().updateResourceAtBase(ID, r.getID(), r.getAmount(), game);
             }
         }
     }
 
     @Override
     public void onShipDataChanged(Ship ship) {
-
-        String log = ((ship != null) ? ship.toString() : "null") + " TravelPlan: ";
-        if(ship != null) {
-            log += (ship.getTravelPlan() != null) ? ship.getTravelPlan().toString() : "null";
-            log += " State: " + ship.getState();
-        } else
-            log += "null State: null";
-
-        Gdx.app.log("LOG", log);
-
-
         game.getHandler().updateShipInFleet(
                 ID,
                 ship.getId(),
@@ -149,7 +134,11 @@ public class Player implements TravelListener {
                 ship.getTravelPlan().getResource().getID(),
                 ship.getTravelPlan().getResource().getAmount(),
                 ship.getTravelPlan().getStartTime(),
-                ShipState.getID(ship.getState()),
+                ship.getAttributes().getFuelCapacityLvl(),
+                ship.getAttributes().getFuelEfficiencyLvl(),
+                ship.getAttributes().getTravelSpeedLvl(),
+                ship.getAttributes().getMiningSpeedLvl(),
+                ship.getAttributes().getResourceCapacityLvl(),
                 game
         );
     }

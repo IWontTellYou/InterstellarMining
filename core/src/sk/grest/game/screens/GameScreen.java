@@ -13,32 +13,24 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import java.sql.Timestamp;
-import java.util.ArrayList;
-
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.TravelSettingDialog;
 import sk.grest.game.entities.PlanetSystem;
-import sk.grest.game.entities.Resource;
-import sk.grest.game.entities.TravelPlan;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Planet;
-import sk.grest.game.entities.Ship;
+import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.other.PlanetStats;
 
 public class GameScreen implements Screen, OnStatsChangedListener {
 
     // TODO REGISTER SCREEN
-    // TODO SHIP LIST + UPGRADE WINDOW
+    // TODO SHIP UPGRADE WINDOW
     // TODO SHIP SHOP
-    // TODO SEND SHIP AWAY WINDOW (BY CLICKING ON THE PLANET)
     // TODO PLANET SYSTEM LIST
-    // TODO FIX PLANET STATS VIEW
-    // TODO FIX FONT SIZE (KEEPS GETTING BIGGER ALSO IS LOW QUALITY)
 
     private static final String BASE_PLANET_NAME = "Earth";
 

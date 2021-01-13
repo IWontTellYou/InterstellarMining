@@ -105,6 +105,11 @@ public class DatabaseConstants {
         public static final String DESTINATION_ID = "destination_id";
         public static final String STATE_ID = "state_id";
         public static final String AMOUNT = "amount";
+        public static final String TRAVEL_SPEED_LVL = "travel_speed_lvl";
+        public static final String MINING_SPEED_LVL = "mining_speed_lvl";
+        public static final String RESOURCE_CAPACITY_LVL = "resource_capacity_lvl";
+        public static final String FUEL_CAPACITY_LVL = "fuel_capacity_lvl";
+        public static final String FUEL_EFFICIENCY_LVL = "fuel_efficiency_lvl";
     }
 
     /*

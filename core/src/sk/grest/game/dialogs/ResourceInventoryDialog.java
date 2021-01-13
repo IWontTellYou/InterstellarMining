@@ -2,7 +2,6 @@ package sk.grest.game.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -16,7 +15,6 @@ import java.util.Locale;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Resource;
-import sk.grest.game.entities.Ship;
 
 public class ResourceInventoryDialog extends CustomDialog {
 
