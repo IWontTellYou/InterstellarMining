@@ -7,9 +7,12 @@ import java.sql.Timestamp;
 import sk.grest.game.entities.Planet;
 import sk.grest.game.entities.Resource;
 import sk.grest.game.entities.enums.ShipState;
+import sk.grest.game.entities.ship.Attributes.AttributeType;
 import sk.grest.game.listeners.TravelListener;
 
 import static sk.grest.game.entities.enums.ShipState.AT_THE_BASE;
+import static sk.grest.game.entities.enums.ShipState.MINING;
+import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class Ship {
 
@@ -112,37 +115,54 @@ public class Ship {
         return name;
     }
 
+    public int getAttribute(AttributeType type){
+        switch (type){
+            case MINING_SPEED:
+                return (int) miningSpeed + attributes.getAttribute(type);
+            case TRAVEL_SPEED:
+                return (int) travelSpeed + attributes.getAttribute(type);
+            case FUEL_CAPACITY:
+                return (int) fuelCapacity + attributes.getAttribute(type);
+            case FUEL_EFFICIENCY:
+                return (int) fuelEfficiency + attributes.getAttribute(type);
+            case RESOURCE_CAPACITY:
+                return (int) resourceCapacity + attributes.getAttribute(type);
+            default:
+                return -1;
+        }
+    }
+
     public float getMiningSpeed() {
         if(attributes != null)
-            return miningSpeed + attributes.getMiningSpeedLvl();
+            return miningSpeed + attributes.getAttribute(MINING_SPEED);
         else
             return miningSpeed;
     }
 
     public float getTravelSpeed() {
         if(attributes != null)
-            return travelSpeed + attributes.getTravelSpeedLvl();
+            return travelSpeed + attributes.getAttribute(TRAVEL_SPEED);
         else
             return travelSpeed;
     }
 
     public float getResourceCapacity() {
         if(attributes != null)
-            return resourceCapacity + attributes.getResourceCapacityLvl();
+            return resourceCapacity + attributes.getAttribute(RESOURCE_CAPACITY);
         else
             return resourceCapacity;
     }
 
     public float getFuelCapacity() {
         if(attributes != null)
-            return fuelCapacity + attributes.getFuelCapacityLvl();
+            return fuelCapacity + attributes.getAttribute(FUEL_CAPACITY);
         else
             return fuelCapacity;
     }
 
     public float getFuelEfficiency() {
         if(attributes != null)
-            return fuelEfficiency + attributes.getFuelEfficiencyLvl();
+            return fuelEfficiency + attributes.getAttribute(FUEL_EFFICIENCY);
         else
             return fuelEfficiency;
     }
@@ -173,11 +193,11 @@ public class Ship {
             return AT_THE_BASE;
     }
 
-    public Timestamp getTimeLeft() {
+    public long getTimeLeft() {
         if(travelPlan != null)
             return travelPlan.getTimeLeft();
         else
-            return new Timestamp(0);
+            return 0;
     }
 
     public TravelPlan getTravelPlan(){

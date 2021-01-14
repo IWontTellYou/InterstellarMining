@@ -6,8 +6,11 @@ import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.enums.ShipState;
+import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.listeners.TravelListener;
+
+import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class Player implements TravelListener {
 
@@ -134,11 +137,11 @@ public class Player implements TravelListener {
                 ship.getTravelPlan().getResource().getID(),
                 ship.getTravelPlan().getResource().getAmount(),
                 ship.getTravelPlan().getStartTime(),
-                ship.getAttributes().getFuelCapacityLvl(),
-                ship.getAttributes().getFuelEfficiencyLvl(),
-                ship.getAttributes().getTravelSpeedLvl(),
-                ship.getAttributes().getMiningSpeedLvl(),
-                ship.getAttributes().getResourceCapacityLvl(),
+                ship.getAttributes().getAttribute(FUEL_CAPACITY),
+                ship.getAttributes().getAttribute(FUEL_EFFICIENCY),
+                ship.getAttributes().getAttribute(TRAVEL_SPEED),
+                ship.getAttributes().getAttribute(MINING_SPEED),
+                ship.getAttributes().getAttribute(RESOURCE_CAPACITY),
                 game
         );
     }

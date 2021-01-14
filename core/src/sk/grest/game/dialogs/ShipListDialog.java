@@ -106,8 +106,8 @@ public class ShipListDialog extends Dialog {
 
             Label shipTimeToArrive;
 
-            long timeLeft = s.getTimeLeft().getTime();
-            if(s.getTimeLeft().getTime() == 0){
+            long timeLeft = s.getTimeLeft();
+            if(s.getTimeLeft() == 0){
                 shipTimeToArrive = new Label("00:00:00", skin);
             }else{
                 shipTimeToArrive = new Label(ScreenDeafults.getTimeFormat(timeLeft), skin);
@@ -152,14 +152,13 @@ public class ShipListDialog extends Dialog {
             for (int i = 0; i < toUpdate.size(); i+=3) {
                 if(ships.get(shipIndex).getState() != ShipState.AT_THE_BASE) {
                     toUpdate.get(i).setText(ships.get(shipIndex).getCurrentDestination().getName());
-                    toUpdate.get(i + 1).setText(ScreenDeafults.getTimeFormat(ships.get(shipIndex).getTimeLeft().getTime()));
+                    toUpdate.get(i + 1).setText(ScreenDeafults.getTimeFormat(ships.get(shipIndex).getTimeLeft()));
                     toUpdate.get(i + 2).setText(ships.get(shipIndex).getState().toString());
                 }else {
                     toUpdate.get(i).setText("NONE");
                     toUpdate.get(i+1).setText("00:00:00");
                     toUpdate.get(i+2).setText(ShipState.AT_THE_BASE.toString());
                 }
-
                 shipIndex++;
             }
             timeLeft = 1;

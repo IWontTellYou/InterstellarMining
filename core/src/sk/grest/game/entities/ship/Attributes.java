@@ -1,5 +1,12 @@
 package sk.grest.game.entities.ship;
 
+import com.badlogic.gdx.Gdx;
+
+import javax.xml.stream.events.Attribute;
+
+import static sk.grest.game.entities.ship.Attributes.AttributeType.FUEL_EFFICIENCY;
+import static sk.grest.game.entities.ship.Attributes.AttributeType.RESOURCE_CAPACITY;
+
 public class Attributes {
 
     private int miningSpeedLvl;
@@ -8,62 +15,175 @@ public class Attributes {
     private int fuelCapacityLvl;
     private int fuelEfficiencyLvl;
 
-    Attributes(){
-        miningSpeedLvl = 1;
-        travelSpeedLvl = 1;
-        resourceCapacityLvl = 1;
-        fuelCapacityLvl = 1;
-        fuelEfficiencyLvl = 1;
-    }
+    private int miningSpeedTemp;
+    private int travelSpeedTemp;
+    private int resourceCapacityTemp;
+    private int fuelCapacityTemp;
+    private int fuelEfficiencyTemp;
 
-    public Attributes(int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl,
-                      int fuelCapacityLvl, int fuelEfficiencyLvl) {
+    public Attributes() {
+        this(1, 1, 1, 1, 1);
+    }
+    public Attributes(int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl, int fuelCapacityLvl, int fuelEfficiencyLvl) {
         this.miningSpeedLvl = miningSpeedLvl;
         this.travelSpeedLvl = travelSpeedLvl;
         this.resourceCapacityLvl = resourceCapacityLvl;
         this.fuelCapacityLvl = fuelCapacityLvl;
         this.fuelEfficiencyLvl = fuelEfficiencyLvl;
+
+        miningSpeedTemp = 0;
+        travelSpeedTemp = 0;
+        resourceCapacityTemp = 0;
+        fuelCapacityTemp = 0;
+        fuelEfficiencyTemp = 0;
     }
 
-    public int getMiningSpeedLvl() {
-        return miningSpeedLvl;
+    public int getAttribute(Attributes.AttributeType type){
+        switch (type){
+            case MINING_SPEED:
+                return miningSpeedLvl;
+            case TRAVEL_SPEED:
+                return travelSpeedLvl;
+            case FUEL_CAPACITY:
+                return fuelCapacityLvl;
+            case FUEL_EFFICIENCY:
+                return fuelEfficiencyLvl;
+            case RESOURCE_CAPACITY:
+                return resourceCapacityLvl;
+            default:
+                return -1;
+        }
+    }
+    public int getTemporaryAttribute(Attributes.AttributeType type){
+        switch (type){
+            case MINING_SPEED:
+                return miningSpeedTemp;
+            case TRAVEL_SPEED:
+                return travelSpeedTemp;
+            case FUEL_CAPACITY:
+                return fuelCapacityTemp;
+            case FUEL_EFFICIENCY:
+                return fuelEfficiencyTemp;
+            case RESOURCE_CAPACITY:
+                return resourceCapacityTemp;
+            default:
+                return -1;
+        }
     }
 
-    public int getTravelSpeedLvl() {
-        return travelSpeedLvl;
+    public void increaseTemporaryAttribute(AttributeType type){
+        increaseTemporaryAttribute(type, 1);
+    }
+    public void increaseTemporaryAttribute(AttributeType type, int amount){
+        switch (type){
+            case MINING_SPEED:
+                miningSpeedTemp += amount;
+                break;
+            case TRAVEL_SPEED:
+                travelSpeedTemp += amount;
+                break;
+            case FUEL_CAPACITY:
+                fuelCapacityTemp += amount;
+                break;
+            case FUEL_EFFICIENCY:
+                fuelEfficiencyTemp += amount;
+                break;
+            case RESOURCE_CAPACITY:
+                resourceCapacityTemp += amount;
+                break;
+            default:
+                break;
+        }
+    }
+    public void decreaseTemporaryAttribute(AttributeType type){
+        if(getTemporaryAttribute(type) > 0)
+            decreaseTemporaryAttribute(type, 1);
+    }
+    public void decreaseTemporaryAttribute(AttributeType type, int amount){
+        switch (type){
+            case MINING_SPEED:
+                miningSpeedTemp -= amount;
+                break;
+            case TRAVEL_SPEED:
+                travelSpeedTemp -= amount;
+                break;
+            case FUEL_CAPACITY:
+                fuelCapacityTemp -= amount;
+                break;
+            case FUEL_EFFICIENCY:
+                Gdx.app.log("ADD", FUEL_EFFICIENCY + " -");
+                fuelEfficiencyTemp -= amount;
+                break;
+            case RESOURCE_CAPACITY:
+                resourceCapacityTemp -= amount;
+                break;
+            default:
+                break;
+        }
+    }
+    public void saveAttributes(){
+        miningSpeedLvl += miningSpeedTemp;
+        travelSpeedLvl += travelSpeedTemp;
+        fuelEfficiencyLvl += fuelEfficiencyTemp;
+        fuelCapacityLvl += fuelCapacityTemp;
+        resourceCapacityLvl += resourceCapacityTemp;
+
+        miningSpeedTemp = 0;
+        travelSpeedTemp = 0;
+        fuelEfficiencyTemp = 0;
+        fuelCapacityTemp = 0;
+        resourceCapacityTemp = 0;
     }
 
-    public int getResourceCapacityLvl() {
-        return resourceCapacityLvl;
+    @Deprecated
+    private void increaseAttribute(AttributeType type, int amount){
+        switch (type){
+            case MINING_SPEED:
+                miningSpeedLvl += amount;
+                break;
+            case TRAVEL_SPEED:
+                travelSpeedLvl += amount;
+                break;
+            case FUEL_CAPACITY:
+                fuelCapacityLvl += amount;
+                break;
+            case FUEL_EFFICIENCY:
+                fuelEfficiencyLvl += amount;
+                break;
+            case RESOURCE_CAPACITY:
+                resourceCapacityLvl += amount;
+                break;
+            default:
+                break;
+        }
     }
 
-    public int getFuelCapacityLvl() {
-        return fuelCapacityLvl;
+    public enum AttributeType {
+        MINING_SPEED,
+        TRAVEL_SPEED,
+        RESOURCE_CAPACITY,
+        FUEL_CAPACITY,
+        FUEL_EFFICIENCY;
+
+        public static AttributeType getAttributeType(int id){
+
+            switch (id){
+                case 0:
+                    return TRAVEL_SPEED;
+                case 1:
+                    return MINING_SPEED;
+                case 2:
+                    return FUEL_CAPACITY;
+                case 3:
+                    return FUEL_EFFICIENCY;
+                case 4:
+                    return RESOURCE_CAPACITY;
+            }
+
+            return null;
+        }
     }
 
-    public int getFuelEfficiencyLvl() {
-        return fuelEfficiencyLvl;
-    }
-
-    // INCREASING ATRIBUTES
-
-    public void increaseMiningSpeedLvl() {
-        this.miningSpeedLvl++;
-    }
-
-    public void increaseTravelSpeedLvl() {
-        this.travelSpeedLvl++;
-    }
-
-    public void increaseResourceCapacityLvl() {
-        this.resourceCapacityLvl++;
-    }
-
-    public void increaseFuelCapacityLvl() {
-        this.fuelCapacityLvl++;
-    }
-
-    public void increaseFuelEfficiencyLvl() {
-        this.fuelEfficiencyLvl++;
-    }
 }
+
+

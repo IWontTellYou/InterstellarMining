@@ -33,6 +33,13 @@ import static sk.grest.game.database.DatabaseConstants.*;
 
 public class InterstellarMining extends Game implements DatabaseConnection.ConnectorEvent {
 
+	// BEFORE PRESENTATION
+	// TODO CLEAN UP CODE
+	// TODO DATABASE CAN BE POSSIBLY MADE SIMPLER USING JOINs (IF THERE'S TIME)
+	// TODO REGISTRATION
+	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
+	// TODO FIX SHIP UPDATE
+
 	private Player player;
 
 	private DatabaseHandler handler;
@@ -350,9 +357,8 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 							(Integer) data.get(ShipInFleetTable.FUEL_EFFICIENCY_LVL)
 					);
 
-					Timestamp taskTime = null;
 					if (data.get(ShipInFleetTable.TASK_TIME) != null && destination != null) {
-						taskTime = new Timestamp(Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME)));
+						long taskTime = Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME));
 						Resource resource = getResourceByID((Integer) data.get(ShipInFleetTable.RESOURCE_ID));
 						resource.setAmount((Float) data.get(ShipInFleetTable.AMOUNT));
 						TravelPlan plan = new TravelPlan(destination, ship, resource, taskTime);

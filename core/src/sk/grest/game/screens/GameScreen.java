@@ -17,6 +17,7 @@ import sk.grest.game.InterstellarMining;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.TravelSettingDialog;
+import sk.grest.game.dialogs.UpgradeShipDialog;
 import sk.grest.game.entities.PlanetSystem;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
@@ -47,6 +48,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private ShipListDialog shipListDialog;
     private TravelSettingDialog travelSettingDialog;
     private ResourceInventoryDialog resourceInventoryDialog;
+    private UpgradeShipDialog upgradeShipDialog;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -110,8 +112,11 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(isOver()){
-                    // ADD ACTION
+                Gdx.app.log("CLICK", "Clicked");
+                if(isOver(event.getStageX(), event.getStageY())){
+                    Gdx.app.log("CLICK", "Clicked inside");
+                    upgradeShipDialog = new UpgradeShipDialog(game, "", game.getUISkin(), game.getPlayer().getShips().get(0));
+                    upgradeShipDialog.show(stage);
                 }
             }
 
@@ -122,8 +127,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 }
             }
 
-            @Override
-            public boolean isOver(Actor actor, float x, float y) {
+            public boolean isOver(float x, float y) {
                 Vector2 mouse = new Vector2(x, y);
                 return mouse.dst(ScreenDeafults.TOP_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
