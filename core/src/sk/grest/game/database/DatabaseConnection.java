@@ -11,9 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import sk.grest.game.entities.Resource;
-import sk.grest.game.entities.ship.Ship;
-
 import static sk.grest.game.database.DatabaseConstants.*;
 
 public class DatabaseConnection {
@@ -230,7 +227,8 @@ public class DatabaseConnection {
                 break;
             case ResourceAtBase.TABLE_NAME:
                 sql += ResourceAtBase.AMOUNT + " = " + (Float) data.get(ShipInFleetTable.AMOUNT);
-                sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ResourceAtBase.RESOURCE_ID + " = " + objectId;
+                sql += " WHERE " + PLAYER_ID + " = " + playerId + " AND " + ResourceAtBase.RESOURCE_ID + " = " + objectId;
+                Gdx.app.log("SQL", sql);
                 break;
             case PlayerTable.TABLE_NAME:
                 sql += PlayerTable.LEVEL + " = " + (Integer) data.get(PlayerTable.LEVEL) + ", ";

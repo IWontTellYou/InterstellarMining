@@ -11,6 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.viewport.ExtendViewport;
+import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
@@ -36,6 +38,14 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private static final String BASE_PLANET_NAME = "Earth";
 
     private InterstellarMining game;
+
+    //table.setDebug(true);
+//table.debug(Table.Debug.all);
+
+    // MENU LAYOUT INITIALIZED
+
+    // PLANET STATS INITIALIZED
+
     private Stage stage;
 
     private PlanetStats planetStats;
@@ -56,6 +66,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         this.travelSettingDialog = null;
         this.shipListDialog = null;
 
+        stage = new Stage(new ScreenViewport());
+
         Gdx.app.log("SCREEN_CHANGE", "Screen changed to Game");
 
         // LAYOUT DEFINING
@@ -68,20 +80,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         // planetStats.getTable().setVisible(false);
 
         base = game.getPlanetByName(BASE_PLANET_NAME);
-
-        //table.setDebug(true);
-        //table.debug(Table.Debug.all);
-
-        // MENU LAYOUT INITIALIZED
-
-        // PLANET STATS INITIALIZED
-
-        // TooltipManager tooltipManager = new TooltipManager();
-        // final Tooltip<Table> stats = new Tooltip<>(planetStats);
-        // tooltipManager.enter(stats);
-        // tooltipManager.instant();
-
-        stage = new Stage(new ScreenViewport());
 
         final Button backToMenu = new Button(game.getSpriteSkin(), "left_top_button", "left_top_button_pressed");
         backToMenu.getButton().addListener(new ClickListener(){
@@ -212,6 +210,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                         @Override
                         public void clicked(InputEvent event, float x, float y) {
                             travelSettingDialog.getShipToTravel().setDestination(
+                                            game,
                                             planetStats.getCurrentPlanet(),
                                             travelSettingDialog.getResourceToMine()
                                     );

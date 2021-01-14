@@ -15,7 +15,7 @@ import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.Planet;
-import sk.grest.game.entities.Resource;
+import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Ship;
 
 public class TravelSettingDialog extends CustomDialog {

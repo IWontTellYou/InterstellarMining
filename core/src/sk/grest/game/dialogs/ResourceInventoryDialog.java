@@ -14,7 +14,7 @@ import java.util.Locale;
 
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Player;
-import sk.grest.game.entities.Resource;
+import sk.grest.game.entities.resource.Resource;
 
 public class ResourceInventoryDialog extends CustomDialog {
 

@@ -13,9 +13,10 @@ import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
 
+import sk.grest.game.InterstellarMining;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.ship.Ship;
-import sk.grest.game.entities.enums.ShipState;
+import sk.grest.game.entities.ship.ShipState;
 
 public class ShipListDialog extends Dialog {
 
@@ -44,6 +45,9 @@ public class ShipListDialog extends Dialog {
         //
 
         Table contentTable = new Table(skin);
+
+        setBackground(InterstellarMining.back);
+        setSize(ScreenDeafults.DEFAULT_DIALOG_WIDTH, ScreenDeafults.DEFAULT_DIALOG_HEIGHT);
 
         Label imageLabel = new Label("", skin);
         contentTable.add(imageLabel).
@@ -117,6 +121,8 @@ public class ShipListDialog extends Dialog {
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight);
 
+            contentTable.getRows();
+
             toUpdate.add(shipTimeToArrive);
 
             Label shipState = new Label(s.getState().toString(), skin);
@@ -129,7 +135,7 @@ public class ShipListDialog extends Dialog {
             toUpdate.add(shipState);
         }
 
-        getContentTable().add(contentTable);
+        getContentTable().add(contentTable).padBottom(100).row();
 
         // BUTTON TABLE
 
@@ -142,7 +148,7 @@ public class ShipListDialog extends Dialog {
                 listDialog.hide();
             }
         });
-        getButtonTable().add(closeBtn);
+        getContentTable().add(closeBtn);
 
     }
 
@@ -164,6 +170,16 @@ public class ShipListDialog extends Dialog {
             timeLeft = 1;
         }else
             timeLeft -= delta;
+    }
+
+    @Override
+    public float getPrefWidth() {
+        return ScreenDeafults.DEFAULT_DIALOG_WIDTH;
+    }
+
+    @Override
+    public float getPrefHeight() {
+        return ScreenDeafults.DEFAULT_DIALOG_HEIGHT;
     }
 
 }

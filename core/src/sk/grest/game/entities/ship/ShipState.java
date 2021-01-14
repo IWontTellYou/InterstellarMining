@@ -1,4 +1,4 @@
-package sk.grest.game.entities.enums;
+package sk.grest.game.entities.ship;
 
 public enum ShipState {
     AT_THE_BASE,

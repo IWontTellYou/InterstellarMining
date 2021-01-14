@@ -1,23 +1,22 @@
 package sk.grest.game.entities;
 
-import com.badlogic.gdx.Gdx;
-
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.entities.enums.ShipState;
-import sk.grest.game.entities.ship.Attributes;
-import sk.grest.game.entities.ship.Ship;
-import sk.grest.game.listeners.TravelListener;
+import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.entities.ship.ShipState;
+import sk.grest.game.listeners.DatabaseChangeListener;
 
-import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
+public class Player {
 
-public class Player implements TravelListener {
+    DatabaseChangeListener listener;
 
     private int ID;
     private String name;
     private String password;
     private String email;
+
+    private long money;
     private int level;
     private int experience;
 
@@ -71,26 +70,27 @@ public class Player implements TravelListener {
         return resourcesWithAmount;
     }
 
+    public long getMoney() { return money;}
+    public void increaseMoney(long amount) {
+        money += amount;
+    }
+    public void decreaseMoney(long amount) {money -= amount;}
+
     public int getID() {
         return ID;
     }
-
     public String getName() {
         return name;
     }
-
     public String getPassword() {
         return password;
     }
-
     public String getEmail() {
         return email;
     }
-
     public int getLevel() {
         return level;
     }
-
     public int getExperience() {
         return experience;
     }
@@ -113,36 +113,4 @@ public class Player implements TravelListener {
         }
     }
 
-    @Override
-    public void onMiningFinished(Resource r) {
-
-    }
-
-    @Override
-    public void onShipArrivedAtHome(Resource r) {
-        for (Resource resource : getResourcesAtBase()) {
-            if(resource.getID() == r.getID()){
-                resource.addAmount(r);
-                game.getHandler().updateResourceAtBase(ID, r.getID(), r.getAmount(), game);
-            }
-        }
-    }
-
-    @Override
-    public void onShipDataChanged(Ship ship) {
-        game.getHandler().updateShipInFleet(
-                ID,
-                ship.getId(),
-                ship.getCurrentDestination().getID(),
-                ship.getTravelPlan().getResource().getID(),
-                ship.getTravelPlan().getResource().getAmount(),
-                ship.getTravelPlan().getStartTime(),
-                ship.getAttributes().getAttribute(FUEL_CAPACITY),
-                ship.getAttributes().getAttribute(FUEL_EFFICIENCY),
-                ship.getAttributes().getAttribute(TRAVEL_SPEED),
-                ship.getAttributes().getAttribute(MINING_SPEED),
-                ship.getAttributes().getAttribute(RESOURCE_CAPACITY),
-                game
-        );
-    }
 }

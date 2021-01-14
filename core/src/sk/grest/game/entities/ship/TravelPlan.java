@@ -4,18 +4,18 @@ import com.badlogic.gdx.Gdx;
 
 import java.util.Arrays;
 
-import sk.grest.game.defaults.GameConstants;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Planet;
-import sk.grest.game.entities.Resource;
-import sk.grest.game.entities.enums.ShipState;
-import sk.grest.game.entities.ship.Ship;
-import sk.grest.game.listeners.TravelListener;
+import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.listeners.DatabaseChangeListener;
 
 import static sk.grest.game.defaults.GameConstants.BASE_DISTANCE;
 import static sk.grest.game.defaults.GameConstants.BASE_MINING_TIME;
+import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class TravelPlan {
+
+    DatabaseChangeListener listener;
 
     // TODO FIX TIMING (RESOURCE HAS TO BE ADDED WHEN IT ARRIVES AT BASE)
 
@@ -33,32 +33,28 @@ public class TravelPlan {
     private float resourceAmount;
 
     private boolean resourceMined;
+    private boolean travelBegun;
 
-    public TravelPlan(Planet destination, sk.grest.game.entities.ship.Ship ship, Resource resource, long startTime) {
+    public TravelPlan(DatabaseChangeListener listener, Planet destination, Ship ship, Resource resource, long startTime) {
+        this.listener = listener;
         this.destination = destination;
         this.ship = ship;
-        this.resource = resource;
+        this.resource = Resource.clone(resource);
         this.resourceAmount = 0;
         this.resourceMined = false;
         setTravel(startTime);
     }
-
-    public TravelPlan(Planet destination, Ship ship, Resource resource){
-        this.destination = destination;
-        this.ship = ship;
-        this.resource = resource;
-        this.resourceAmount = 0;
-        this.resourceMined = false;
-        setTravel(System.currentTimeMillis());
+    public TravelPlan(DatabaseChangeListener listener, Planet destination, Ship ship, Resource resource){
+        this(listener, destination, ship, resource, System.currentTimeMillis());
     }
 
     private void setTravel(long startTime){
 
         // IF DISTANCE == SHIP's SPEED, TRAVEL TIME WILL BE 5 MINUTES
-        long travelTime = (long) (destination.getDistance() * BASE_DISTANCE / ship.getTravelSpeed());
+        long travelTime = (long) (destination.getDistance() * BASE_DISTANCE / ship.getAttribute(TRAVEL_SPEED));
 
         // IF SHIP's CAPACITY == SHIP's MINING SPEED, MINING TIME WILL BE 5 MINUTES
-        long miningTime = (long) (ship.getResourceCapacity() * BASE_MINING_TIME / ship.getMiningSpeed());
+        long miningTime = (long) (ship.getAttribute(RESOURCE_CAPACITY) * BASE_MINING_TIME / ship.getAttribute(MINING_SPEED));
 
         this.schedule = new long[4];
         schedule[FROM_HOME] = startTime;
@@ -74,6 +70,15 @@ public class TravelPlan {
         log += "\n[TO_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_HOME]);
         Gdx.app.log("\nTIME_TRAVEL", log + "\n");
 
+        travelBegun = true;
+
+    }
+
+    public boolean isTravelBegun() {
+        return travelBegun;
+    }
+    public void setTravelBegun(boolean travelBegun) {
+        this.travelBegun = travelBegun;
     }
 
     public ShipState getCurrentState(){
@@ -87,13 +92,14 @@ public class TravelPlan {
         log += "\n[TO_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_HOME]);
         Gdx.app.log("TIME_TRAVEL", log + "\n");
          */
-        if(schedule[TO_HOME] < currentTime)
+
+        if(schedule[TO_HOME] <= currentTime)
             return ShipState.AT_THE_BASE;
-        else if(schedule[FROM_DEST] < currentTime)
+        else if(schedule[FROM_DEST] <= currentTime)
             return ShipState.TRAVELLING_BACK;
-        else if(schedule[TO_DEST] < currentTime)
+        else if(schedule[TO_DEST] <= currentTime)
             return ShipState.MINING;
-        else if(schedule[FROM_HOME] < currentTime)
+        else if(schedule[FROM_HOME] <= currentTime)
             return ShipState.TRAVELLING_OUT;
         else
             return null;
@@ -105,6 +111,7 @@ public class TravelPlan {
         resource.setAmount(0);
         setTravel(System.currentTimeMillis());
     }
+
     public void reset(){
         Arrays.fill(schedule, 0);
         destination = null;
@@ -141,10 +148,10 @@ public class TravelPlan {
             return 0;
     }
 
-    public void update(TravelListener listener, float delta){
+    public void update(float delta){
         if(getCurrentState() == ShipState.TRAVELLING_BACK && !resourceMined){
             resourceMined = true;
-            resourceAmount = ship.getResourceCapacity();
+            resource.setAmount(ship.getAttribute(RESOURCE_CAPACITY));
             Gdx.app.log("SHIP_UPDATE", "SHIP UPDATED AFTER MINING ENDED");
             listener.onShipDataChanged(ship);
         }

@@ -4,13 +4,12 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.PlanetSystem;
-import sk.grest.game.entities.Resource;
+import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.entities.Planet;
 
@@ -74,12 +73,15 @@ public class PlanetStats {
 
         this.nameLabel.setText(planetSystem.get(currentPlanetIndex).getName());
 
-        planetStats.add(new Label("Name:", game.getUISkin()))
+
+        Label nameText = new Label("Name:", game.getUISkin());
+        planetStats.add(nameText)
                 .width(cellWidth).height(cellHeight);
         planetStats.add(nameLabel)
                 .width(cellWidth).height(cellHeight).row();
 
-        planetStats.add(new Label("Resources:", game.getUISkin()))
+        Label resourcesText = new Label("Resources:", game.getUISkin());
+        planetStats.add(resourcesText)
                 .width(cellWidth).height(cellHeight);
 
         ArrayList<Resource> resources = planetSystem.get(currentPlanetIndex).getResources();
@@ -92,11 +94,18 @@ public class PlanetStats {
 
         for (int i = 1; i < resourcesLabel.length; i++) {
             resourcesLabel[i] = new Label(resources.get(i).getName(), game.getUISkin());
+            resourcesLabel[i].setAlignment(Align.center);
             planetStats.add(resourcesLabel[i])
-                    .width(cellWidth).height(cellHeight).
-                    align(Align.right).
-                    colspan(2).row();
+                    .width(cellWidth)
+                    .height(cellHeight)
+                    .align(Align.right)
+                    .colspan(2)
+                    .row();
         }
+
+        planetStats.setBackground(InterstellarMining.back);
+        planetStats.setSize(Gdx.graphics.getWidth()/3f, Gdx.graphics.getHeight()/5f);
+
     }
 
     public Table getTable(){

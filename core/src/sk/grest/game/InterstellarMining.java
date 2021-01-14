@@ -8,39 +8,43 @@ import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
-import java.sql.Timestamp;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.Map;
 
-import sk.grest.game.database.DatabaseConnection;
 import sk.grest.game.database.DatabaseHandler;
 import sk.grest.game.database.DatabaseInitalization;
 import sk.grest.game.entities.Planet;
 import sk.grest.game.entities.PlanetSystem;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
-import sk.grest.game.entities.Resource;
+import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.TravelPlan;
-import sk.grest.game.entities.enums.ResourceRarity;
-import sk.grest.game.entities.enums.ResourceState;
+import sk.grest.game.entities.resource.ResourceRarity;
+import sk.grest.game.entities.resource.ResourceState;
+import sk.grest.game.listeners.DatabaseChangeListener;
 import sk.grest.game.screens.GameScreen;
 import sk.grest.game.screens.MainMenuScreen;
 
+import static sk.grest.game.database.DatabaseConnection.*;
 import static sk.grest.game.database.DatabaseConstants.*;
+import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
-public class InterstellarMining extends Game implements DatabaseConnection.ConnectorEvent {
+public class InterstellarMining extends Game implements ConnectorEvent, DatabaseChangeListener {
 
 	// BEFORE PRESENTATION
 	// TODO CLEAN UP CODE
 	// TODO DATABASE CAN BE POSSIBLY MADE SIMPLER USING JOINs (IF THERE'S TIME)
 	// TODO REGISTRATION
 	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
-	// TODO FIX SHIP UPDATE
+	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
 
 	private Player player;
+
+	public static Drawable back;
 
 	private DatabaseHandler handler;
 	private DatabaseInitalization dataInit;
@@ -62,7 +66,8 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 
 		Gdx.app.log("Time", new Date(System.currentTimeMillis()).toString());
 
-		handler = new DatabaseHandler(DatabaseConnection.getInstance(), this);
+		handler = DatabaseHandler.getInstance();
+		handler.init(this);
 		dataInit = new DatabaseInitalization();
 
 		resources = new ArrayList<>();
@@ -74,11 +79,13 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 		defaultFont = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
 		batch = new SpriteBatch();
 
-		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprite.atlas"));
+		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprites.atlas"));
 		spriteSkin = new Skin(area);
 
 		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiskin.atlas"));
 		uiskin = new Skin(Gdx.files.internal("skins\\uiskin.json"), uiarea);
+
+		back = spriteSkin.getDrawable("actor_background");
 
 		setScreen(new MainMenuScreen(this));
 	}
@@ -225,9 +232,9 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 			case ShipTable.TABLE_NAME:
 				for (Map<String, Object> data : tableData) {
 					Ship ship = new Ship(
+							this,
 							(Integer) data.get(ShipTable.ID),
 							(String) data.get(ShipTable.NAME),
-							player,
 							(Float) data.get(ShipTable.MINING_SPEED),
 							(Float) data.get(ShipTable.TRAVEL_SPEED),
 							(Float) data.get(ShipTable.RESOURCE_CAPACITY),
@@ -337,14 +344,14 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 						destination = null;
 
 					Ship ship = new Ship(
+							this,
 							s.getId(),
 							s.getName(),
-							player,
-							s.getMiningSpeed(),
-							s.getTravelSpeed(),
-							s.getResourceCapacity(),
-							s.getFuelCapacity(),
-							s.getFuelEfficiency(),
+							s.getAttribute(MINING_SPEED),
+							s.getAttribute(TRAVEL_SPEED),
+							s.getAttribute(RESOURCE_CAPACITY),
+							s.getAttribute(FUEL_CAPACITY),
+							s.getAttribute(FUEL_EFFICIENCY),
 							s.getPrice(),
 							(Integer) data.get(ShipInFleetTable.UPGRADE_LEVEL)
 					);
@@ -357,11 +364,15 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 							(Integer) data.get(ShipInFleetTable.FUEL_EFFICIENCY_LVL)
 					);
 
-					if (data.get(ShipInFleetTable.TASK_TIME) != null && destination != null) {
+					if (data.get(ShipInFleetTable.TASK_TIME) != null && Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME)) != 0 && destination != null) {
 						long taskTime = Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME));
 						Resource resource = getResourceByID((Integer) data.get(ShipInFleetTable.RESOURCE_ID));
 						resource.setAmount((Float) data.get(ShipInFleetTable.AMOUNT));
-						TravelPlan plan = new TravelPlan(destination, ship, resource, taskTime);
+						TravelPlan plan = new TravelPlan(this, destination, ship, resource, taskTime);
+
+						if(plan.getCurrentState() == ShipState.AT_THE_BASE){
+						}
+
 						ship.setTravelPlan(plan);
 					}
 
@@ -426,5 +437,29 @@ public class InterstellarMining extends Game implements DatabaseConnection.Conne
 	@Override
 	public void onResultFailed(int requestCode, String message) {
 		Gdx.app.log("RESULT_FAILED", message);
+	}
+
+	// DATABASE CHANGE LISTENER METHODS
+
+	@Override
+	public void onShipDataChanged(Ship ship) {
+		handler.updateShipInFleet(player.getID(), ship, this);
+	}
+
+	@Override
+	public void onAttributesChanged(Ship ship, Attributes attributes) {
+		handler.updateShipInFleet(player.getID(), ship, this);
+	}
+
+	@Override
+	public void onShipArrivedAtBase(Ship ship, Resource resource) {
+		for (Resource r : player.getResourcesAtBase()) {
+			if(resource.getID() == r.getID()){
+				r.addAmount(resource);
+				Gdx.app.log("RESOURCE", r.getAmount()+"");
+				handler.updateResourceAtBase(player.getID(), r.getID(), r.getAmount(), this);
+				handler.updateShipInFleet(player.getID(), ship, this);
+			}
+		}
 	}
 }

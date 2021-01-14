@@ -2,6 +2,8 @@ package sk.grest.game.entities;
 
 import java.util.ArrayList;
 
+import sk.grest.game.entities.resource.Resource;
+
 public class Planet {
 
     private int ID;

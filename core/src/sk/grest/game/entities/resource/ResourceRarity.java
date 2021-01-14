@@ -1,4 +1,4 @@
-package sk.grest.game.entities.enums;
+package sk.grest.game.entities.resource;
 
 public enum ResourceRarity {
     COMMON,

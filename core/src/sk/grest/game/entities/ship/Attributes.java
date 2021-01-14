@@ -4,10 +4,15 @@ import com.badlogic.gdx.Gdx;
 
 import javax.xml.stream.events.Attribute;
 
+import sk.grest.game.database.DatabaseHandler;
+import sk.grest.game.listeners.DatabaseChangeListener;
+
 import static sk.grest.game.entities.ship.Attributes.AttributeType.FUEL_EFFICIENCY;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.RESOURCE_CAPACITY;
 
 public class Attributes {
+
+    private DatabaseChangeListener listener;
 
     private int miningSpeedLvl;
     private int travelSpeedLvl;
@@ -21,10 +26,10 @@ public class Attributes {
     private int fuelCapacityTemp;
     private int fuelEfficiencyTemp;
 
-    public Attributes() {
-        this(1, 1, 1, 1, 1);
+    public Attributes(DatabaseChangeListener listener) {
+        this(listener, 1, 1, 1, 1, 1);
     }
-    public Attributes(int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl, int fuelCapacityLvl, int fuelEfficiencyLvl) {
+    public Attributes(DatabaseChangeListener listener, int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl, int fuelCapacityLvl, int fuelEfficiencyLvl) {
         this.miningSpeedLvl = miningSpeedLvl;
         this.travelSpeedLvl = travelSpeedLvl;
         this.resourceCapacityLvl = resourceCapacityLvl;
@@ -36,6 +41,9 @@ public class Attributes {
         resourceCapacityTemp = 0;
         fuelCapacityTemp = 0;
         fuelEfficiencyTemp = 0;
+
+        this.listener = listener;
+
     }
 
     public int getAttribute(Attributes.AttributeType type){
@@ -182,6 +190,7 @@ public class Attributes {
 
             return null;
         }
+
     }
 
 }

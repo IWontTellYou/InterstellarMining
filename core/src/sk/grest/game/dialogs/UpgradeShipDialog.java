@@ -21,6 +21,8 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class UpgradeShipDialog extends CustomDialog {
 
+    // TODO ADD CONDINTION SHIP.STATE == AT_THE_BASE
+
     private static final int TRAVEL_SPEED_LABEL = 0;
     private static final int MINING_SPEED_LABEL = 1;
     private static final int FUEL_CAPACITY_LABEL = 2;
@@ -28,7 +30,6 @@ public class UpgradeShipDialog extends CustomDialog {
     private static final int RESOURCE_CAPACITY_LABEL = 4;
 
     // InterstellarMining class will be here as temporary solution until I have regular graphichs for Buttons
-
 
     public static final String BTN_PLUS_DEFAULT_UP = "tree-plus";
     public static final String BTN_MINUS_DEFAULT_UP = "tree-minus";
@@ -46,18 +47,18 @@ public class UpgradeShipDialog extends CustomDialog {
         this.ship = ship;
         labels = new Label[5];
 
-        float defaultActorWidth = getWidth()/2f;
-        float defaultActorHeight = getHeight()/10f;
+        float defaultButtonWidth = getWidth()/8f;
+        float defaultButtonHeight = getHeight()/20f;
 
         float defaultLabelWidth = getWidth()/3.5f;
         float defaultLabelHeight = getHeight()/17.5f;
 
-        float defaultBtnSize = getHeight()/30f;
+        float defaultBtnSize = getHeight()/40f;
 
         Image shipImage = new Image();
 
         Table upgradeLayout = new Table(skin);
-        upgradeLayout.debug(Debug.all);
+        //upgradeLayout.debug(Debug.all);
 
         final Attributes attributes = ship.getAttributes();
 
@@ -83,7 +84,7 @@ public class UpgradeShipDialog extends CustomDialog {
 
         upgradeLayout.add(labels[TRAVEL_SPEED_LABEL])
                 .width(defaultLabelWidth)
-                .height(defaultActorHeight);
+                .height(defaultLabelHeight);
         upgradeLayout.add(travelSpeedMinus.getButton())
                 .size(defaultBtnSize);
         upgradeLayout.add(travelSpeedPlus.getButton())
@@ -112,7 +113,7 @@ public class UpgradeShipDialog extends CustomDialog {
 
         upgradeLayout.add(labels[MINING_SPEED_LABEL])
                 .width(defaultLabelWidth)
-                .height(defaultActorHeight);
+                .height(defaultLabelHeight);
         upgradeLayout.add(miningSpeedMinus.getButton())
                 .size(defaultBtnSize);
         upgradeLayout.add(miningSpeedPlus.getButton())
@@ -141,7 +142,7 @@ public class UpgradeShipDialog extends CustomDialog {
 
         upgradeLayout.add(labels[FUEL_CAPACITY_LABEL])
                 .width(defaultLabelWidth)
-                .height(defaultActorHeight);
+                .height(defaultLabelHeight);
         upgradeLayout.add(fuelCapacityMinus.getButton())
                 .size(defaultBtnSize);
         upgradeLayout.add(fuelCapacityPlus.getButton())
@@ -172,7 +173,7 @@ public class UpgradeShipDialog extends CustomDialog {
 
         upgradeLayout.add(labels[FUEL_EFFICIENCY_LABEL])
                 .width(defaultLabelWidth)
-                .height(defaultActorHeight);
+                .height(defaultLabelHeight);
         upgradeLayout.add(fuelEfficiencyMinus.getButton())
                 .size(defaultBtnSize);
         upgradeLayout.add(fuelEfficiencyPlus.getButton())
@@ -203,30 +204,45 @@ public class UpgradeShipDialog extends CustomDialog {
 
         upgradeLayout.add(labels[RESOURCE_CAPACITY_LABEL])
                 .width(defaultLabelWidth)
-                .height(defaultActorHeight);
+                .height(defaultLabelHeight);
         upgradeLayout.add(resourceCapacityMinus.getButton())
                 .size(defaultBtnSize);
         upgradeLayout.add(resourceCapacityPlus.getButton())
                 .size(defaultBtnSize)
                 .row();
 
-        getContentTable().add(upgradeLayout).row();
-
         TextButton saveBtn = new TextButton("SAVE", skin);
         saveBtn.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                ship.getAttributes().saveAttributes();
+                ship.saveAttributes();
                 for (int i = 0; i < labels.length; i++)
                     labels[i].setText(getLabelAtributeString(Objects.requireNonNull(getAttributeType(i))));
-
             }
         });
 
-        getContentTable().add(saveBtn)
-                .width(defaultBtnSize * 4f)
-                .height(defaultBtnSize * 2f)
+        upgradeLayout.add(saveBtn)
+                .width(defaultButtonWidth)
+                .height(defaultButtonHeight)
                 .align(Align.center);
+
+        final UpgradeShipDialog shipDialog = this;
+        TextButton closeBtn = new TextButton("CLOSE", skin);
+        closeBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                shipDialog.hide();
+            }
+        });
+
+        upgradeLayout.add(closeBtn)
+                .width(defaultButtonWidth)
+                .height(defaultButtonHeight)
+                .align(Align.center);
+
+        getContentTable().debug(Debug.all);
+
+        getContentTable().add(upgradeLayout).row();
 
     }
 
