@@ -74,11 +74,11 @@ public class DatabaseConnection {
 
                     // Gdx.app.log("SQL_QUERRY", requestData.get(0).toString());
 
-                    eventListener.
-                            onFetchSuccess
-                                    (requestCode,
-                                            PlayerTable.TABLE_NAME,
-                                            requestData);
+                    // TODO CREATE A TOAST OR SOMETHING LIKE THAT FOR THIS
+                    if(requestData.size() > 0)
+                        eventListener.onUserLoginSuccessful(requestCode, requestData.get(0));
+                    else
+                        Gdx.app.log("WRONG_CREDENTIALS", "Could not log in");
 
                 } catch (SQLException e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
@@ -156,17 +156,9 @@ public class DatabaseConnection {
             public void run() {
                 try {
                     Statement stm = connection.createStatement();
-                    StringBuilder keyNames = new StringBuilder();
-                    StringBuilder keyValues = new StringBuilder();
-                    for (String s : data.keySet()) {
-                        keyNames.append(s).append(",");
-                        keyValues.append(data.get(s)).append(",");
-                    }
-                    keyNames = new StringBuilder(keyNames.substring(0, keyNames.length() - 1));
-                    keyValues = new StringBuilder(keyValues.substring(0, keyValues.length() - 1));
-                    String sql = "INSERT INTO " + tableName + "(" + keyNames + ") VALUE (" + keyValues + ")";
+                    String sql = getAddRowSQL(tableName, data);
 
-                    Gdx.app.log("SQL_QUERRY", sql);
+                    // Gdx.app.log("SQL_QUERRY", sql);
 
                     stm.executeUpdate(sql);
                     eventListener.onUpdateSuccess(requestCode, tableName);
@@ -239,6 +231,32 @@ public class DatabaseConnection {
 
         return sql;
     }
+    private String getAddRowSQL(final String tableName, final Map<String, Object> data){
+        StringBuilder keyNames = new StringBuilder();
+        StringBuilder keyValues = new StringBuilder();
+
+        if(tableName.equals(PlayerTable.TABLE_NAME)){
+            for (String key : data.keySet()) {
+                keyNames.append(key).append(",");
+
+                if(key.equals(PlayerTable.NAME) || key.equals(PlayerTable.EMAIL) || key.equals(PlayerTable.PASSWORD))
+                    keyValues.append("'").append(data.get(key)).append("'").append(",");
+                else
+                    keyValues.append(data.get(key)).append(",");
+            }
+        }else {
+            for (String s : data.keySet()) {
+                keyNames.append(s).append(",");
+                keyValues.append(data.get(s)).append(",");
+            }
+        }
+
+        keyNames = new StringBuilder(keyNames.substring(0, keyNames.length() - 1));
+        keyValues = new StringBuilder(keyValues.substring(0, keyValues.length() - 1));
+
+        return "INSERT INTO " + tableName + "(" + keyNames + ") VALUES (" + keyValues + ")";
+    }
+
 
     public interface ConnectorEvent {
         void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData);
@@ -246,6 +264,7 @@ public class DatabaseConnection {
         void onConnect();
         void onConnectionFailed();
         void onResultFailed(int requestCode, String message);
+        void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData);
     }
 
 }

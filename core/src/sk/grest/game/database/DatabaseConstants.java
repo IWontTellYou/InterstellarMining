@@ -14,6 +14,7 @@ public class DatabaseConstants {
         public static final String PASSWORD = "password";
         public static final String LEVEL = "level";
         public static final String EXPERIENCE = "experience";
+        public static final String MONEY = "money";
     }
 
     public static final class LoginHistoryTable {

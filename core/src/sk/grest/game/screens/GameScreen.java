@@ -31,7 +31,7 @@ import sk.grest.game.other.PlanetStats;
 public class GameScreen implements Screen, OnStatsChangedListener {
 
     // TODO REGISTER SCREEN
-    // TODO SHIP UPGRADE WINDOW
+    // TODO FINISH SHIP UPGRADE WINDOW
     // TODO SHIP SHOP
     // TODO PLANET SYSTEM LIST
 
@@ -176,8 +176,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-        Button leftPanel = new Button(game.getSpriteSkin(), "left_panel", null);
-        leftPanel.getButton().addListener(new ClickListener(){
+        Button shipsListButton = new Button(game.getSpriteSkin(), "ships", "ships_pressed");
+        shipsListButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 shipListDialog = new ShipListDialog("", game.getUISkin(), game.getPlayer().getShips());
@@ -185,8 +185,24 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-        Button rightPanel = new Button(game.getSpriteSkin(), "right_panel", null);
-        rightPanel.getButton().addListener(new ClickListener(){
+        Button shipsShopButton = new Button(game.getSpriteSkin(), "shop", "shop_pressed");
+        shipsShopButton.getButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+            }
+        });
+
+        Button achievementsButton = new Button(game.getSpriteSkin(), "achievement", "achievement_pressed");
+        achievementsButton.getButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+
+            }
+        });
+
+        Button inventoryButton = new Button(game.getSpriteSkin(), "home", "home_pressed");
+        inventoryButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // ADD ACTION
@@ -262,6 +278,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         planetName.setAlignment(Align.center);
         table.add(planetName)
                 .align(Align.top)
+                .center()
                 .width(btnWidth)
                 .height(btnHeight);
 
@@ -274,19 +291,33 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
         // ROW 1
 
-        leftPanel.getButton().align(Align.left);
-        table.add(leftPanel.getButton())
-                .expand().align(Align.left)
-                .width(Gdx.graphics.getWidth() / 4f)
-                .height(Gdx.graphics.getHeight() / 1.5f);
+
+        Table leftPanel = new Table();
+        leftPanel.add(shipsListButton.getButton()).center().row();
+        leftPanel.add(shipsShopButton.getButton().center()).row();
+        leftPanel.add(achievementsButton.getButton().center()).row();
+        leftPanel.setBackground(game.getSpriteSkin().getDrawable("left_panel"));
+        leftPanel.debug(Table.Debug.all);
+
+        table.add(leftPanel)
+                .uniform()
+                .prefHeight(Gdx.graphics.getHeight() / 3f)
+                .prefWidth(Gdx.graphics.getWidth() / 16f)
+                .left()
+                .fill(false, false)
+                .width(Gdx.graphics.getWidth() / 8f)
+                .height(Gdx.graphics.getHeight() / 1.5f)
+                .pad(0);
 
         table.add(planetBtn.getButton())
-                .expand().align(Align.center)
+                .expandX().align(Align.center)
                 .width(planetSize)
                 .height(planetSize);
 
+        Button rightPanel = new Button(game.getSpriteSkin(), "right_panel", null);
         rightPanel.getButton().align(Align.right);
         table.add(rightPanel.getButton())
+                .uniform()
                 .expand().align(Align.right)
                 .width(Gdx.graphics.getWidth() / 4f)
                 .height(Gdx.graphics.getHeight() / 1.5f)

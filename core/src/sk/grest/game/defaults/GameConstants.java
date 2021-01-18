@@ -2,6 +2,10 @@ package sk.grest.game.defaults;
 
 public class GameConstants {
 
+    // REGISTRATION DEFAULTS
+
+    public static final int DEFAULT_SHIP_COUNT = 1;
+
     // TIME CONSTANTS
 
     public static final float SECOND = 1000f;

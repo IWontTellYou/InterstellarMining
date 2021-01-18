@@ -83,7 +83,7 @@ public class Ship {
     // TODO DONT NEED THIS (I GUESS) REPLACED BY ATTRIBUTES
     public void saveAttributes(){
         // TODO FIX - POSSIBLY WRONG
-        if(travelPlan.getCurrentState() == AT_THE_BASE){
+        if(travelPlan == null || travelPlan.getCurrentState() == AT_THE_BASE){
             attributes.saveAttributes();
             listener.onAttributesChanged(this, attributes);
         }else{

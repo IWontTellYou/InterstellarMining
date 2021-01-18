@@ -121,6 +121,10 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	public DatabaseHandler getHandler() {
 		return handler;
 	}
+	public Player getPlayer() {
+		return player;
+	}
+
 	public ArrayList<Ship> getShipsShop() {
 		return shipsShop;
 	}
@@ -130,8 +134,8 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	public ArrayList<Research> getResearches() {
 		return researches;
 	}
-	public Player getPlayer() {
-		return player;
+	public ArrayList<Resource> getResources() {
+		return resources;
 	}
 
 	// Get by ID methods
@@ -438,6 +442,9 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	public void onResultFailed(int requestCode, String message) {
 		Gdx.app.log("RESULT_FAILED", message);
 	}
+	@Override
+	public void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData) {}
+
 
 	// DATABASE CHANGE LISTENER METHODS
 

@@ -1,21 +1,24 @@
 package sk.grest.game.database;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.entities.ship.Attributes;
+import sk.grest.game.entities.Player;
 import sk.grest.game.entities.ship.Ship;
 
 import static sk.grest.game.database.DatabaseConnection.*;
 import static sk.grest.game.database.DatabaseConstants.*;
+import static sk.grest.game.database.DatabaseConstants.PlayerTable.*;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.EMAIL;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.EXPERIENCE;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.LEVEL;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.NAME;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.PASSWORD;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.TABLE_NAME;
+import static sk.grest.game.database.DatabaseConstants.PLAYER_ID;
 import static sk.grest.game.database.DatabaseConstants.ShipInFleetTable.*;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
@@ -57,14 +60,46 @@ public class DatabaseHandler {
         connection.addRow(requestCode++, LoginHistoryTable.TABLE_NAME, data, game);
     }
 
-    public void addPlayer(String name, String password, String email, int level, int experience){
+    public void getPlayersTable(ConnectorEvent listener){
+        connection.getTable(requestCode++, TABLE_NAME, listener);
+    }
+
+    public void addPlayer(String name, String password, String email, ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
         data.put(NAME, name);
         data.put(PASSWORD, password);
         data.put(EMAIL, email);
-        data.put(LEVEL, level);
-        data.put(EXPERIENCE, experience);
-        connection.addRow(requestCode++, TABLE_NAME, data, game);
+        data.put(LEVEL, 1);
+        data.put(EXPERIENCE, 0);
+        data.put(MONEY, 10000);
+        connection.addRow(requestCode++, TABLE_NAME, data, listener);
+    }
+    
+    public void addPlayerData(Map<String, Object> data, ConnectorEvent listener){
+        int playerId = (Integer) data.get(PlayerTable.ID);
+
+        // RESOURCE AT BASE
+        for (int i = 0; i < game.getResources().size(); i++) {
+            Map<String, Object> resourceData = new HashMap<>();
+            resourceData.put(PLAYER_ID, playerId);
+            resourceData.put(ResourceAtBase.RESOURCE_ID, i+1);
+            resourceData.put(ResourceAtBase.AMOUNT, 0);
+            connection.addRow(requestCode++, ResourceAtBase.TABLE_NAME, resourceData, listener);
+        }
+
+        for (int i = 0; i < game.getPlanetSystems().size(); i++) {
+            Map<String, Object> planetSystemData = new HashMap<>();
+            planetSystemData.put(DiscoveredSystemsTable.PLAYER_ID, playerId);
+            planetSystemData.put(DiscoveredSystemsTable.PLANET_SYSTEM_ID, i+1);
+            planetSystemData.put(DiscoveredSystemsTable.UNLOCKED, i+1 == 1);
+            connection.addRow(requestCode++, DiscoveredSystemsTable.TABLE_NAME, planetSystemData, listener);
+        }
+
+        Map<String, Object> basicShip = new HashMap<>();
+        basicShip.put(PLAYER_ID, playerId);
+        basicShip.put(SHIP_ID, 1);
+        connection.addRow(requestCode++, ShipInFleetTable.TABLE_NAME, basicShip, listener);
+
     }
 
     public void setConnection(DatabaseConnection connection) {
