@@ -1,4 +1,4 @@
-package sk.grest.game.entities;
+package sk.grest.game.entities.planet;
 
 import java.util.ArrayList;
 

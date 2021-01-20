@@ -14,8 +14,8 @@ import java.util.Map;
 
 import sk.grest.game.database.DatabaseHandler;
 import sk.grest.game.database.DatabaseInitalization;
-import sk.grest.game.entities.Planet;
-import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.entities.planet.Planet;
+import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
 import sk.grest.game.entities.resource.Resource;
@@ -35,12 +35,25 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class InterstellarMining extends Game implements ConnectorEvent, DatabaseChangeListener {
 
-	// BEFORE PRESENTATION
+	// TUESDAY
+	// TODO FIX BUTTONS
+	// TODO SHIP SHOP (BASICALLY DONE)
+
+	// WEDNESDAY
+	// TODO FIX SCROLLING LAYOUT FOR RESOURCE_DIALOG, SHIPS_LIST AND SHIPS_SHOP
+	// TODO FINISH SHIP UPGRADE WINDOW
+
+	// THURSDAY
+	// TODO PLANET SYSTEM LIST
+	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
+
+	// FRIDAY
+	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
+	// TODO REMEMBER NAME AND PASSWORD
+
+	// PROBLEMS THAT WILL WAIT
 	// TODO CLEAN UP CODE
 	// TODO DATABASE CAN BE POSSIBLY MADE SIMPLER USING JOINs (IF THERE'S TIME)
-	// TODO REGISTRATION
-	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
-	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
 
 	private Player player;
 
@@ -169,15 +182,24 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		return null;
 	}
 
-	// Get by name methods
-	public Ship getShipByName(String name){
-		for (Ship s : shipsShop) {
-			if (s.getName().equals(name)){
-				return s;
+	public ArrayList<Ship> getShipsNotOwned(){
+		ArrayList<Ship> shipsNotOwned = new ArrayList<>();
+		for (Ship shopShip : shipsShop) {
+			boolean shipOwned = false;
+			for (Ship playerShip : player.getShips()) {
+				if (playerShip.getId() == shopShip.getId()) {
+					shipOwned = true;
+					break;
+				}
 			}
+			if(!shipOwned)
+				shipsNotOwned.add(shopShip);
 		}
-		return null;
+		return shipsNotOwned;
 	}
+
+	// Get by name methods
+
 	public Planet getPlanetByName(String name){
 		for (Planet p : planets){
 			if (p.getName().equals(name))
@@ -222,7 +244,8 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 						(String) playerData.get(PlayerTable.PASSWORD),
 						(String) playerData.get(PlayerTable.EMAIL),
 						(Integer) playerData.get(PlayerTable.LEVEL),
-						(Integer) playerData.get(PlayerTable.EXPERIENCE)
+						(Integer) playerData.get(PlayerTable.EXPERIENCE),
+						Long.parseLong((String) playerData.get(PlayerTable.MONEY))
 				);
 
 				Gdx.app.log(PlayerTable.TABLE_NAME, "INITIALIZATION DONE!");
@@ -443,7 +466,11 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		Gdx.app.log("RESULT_FAILED", message);
 	}
 	@Override
-	public void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData) {}
+	public void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData) {
+		ArrayList<Map<String, Object>> data = new ArrayList<>();
+		data.add(tableData);
+		onFetchSuccess(requestCode, PlayerTable.TABLE_NAME, data);
+	}
 
 
 	// DATABASE CHANGE LISTENER METHODS

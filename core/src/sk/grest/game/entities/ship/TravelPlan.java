@@ -5,7 +5,7 @@ import com.badlogic.gdx.Gdx;
 import java.util.Arrays;
 
 import sk.grest.game.defaults.ScreenDeafults;
-import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.DatabaseChangeListener;
 
@@ -16,8 +16,6 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 public class TravelPlan {
 
     DatabaseChangeListener listener;
-
-    // TODO FIX TIMING (RESOURCE HAS TO BE ADDED WHEN IT ARRIVES AT BASE)
 
     private final static int FROM_HOME = 0;
     private final static int TO_DEST = 1;

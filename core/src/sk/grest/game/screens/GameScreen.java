@@ -2,6 +2,10 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.assets.AssetManager;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -10,39 +14,41 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
+import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
+import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
-import com.badlogic.gdx.utils.viewport.ExtendViewport;
-import com.badlogic.gdx.utils.viewport.FitViewport;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import javax.xml.soap.Text;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
+import sk.grest.game.dialogs.ShipsShopDialog;
 import sk.grest.game.dialogs.TravelSettingDialog;
 import sk.grest.game.dialogs.UpgradeShipDialog;
-import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
-import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.ship.Ship;
-import sk.grest.game.other.PlanetStats;
+import sk.grest.game.entities.planet.PlanetStats;
 
 public class GameScreen implements Screen, OnStatsChangedListener {
 
-    // TODO REGISTER SCREEN
-    // TODO FINISH SHIP UPGRADE WINDOW
-    // TODO SHIP SHOP
-    // TODO PLANET SYSTEM LIST
+    private static final float PANEL_WIDTH = 175;
+    private static final float PANEL_HEIGHT = 620;
+
 
     private static final String BASE_PLANET_NAME = "Earth";
 
     private InterstellarMining game;
 
-    //table.setDebug(true);
-//table.debug(Table.Debug.all);
-
     // MENU LAYOUT INITIALIZED
+
+    private Texture panelLeft;
+    private Texture panelRight;
 
     // PLANET STATS INITIALIZED
 
@@ -51,7 +57,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private PlanetStats planetStats;
 
     private Button planetBtn;
-    private Label planetName;
+    private Label moneyLabel;
 
     private Planet base;
 
@@ -59,12 +65,17 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private TravelSettingDialog travelSettingDialog;
     private ResourceInventoryDialog resourceInventoryDialog;
     private UpgradeShipDialog upgradeShipDialog;
+    private ShipsShopDialog shipsShopDialog;
 
     public GameScreen(final InterstellarMining game) {
+
+        panelLeft = new Texture(Gdx.files.internal("image/left_panel.png"));
+        panelRight = new Texture(Gdx.files.internal("image/right_panel.png"));
 
         this.game = game;
         this.travelSettingDialog = null;
         this.shipListDialog = null;
+        this.shipsShopDialog = null;
 
         stage = new Stage(new ScreenViewport());
 
@@ -185,11 +196,13 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-        Button shipsShopButton = new Button(game.getSpriteSkin(), "shop", "shop_pressed");
+        final Button shipsShopButton = new Button(game.getSpriteSkin(), "shop", "shop_pressed");
         shipsShopButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                shipsShopDialog = new ShipsShopDialog("", game.getUISkin(), game);
+                shipsShopDialog.show(stage);
+                Gdx.app.log("STATE", 4 + " " + shipsShopDialog.isVisible());
             }
         });
 
@@ -210,6 +223,24 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 resourceInventoryDialog.show(stage);
             }
         });
+
+        Button otherButton = new Button(game.getSpriteSkin(), "settings", "settings_pressed");
+        otherButton.getButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // ADD ACTION
+            }
+        });
+
+        Button settingsButton = new Button(game.getSpriteSkin(), "settings", "settings_pressed");
+        settingsButton.getButton().addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                // ADD ACTION
+            }
+        });
+
+
 
         planetBtn = new Button(game.getSpriteSkin(), planetStats.getCurrentPlanet().getAssetId(), null);
         planetBtn.getButton().addListener(new ClickListener(){
@@ -270,13 +301,13 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
         backToMenu.getButton().align(Align.topLeft);
         table.add(backToMenu.getButton())
-                .expandX().align(Align.topLeft)
+                .align(Align.topLeft)
                 .width(btnWidth)
                 .height(btnHeight);
 
-        planetName = new Label(planetStats.getSystemName(), game.getUISkin());
-        planetName.setAlignment(Align.center);
-        table.add(planetName)
+        moneyLabel = new Label(game.getPlayer().getMoney() + " $", game.getUISkin());
+        moneyLabel.setAlignment(Align.center);
+        table.add(moneyLabel)
                 .align(Align.top)
                 .center()
                 .width(btnWidth)
@@ -291,16 +322,21 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
         // ROW 1
 
+        //table.debug(Table.Debug.all);
 
-        Table leftPanel = new Table();
-        leftPanel.add(shipsListButton.getButton()).center().row();
-        leftPanel.add(shipsShopButton.getButton().center()).row();
-        leftPanel.add(achievementsButton.getButton().center()).row();
-        leftPanel.setBackground(game.getSpriteSkin().getDrawable("left_panel"));
-        leftPanel.debug(Table.Debug.all);
+        Table leftPanel = new Table(game.getUISkin());
+        leftPanel.setFillParent(false);
+        leftPanel.left();
+        leftPanel.setScale(0.95f);
+        leftPanel.setOrigin(leftPanel.getPrefWidth() / 2 - 40, leftPanel.getPrefHeight() / 2);
+        leftPanel.add(shipsListButton.getButton()).fill().pad(15,5,40,40).row();
+        leftPanel.add(shipsShopButton.getButton()).fill().padBottom(40).padRight(40).padLeft(5).row();
+        leftPanel.add(achievementsButton.getButton()).fill().padRight(40).padLeft(5).row();
+
+        //leftPanel.debug(Table.Debug.all);
 
         table.add(leftPanel)
-                .uniform()
+                .uniformX()
                 .prefHeight(Gdx.graphics.getHeight() / 3f)
                 .prefWidth(Gdx.graphics.getWidth() / 16f)
                 .left()
@@ -314,14 +350,27 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 .width(planetSize)
                 .height(planetSize);
 
-        Button rightPanel = new Button(game.getSpriteSkin(), "right_panel", null);
-        rightPanel.getButton().align(Align.right);
-        table.add(rightPanel.getButton())
-                .uniform()
-                .expand().align(Align.right)
-                .width(Gdx.graphics.getWidth() / 4f)
+        Table rightPanel = new Table(game.getUISkin());
+        rightPanel.setFillParent(false);
+        rightPanel.right();
+        rightPanel.setOrigin(leftPanel.getPrefWidth() / 2 - 40, leftPanel.getPrefHeight() / 2);
+        rightPanel.add(inventoryButton.getButton()).fill().padTop(15).padBottom(40).padLeft(35).row();
+        rightPanel.add(otherButton.getButton()).fill().padBottom(40).padLeft(35).row();
+        rightPanel.add(settingsButton.getButton()).fill().padLeft(35).row();
+
+        //rightPanel.debug(Table.Debug.all);
+
+        table.add(rightPanel)
+                .uniformX()
+                .prefHeight(Gdx.graphics.getHeight() / 3f)
+                .prefWidth(Gdx.graphics.getWidth() / 16f)
+                .right()
+                .fill(false, false)
+                .width(Gdx.graphics.getWidth() / 8f)
                 .height(Gdx.graphics.getHeight() / 1.5f)
+                .pad(0)
                 .row();
+
 
         // ROW 2
 
@@ -331,8 +380,12 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 .width(btnWidth)
                 .height(btnHeight);
 
-        planetStats.getTable().align(Align.center);
+        //table.debug(Table.Debug.all);
+
+        //planetStats.getTable().debug(Table.Debug.all);
+        //planetStats.getTable().align(Align.center);
         table.add(planetStats.getTable())
+                .width(Gdx.graphics.getWidth()/4f)
                 .align(Align.bottom);
 
         rightDown.getButton().align(Align.bottomRight);
@@ -342,7 +395,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 .height(btnHeight)
                 .row();
 
-        table.setBackground(game.getBackground());
+        table.setBackground(game.getSpriteSkin().getDrawable("game_screen_background"));
 
         Container<Table> container = new Container<>(table);
         container.fillX();
@@ -369,14 +422,18 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             resourceInventoryDialog.update(delta);
         }
 
-
         if(game.isDatabaseInitialized()) {
             for (Ship s : game.getPlayer().getShips()) {
                 s.update(delta);
             }
 
+            moneyLabel.setText(game.getPlayer().getMoney() + " $");
+
             // START OF RENDERING SPRITES
             game.getBatch().begin();
+
+            //game.getBatch().draw(panelLeft, 0, Gdx.graphics.getHeight()/2f - PANEL_HEIGHT/2f, PANEL_WIDTH, PANEL_HEIGHT);
+            //game.getBatch().draw(panelRight, Gdx.graphics.getWidth(), Gdx.graphics.getHeight()/2f - PANEL_HEIGHT/2f, PANEL_WIDTH, PANEL_HEIGHT);
 
             // STAGE RENDERING
             stage.act(delta);
@@ -418,6 +475,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
     @Override
     public void onPlanetSystemChanged(PlanetSystem system) {
-        planetName.setText(system.getName());
+        // planetName.setText(system.getName());
     }
 }

@@ -59,7 +59,7 @@ background
   orig: 1920, 1080
   offset: 0, 0
   index: -1
-mars
+game_screen_background
   rotate: false
   xy: 3845, 1
   size: 1920, 1080
@@ -80,6 +80,13 @@ earth
   orig: 832, 832
   offset: 0, 0
   index: -1
+mars
+  rotate: false
+  xy: 5767, 1
+  size: 1920, 1080
+  orig: 1920, 1080
+  offset: 0, 0
+  index: -1
 title
   rotate: false
   xy: 6307, 2133
@@ -89,168 +96,168 @@ title
   index: -1
 left_panel
   rotate: false
-  xy: 5767, 461
+  xy: 7152, 3465
   size: 175, 620
   orig: 175, 620
   offset: 0, 0
   index: -1
 right_panel
   rotate: false
-  xy: 7152, 3468
+  xy: 6307, 1514
   size: 174, 617
   orig: 174, 617
   offset: 0, 0
   index: -1
 options_over
   rotate: false
-  xy: 6307, 2014
+  xy: 7329, 3968
   size: 474, 117
   orig: 474, 117
   offset: 0, 0
   index: -1
 options_up
   rotate: false
-  xy: 7328, 3968
+  xy: 6483, 2014
   size: 474, 117
   orig: 474, 117
   offset: 0, 0
   index: -1
 play_over
   rotate: false
-  xy: 5944, 967
+  xy: 7805, 3971
   size: 306, 114
   orig: 306, 114
   offset: 0, 0
   index: -1
 play_up
   rotate: false
-  xy: 6307, 1898
+  xy: 7329, 3852
   size: 306, 114
   orig: 306, 114
   offset: 0, 0
   index: -1
 exit_over
   rotate: false
-  xy: 6783, 2017
+  xy: 6483, 1898
   size: 246, 114
   orig: 246, 114
   offset: 0, 0
   index: -1
 exit_up
   rotate: false
-  xy: 7804, 3971
+  xy: 6959, 2017
   size: 246, 114
   orig: 246, 114
   offset: 0, 0
   index: -1
 left_bottom_button
   rotate: false
-  xy: 5767, 299
+  xy: 7152, 3303
   size: 162, 160
   orig: 162, 160
   offset: 0, 0
   index: -1
 left_top_button
   rotate: false
-  xy: 7152, 3305
+  xy: 6307, 1351
   size: 160, 161
   orig: 160, 161
   offset: 0, 0
   index: -1
 right_bottom_button
   rotate: false
-  xy: 7328, 3806
+  xy: 7329, 3690
   size: 161, 160
   orig: 161, 160
   offset: 0, 0
   index: -1
 right_top_button
   rotate: false
-  xy: 5944, 807
+  xy: 6483, 1738
   size: 159, 158
   orig: 159, 158
   offset: 0, 0
   index: -1
 left_top_button_pressed
   rotate: false
-  xy: 6307, 1740
+  xy: 6307, 1193
   size: 156, 156
   orig: 156, 156
   offset: 0, 0
   index: -1
 right_top_button_pressed
   rotate: false
-  xy: 5767, 142
+  xy: 7329, 3533
   size: 155, 155
   orig: 155, 155
   offset: 0, 0
   index: -1
 achievement
   rotate: false
-  xy: 7328, 3654
+  xy: 6483, 1586
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 achievement_pressed
   rotate: false
-  xy: 7491, 3816
+  xy: 7492, 3700
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 home
   rotate: false
-  xy: 5944, 655
+  xy: 6731, 1862
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 home_pressed
   rotate: false
-  xy: 6307, 1588
+  xy: 7207, 1981
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 7328, 3502
+  xy: 7359, 1981
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 settings_pressed
   rotate: false
-  xy: 7643, 3816
+  xy: 7511, 1981
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 ships
   rotate: false
-  xy: 5944, 503
+  xy: 6883, 1862
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 ships_pressed
   rotate: false
-  xy: 6307, 1436
+  xy: 7035, 1865
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 shop
   rotate: false
-  xy: 6307, 1284
+  xy: 7187, 1829
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 shop_pressed
   rotate: false
-  xy: 6307, 1132
+  xy: 7339, 1829
   size: 150, 150
   orig: 150, 150
   offset: 0, 0

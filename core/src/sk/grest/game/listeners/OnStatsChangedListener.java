@@ -1,9 +1,7 @@
 package sk.grest.game.listeners;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Table;
-
-import sk.grest.game.entities.Planet;
-import sk.grest.game.entities.PlanetSystem;
+import sk.grest.game.entities.planet.Planet;
+import sk.grest.game.entities.planet.PlanetSystem;
 
 public interface OnStatsChangedListener {
 

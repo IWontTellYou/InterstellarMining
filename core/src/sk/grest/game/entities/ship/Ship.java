@@ -2,7 +2,7 @@ package sk.grest.game.entities.ship;
 
 import com.badlogic.gdx.Gdx;
 
-import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Attributes.AttributeType;
 import sk.grest.game.listeners.DatabaseChangeListener;
@@ -80,7 +80,6 @@ public class Ship {
         }
     }
 
-    // TODO DONT NEED THIS (I GUESS) REPLACED BY ATTRIBUTES
     public void saveAttributes(){
         // TODO FIX - POSSIBLY WRONG
         if(travelPlan == null || travelPlan.getCurrentState() == AT_THE_BASE){

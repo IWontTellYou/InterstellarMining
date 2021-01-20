@@ -3,6 +3,7 @@ package sk.grest.game.entities;
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.listeners.DatabaseChangeListener;
@@ -21,12 +22,12 @@ public class Player {
     private int experience;
 
     private ArrayList<sk.grest.game.entities.ship.Ship> ships;
-    private ArrayList<PlanetSystem> systemsDiscovered;
+    private ArrayList<sk.grest.game.entities.planet.PlanetSystem> systemsDiscovered;
     private ArrayList<Resource> resourcesAtBase;
 
     private InterstellarMining game;
 
-    public Player(InterstellarMining game, int ID, String name, String password, String email, int level, int experience) {
+    public Player(InterstellarMining game, int ID, String name, String password, String email, int level, int experience, long money) {
         this.ID = ID;
         this.name = name;
         this.password = password;
@@ -34,6 +35,7 @@ public class Player {
         this.level = level;
         this.experience = experience;
         this.game = game;
+        this.money = money;
 
         this.ships = new ArrayList<>();
         this.systemsDiscovered = new ArrayList<>();
@@ -74,7 +76,12 @@ public class Player {
     public void increaseMoney(long amount) {
         money += amount;
     }
-    public void decreaseMoney(long amount) {money -= amount;}
+    public void decreaseMoney(long amount) {
+        if(amount > money && amount+1 < money)
+            money = 0;
+        else
+            money -= amount;
+    }
 
     public int getID() {
         return ID;

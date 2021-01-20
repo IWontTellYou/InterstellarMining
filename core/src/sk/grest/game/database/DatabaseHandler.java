@@ -74,7 +74,14 @@ public class DatabaseHandler {
         data.put(MONEY, 10000);
         connection.addRow(requestCode++, TABLE_NAME, data, listener);
     }
-    
+    public void updatePlayer(){
+        Player p = game.getPlayer();
+        Map<String, Object> data = new HashMap<>();
+        data.put(LEVEL, p.getLevel());
+        data.put(EXPERIENCE, p.getExperience());
+        data.put(MONEY, p.getMoney());
+        connection.updateRow(requestCode++, game.getPlayer().getID(), 0, PlayerTable.TABLE_NAME, data, game);
+    }
     public void addPlayerData(Map<String, Object> data, ConnectorEvent listener){
         int playerId = (Integer) data.get(PlayerTable.ID);
 
@@ -100,6 +107,15 @@ public class DatabaseHandler {
         basicShip.put(SHIP_ID, 1);
         connection.addRow(requestCode++, ShipInFleetTable.TABLE_NAME, basicShip, listener);
 
+    }
+
+    public void buyShip(Ship s){
+        Map<String, Object> data = new HashMap<>();
+        data.put(SHIP_ID, s.getId());
+        data.put(PLAYER_ID, game.getPlayer().getID());
+        connection.addRow(requestCode++, ShipInFleetTable.TABLE_NAME, data, game);
+
+        updatePlayer();
     }
 
     public void setConnection(DatabaseConnection connection) {
@@ -129,9 +145,6 @@ public class DatabaseHandler {
         data.put(MINING_SPEED_LVL, ship.getAttributes().getAttribute(MINING_SPEED));
         data.put(RESOURCE_CAPACITY_LVL, ship.getAttributes().getAttribute(RESOURCE_CAPACITY));
         connection.updateRow(requestCode++, playerId, ship.getId(), ShipInFleetTable.TABLE_NAME, data, listener);
-    }
-
-    public void updateTable(String tableName, int id, Map<String, Object> data, ConnectorEvent listener){
     }
 
     public void getTable(String tableName, ConnectorEvent listener){

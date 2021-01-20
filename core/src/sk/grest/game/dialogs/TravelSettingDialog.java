@@ -14,7 +14,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.entities.Planet;
+import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Ship;
 

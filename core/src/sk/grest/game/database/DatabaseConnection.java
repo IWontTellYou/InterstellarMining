@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import sk.grest.game.entities.Player;
+
 import static sk.grest.game.database.DatabaseConstants.*;
 
 public class DatabaseConnection {
@@ -74,7 +76,6 @@ public class DatabaseConnection {
 
                     // Gdx.app.log("SQL_QUERRY", requestData.get(0).toString());
 
-                    // TODO CREATE A TOAST OR SOMETHING LIKE THAT FOR THIS
                     if(requestData.size() > 0)
                         eventListener.onUserLoginSuccessful(requestCode, requestData.get(0));
                     else
@@ -225,6 +226,7 @@ public class DatabaseConnection {
             case PlayerTable.TABLE_NAME:
                 sql += PlayerTable.LEVEL + " = " + (Integer) data.get(PlayerTable.LEVEL) + ", ";
                 sql += PlayerTable.EXPERIENCE + " = " + (Integer) data.get(PlayerTable.EXPERIENCE);
+                sql += PlayerTable.MONEY + " = " + (Integer) data.get(PlayerTable.MONEY);
                 sql += " WHERE " + PlayerTable.ID + " = " + (Integer) data.get(PlayerTable.ID);
                 break;
         }

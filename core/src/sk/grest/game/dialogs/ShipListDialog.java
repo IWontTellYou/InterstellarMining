@@ -18,7 +18,7 @@ import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
 
-public class ShipListDialog extends Dialog {
+public class ShipListDialog extends CustomDialog {
 
     private float timeLeft;
     private ArrayList<Label> toUpdate;
@@ -137,18 +137,10 @@ public class ShipListDialog extends Dialog {
 
         getContentTable().add(contentTable).padBottom(100).row();
 
+        addCloseButton(this);
+
         // BUTTON TABLE
 
-        final ShipListDialog listDialog = this;
-
-        TextButton closeBtn = new TextButton("CLOSE", skin);
-        closeBtn.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                listDialog.hide();
-            }
-        });
-        getContentTable().add(closeBtn);
 
     }
 
@@ -170,16 +162,6 @@ public class ShipListDialog extends Dialog {
             timeLeft = 1;
         }else
             timeLeft -= delta;
-    }
-
-    @Override
-    public float getPrefWidth() {
-        return ScreenDeafults.DEFAULT_DIALOG_WIDTH;
-    }
-
-    @Override
-    public float getPrefHeight() {
-        return ScreenDeafults.DEFAULT_DIALOG_HEIGHT;
     }
 
 }

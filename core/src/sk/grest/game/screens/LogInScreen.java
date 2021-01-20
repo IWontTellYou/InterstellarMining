@@ -39,8 +39,8 @@ public class LogInScreen implements Screen {
 
         final Label passwordLabel = new Label("Enter password:", game.getUISkin());
         passwordInput = new TextField("cisco123", game.getUISkin());
-        passwordInput.setPasswordCharacter('*');
-        passwordInput.setPasswordMode(true);
+        //passwordInput.setPasswordCharacter('*');
+        //passwordInput.setPasswordMode(true);
 
 
         TextButton submit = new TextButton("LOG IN", game.getUISkin());
