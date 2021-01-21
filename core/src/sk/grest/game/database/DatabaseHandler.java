@@ -1,6 +1,5 @@
 package sk.grest.game.database;
 
-import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -136,9 +135,9 @@ public class DatabaseHandler {
     public void updateShipInFleet(int playerId, Ship ship, ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
         data.put(DESTINATION_ID, (ship.getCurrentDestination() != null) ? ship.getCurrentDestination().getID() : null);
-        data.put(RESOURCE_ID, (ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getResource().getID() : null);
-        data.put(AMOUNT, (ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getResource().getAmount() : 0);
-        data.put(TASK_TIME, (ship.getTravelPlan() != null) ? ship.getTravelPlan().getStartTime() : null);
+        data.put(RESOURCE_ID, (ship.getTravelPlan() != null && ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getResource().getID() : null);
+        data.put(AMOUNT, (ship.getTravelPlan() != null && ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getResource().getAmount() : 0);
+        data.put(TASK_TIME, (ship.getTravelPlan() != null && ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getStartTime() : null);
         data.put(FUEL_CAPACITY_LVL, ship.getAttributes().getAttribute(FUEL_CAPACITY));
         data.put(FUEL_EFFICIENCY_LVL, ship.getAttributes().getAttribute(FUEL_EFFICIENCY));
         data.put(TRAVEL_SPEED_LVL, ship.getAttributes().getAttribute(TRAVEL_SPEED));

@@ -262,3 +262,10 @@ shop_pressed
   orig: 150, 150
   offset: 0, 0
   index: -1
+white_background
+  rotate: false
+  xy: 6307, 1092
+  size: 97, 99
+  orig: 97, 99
+  offset: 0, 0
+  index: -1

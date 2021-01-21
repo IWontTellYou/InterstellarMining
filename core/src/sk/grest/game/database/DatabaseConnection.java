@@ -11,8 +11,6 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
-import sk.grest.game.entities.Player;
-
 import static sk.grest.game.database.DatabaseConstants.*;
 
 public class DatabaseConnection {
@@ -207,27 +205,27 @@ public class DatabaseConnection {
 
         switch (tableName) {
             case ShipInFleetTable.TABLE_NAME:
-                sql += ShipInFleetTable.DESTINATION_ID + " = " + (Integer) data.get(ShipInFleetTable.DESTINATION_ID) + ", ";
-                sql += ShipInFleetTable.RESOURCE_ID + " = " + (Integer) data.get(ShipInFleetTable.RESOURCE_ID) + ", ";
-                sql += ShipInFleetTable.AMOUNT + " = " + (Float) data.get(ShipInFleetTable.AMOUNT) + ", ";
-                sql += ShipInFleetTable.TASK_TIME + " = " + (Long) data.get(ShipInFleetTable.TASK_TIME) + ", ";
-                sql += ShipInFleetTable.FUEL_CAPACITY_LVL + " = " + (Integer) data.get(ShipInFleetTable.FUEL_CAPACITY_LVL) + ", ";
-                sql += ShipInFleetTable.FUEL_EFFICIENCY_LVL + " = " + (Integer) data.get(ShipInFleetTable.FUEL_EFFICIENCY_LVL) + ", ";
-                sql += ShipInFleetTable.RESOURCE_CAPACITY_LVL + " = " + (Integer) data.get(ShipInFleetTable.RESOURCE_CAPACITY_LVL) + ", ";
-                sql += ShipInFleetTable.TRAVEL_SPEED_LVL + " = " + (Integer) data.get(ShipInFleetTable.TRAVEL_SPEED_LVL) + ", ";
-                sql += ShipInFleetTable.MINING_SPEED_LVL + " = " + (Integer) data.get(ShipInFleetTable.MINING_SPEED_LVL) + " ";
+                sql += ShipInFleetTable.DESTINATION_ID + " = " + data.get(ShipInFleetTable.DESTINATION_ID) + ", ";
+                sql += ShipInFleetTable.RESOURCE_ID + " = " + data.get(ShipInFleetTable.RESOURCE_ID) + ", ";
+                sql += ShipInFleetTable.AMOUNT + " = " + data.get(ShipInFleetTable.AMOUNT) + ", ";
+                sql += ShipInFleetTable.TASK_TIME + " = " + data.get(ShipInFleetTable.TASK_TIME) + ", ";
+                sql += ShipInFleetTable.FUEL_CAPACITY_LVL + " = " + data.get(ShipInFleetTable.FUEL_CAPACITY_LVL) + ", ";
+                sql += ShipInFleetTable.FUEL_EFFICIENCY_LVL + " = " + data.get(ShipInFleetTable.FUEL_EFFICIENCY_LVL) + ", ";
+                sql += ShipInFleetTable.RESOURCE_CAPACITY_LVL + " = " + data.get(ShipInFleetTable.RESOURCE_CAPACITY_LVL) + ", ";
+                sql += ShipInFleetTable.TRAVEL_SPEED_LVL + " = " + data.get(ShipInFleetTable.TRAVEL_SPEED_LVL) + ", ";
+                sql += ShipInFleetTable.MINING_SPEED_LVL + " = " + data.get(ShipInFleetTable.MINING_SPEED_LVL) + " ";
                 sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ShipInFleetTable.SHIP_ID + " = " + objectId;
                 break;
             case ResourceAtBase.TABLE_NAME:
-                sql += ResourceAtBase.AMOUNT + " = " + (Float) data.get(ShipInFleetTable.AMOUNT);
+                sql += ResourceAtBase.AMOUNT + " = " + data.get(ShipInFleetTable.AMOUNT);
                 sql += " WHERE " + PLAYER_ID + " = " + playerId + " AND " + ResourceAtBase.RESOURCE_ID + " = " + objectId;
                 Gdx.app.log("SQL", sql);
                 break;
             case PlayerTable.TABLE_NAME:
-                sql += PlayerTable.LEVEL + " = " + (Integer) data.get(PlayerTable.LEVEL) + ", ";
-                sql += PlayerTable.EXPERIENCE + " = " + (Integer) data.get(PlayerTable.EXPERIENCE);
-                sql += PlayerTable.MONEY + " = " + (Integer) data.get(PlayerTable.MONEY);
-                sql += " WHERE " + PlayerTable.ID + " = " + (Integer) data.get(PlayerTable.ID);
+                sql += PlayerTable.LEVEL + " = " + data.get(PlayerTable.LEVEL) + ", ";
+                sql += PlayerTable.EXPERIENCE + " = " + data.get(PlayerTable.EXPERIENCE);
+                sql += PlayerTable.MONEY + " = " + data.get(PlayerTable.MONEY);
+                sql += " WHERE " + PlayerTable.ID + " = " + data.get(PlayerTable.ID);
                 break;
         }
 

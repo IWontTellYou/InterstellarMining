@@ -1,6 +1,7 @@
 package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.assets.AssetManager;
 import com.badlogic.gdx.graphics.Texture;
@@ -45,11 +46,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
     private InterstellarMining game;
 
-    // MENU LAYOUT INITIALIZED
-
-    private Texture panelLeft;
-    private Texture panelRight;
-
     // PLANET STATS INITIALIZED
 
     private Stage stage;
@@ -68,9 +64,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private ShipsShopDialog shipsShopDialog;
 
     public GameScreen(final InterstellarMining game) {
-
-        panelLeft = new Texture(Gdx.files.internal("image/left_panel.png"));
-        panelRight = new Texture(Gdx.files.internal("image/right_panel.png"));
 
         this.game = game;
         this.travelSettingDialog = null;
@@ -412,6 +405,9 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     public void render(float delta) {
         ScreenDeafults.clear();
 
+        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+            game.getPlayer().increaseMoney(10000);
+
         game.getPlayer().update(delta);
 
         if(shipListDialog != null){
@@ -427,7 +423,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 s.update(delta);
             }
 
-            moneyLabel.setText(game.getPlayer().getMoney() + " $");
+            moneyLabel.setText(ScreenDeafults.getMoneyFormat(game.getPlayer().getMoney()));
 
             // START OF RENDERING SPRITES
             game.getBatch().begin();

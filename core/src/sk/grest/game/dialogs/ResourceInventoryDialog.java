@@ -75,7 +75,7 @@ public class ResourceInventoryDialog extends CustomDialog {
         // TABLE DATA
         //
 
-        for (Resource r : player.getResourcesWithAmount()) {
+        for (Resource r : player.getResourcesAtBase()) {
 
             Label resourceImage = new Label("img", skin);
             contentTable.add(resourceImage).

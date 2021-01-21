@@ -13,6 +13,7 @@ import java.util.Objects;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
+import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
 
@@ -23,10 +24,10 @@ public class UpgradeShipDialog extends CustomDialog {
 
     // TODO ADD CONDINTION SHIP.STATE == AT_THE_BASE
 
-    private static final int TRAVEL_SPEED_LABEL = 0;
-    private static final int MINING_SPEED_LABEL = 1;
-    private static final int FUEL_CAPACITY_LABEL = 2;
-    private static final int FUEL_EFFICIENCY_LABEL = 3;
+    private static final int MINING_SPEED_LABEL = 0;
+    private static final int TRAVEL_SPEED_LABEL = 1;
+    private static final int FUEL_EFFICIENCY_LABEL = 2;
+    private static final int FUEL_CAPACITY_LABEL = 3;
     private static final int RESOURCE_CAPACITY_LABEL = 4;
 
     // InterstellarMining class will be here as temporary solution until I have regular graphichs for Buttons
@@ -38,19 +39,22 @@ public class UpgradeShipDialog extends CustomDialog {
 
     private Skin skin;
     private Ship ship;
-    final private Label[] labels;
+    final private Label[] attributeLabels;
+    final private Label[] priceLabels;
 
-    public UpgradeShipDialog(InterstellarMining game, String title, Skin skinTest, final Ship ship) {
+    public UpgradeShipDialog(final InterstellarMining game, String title, Skin skinTest, final Ship ship) {
         super(title, skinTest);
 
         this.skin = game.getUISkin();
         this.ship = ship;
-        labels = new Label[5];
+
+        attributeLabels = new Label[5];
+        priceLabels = new Label[5];
 
         float defaultButtonWidth = getWidth()/8f;
         float defaultButtonHeight = getHeight()/20f;
 
-        float defaultLabelWidth = getWidth()/3.5f;
+        float defaultLabelWidth = getWidth()/8f;
         float defaultLabelHeight = getHeight()/17.5f;
 
         float defaultBtnSize = getHeight()/40f;
@@ -62,169 +66,47 @@ public class UpgradeShipDialog extends CustomDialog {
 
         final Attributes attributes = ship.getAttributes();
 
-    // TRAVEL_SPEED
+        for (int i = 0; i < 5; i++) {
 
-        labels[TRAVEL_SPEED_LABEL] = new Label(getLabelAtributeString(TRAVEL_SPEED), skin);
-        Button travelSpeedPlus = new Button(skin, BTN_PLUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        travelSpeedPlus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.increaseTemporaryAttribute(TRAVEL_SPEED);
-                labels[TRAVEL_SPEED_LABEL].setText(getLabelAtributeString(TRAVEL_SPEED));
-            }
-        });
-        Button travelSpeedMinus = new Button(skin, BTN_MINUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        travelSpeedMinus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.decreaseTemporaryAttribute(TRAVEL_SPEED);
-                labels[TRAVEL_SPEED_LABEL].setText(getLabelAtributeString(TRAVEL_SPEED));
-            }
-        });
+            final int j = i;
 
-        upgradeLayout.add(labels[TRAVEL_SPEED_LABEL])
-                .width(defaultLabelWidth)
-                .height(defaultLabelHeight);
-        upgradeLayout.add(travelSpeedMinus.getButton())
-                .size(defaultBtnSize);
-        upgradeLayout.add(travelSpeedPlus.getButton())
-                .size(defaultBtnSize)
-                .row();
+            Label name = new Label(getLabelAtributeString(getAttributeType(i), 0), skin);
 
-    // MINING_SPEED
+            priceLabels[i] = new Label(getLabelAtributeString(getAttributeType(i), 1), skin);
+            priceLabels[i].setAlignment(Align.center);
 
-        labels[MINING_SPEED_LABEL] = new Label(getLabelAtributeString(MINING_SPEED), skin);
-        Button miningSpeedPlus = new Button(skin, BTN_PLUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        miningSpeedPlus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.increaseTemporaryAttribute(MINING_SPEED);
-                labels[MINING_SPEED_LABEL].setText(getLabelAtributeString(MINING_SPEED));
-            }
-        });
-        Button miningSpeedMinus = new Button(skin, BTN_MINUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        miningSpeedMinus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.decreaseTemporaryAttribute(MINING_SPEED);
-                labels[MINING_SPEED_LABEL].setText(getLabelAtributeString(MINING_SPEED));
-            }
-        });
+            attributeLabels[i] = new Label(getLabelAtributeString(getAttributeType(i), 2), skin);
+            attributeLabels[i].setAlignment(Align.center);
 
-        upgradeLayout.add(labels[MINING_SPEED_LABEL])
-                .width(defaultLabelWidth)
-                .height(defaultLabelHeight);
-        upgradeLayout.add(miningSpeedMinus.getButton())
-                .size(defaultBtnSize);
-        upgradeLayout.add(miningSpeedPlus.getButton())
-                .size(defaultBtnSize)
-                .row();
+            Button travelSpeedPlus = new Button(skin, BTN_PLUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
+            travelSpeedPlus.getButton().addListener(new ClickListener(){
+                @Override
+                public void clicked(InputEvent event, float x, float y) {
+                    if(game.getPlayer().getMoney() > attributes.getAttributePrice(getAttributeType(j))){
+                        attributeLabels[j].setText(getLabelAtributeString(getAttributeType(j), 2));
+                        priceLabels[j].setText(getLabelAtributeString(getAttributeType(j),1));
+                        game.getPlayer().decreaseMoney(attributes.getAttributePrice(getAttributeType(j)));
+                        attributes.increaseAttribute(getAttributeType(j));
+                        ship.saveAttributes();
+                    }
+                }
+            });
 
-    // FUEL_CAPACITY
+            upgradeLayout.add(name)
+                    .width(defaultLabelWidth)
+                    .height(defaultLabelHeight);
+            upgradeLayout.add(attributeLabels[i])
+                    .width(defaultLabelWidth)
+                    .height(defaultLabelHeight);
+            upgradeLayout.add(priceLabels[i])
+                    .width(defaultLabelWidth)
+                    .height(defaultLabelHeight);
+            upgradeLayout.add(travelSpeedPlus.getButton())
+                    .size(defaultBtnSize)
+                    .align(Align.center)
+                    .row();
 
-        labels[FUEL_CAPACITY_LABEL] = new Label(getLabelAtributeString(FUEL_CAPACITY), skin);
-        Button fuelCapacityPlus = new Button(skin, BTN_PLUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        fuelCapacityPlus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.increaseTemporaryAttribute(FUEL_CAPACITY);
-                labels[FUEL_CAPACITY_LABEL].setText(getLabelAtributeString(FUEL_CAPACITY));
-            }
-        });
-        Button fuelCapacityMinus = new Button(skin, BTN_MINUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        fuelCapacityMinus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.decreaseTemporaryAttribute(FUEL_CAPACITY);
-                labels[FUEL_CAPACITY_LABEL].setText(getLabelAtributeString(FUEL_CAPACITY));
-            }
-        });
-
-        upgradeLayout.add(labels[FUEL_CAPACITY_LABEL])
-                .width(defaultLabelWidth)
-                .height(defaultLabelHeight);
-        upgradeLayout.add(fuelCapacityMinus.getButton())
-                .size(defaultBtnSize);
-        upgradeLayout.add(fuelCapacityPlus.getButton())
-                .size(defaultBtnSize)
-                .row();
-
-    // FUEL_EFFICIENCY
-
-        labels[FUEL_EFFICIENCY_LABEL] = new Label(getLabelAtributeString(FUEL_EFFICIENCY), skin);
-
-        Button fuelEfficiencyPlus = new Button(skin, BTN_PLUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        fuelEfficiencyPlus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.increaseTemporaryAttribute(FUEL_EFFICIENCY);
-                labels[FUEL_EFFICIENCY_LABEL].setText(getLabelAtributeString(FUEL_EFFICIENCY));
-            }
-        });
-
-        Button fuelEfficiencyMinus = new Button(skin, BTN_MINUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        fuelEfficiencyMinus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.decreaseTemporaryAttribute(FUEL_EFFICIENCY);
-                labels[FUEL_EFFICIENCY_LABEL].setText(getLabelAtributeString(FUEL_EFFICIENCY));
-            }
-        });
-
-        upgradeLayout.add(labels[FUEL_EFFICIENCY_LABEL])
-                .width(defaultLabelWidth)
-                .height(defaultLabelHeight);
-        upgradeLayout.add(fuelEfficiencyMinus.getButton())
-                .size(defaultBtnSize);
-        upgradeLayout.add(fuelEfficiencyPlus.getButton())
-                .size(defaultBtnSize)
-                .row();
-
-    // RESOURCE_CAPACITY
-
-        labels[RESOURCE_CAPACITY_LABEL] = new Label(getLabelAtributeString(RESOURCE_CAPACITY), skin);
-
-        Button resourceCapacityPlus = new Button(skin, BTN_PLUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        resourceCapacityPlus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.increaseTemporaryAttribute(RESOURCE_CAPACITY);
-                labels[RESOURCE_CAPACITY_LABEL].setText(getLabelAtributeString(RESOURCE_CAPACITY));
-            }
-        });
-
-        Button resourceCapacityMinus = new Button(skin, BTN_MINUS_DEFAULT_UP, BTN_DEFAULT_DOWN);
-        resourceCapacityMinus.getButton().addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                attributes.decreaseTemporaryAttribute(RESOURCE_CAPACITY);
-                labels[RESOURCE_CAPACITY_LABEL].setText(getLabelAtributeString(RESOURCE_CAPACITY));
-            }
-        });
-
-        upgradeLayout.add(labels[RESOURCE_CAPACITY_LABEL])
-                .width(defaultLabelWidth)
-                .height(defaultLabelHeight);
-        upgradeLayout.add(resourceCapacityMinus.getButton())
-                .size(defaultBtnSize);
-        upgradeLayout.add(resourceCapacityPlus.getButton())
-                .size(defaultBtnSize)
-                .row();
-
-        TextButton saveBtn = new TextButton("SAVE", skin);
-        saveBtn.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                ship.saveAttributes();
-                for (int i = 0; i < labels.length; i++)
-                    labels[i].setText(getLabelAtributeString(Objects.requireNonNull(getAttributeType(i))));
-            }
-        });
-
-        upgradeLayout.add(saveBtn)
-                .width(defaultButtonWidth)
-                .height(defaultButtonHeight)
-                .align(Align.center);
+        }
 
         final UpgradeShipDialog shipDialog = this;
         TextButton closeBtn = new TextButton("CLOSE", skin);
@@ -246,39 +128,43 @@ public class UpgradeShipDialog extends CustomDialog {
 
     }
 
-    private String getLabelAtributeString(AttributeType type){
+    private String getLabelAtributeString(AttributeType type, int id){
 
         Attributes attributes = ship.getAttributes();
         String labelText = "";
 
         switch (type){
             case MINING_SPEED:
-                labelText += "Mining speed: " + ship.getAttribute(MINING_SPEED);
-                if(attributes.getTemporaryAttribute(MINING_SPEED) > 0)
-                    labelText += " + " + attributes.getTemporaryAttribute(MINING_SPEED);
-                break;
+                if(id == 0)
+                    return "MINING SPEED";
+                else if (id == 1)
+                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(MINING_SPEED));
+                return ship.getAttribute(MINING_SPEED)+"";
             case TRAVEL_SPEED:
-                labelText += "Travel speed: " + ship.getAttribute(TRAVEL_SPEED);
-                if(attributes.getTemporaryAttribute(TRAVEL_SPEED) > 0)
-                    labelText += " + " + attributes.getTemporaryAttribute(TRAVEL_SPEED);
-                break;
+                if(id == 0)
+                    return "TRAVEL SPEED";
+                else if (id == 1)
+                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(TRAVEL_SPEED));
+                return ship.getAttribute(TRAVEL_SPEED)+"";
             case FUEL_CAPACITY:
-                labelText += "Fuel capacity: " + ship.getAttribute(FUEL_CAPACITY);
-                if(attributes.getTemporaryAttribute(FUEL_CAPACITY) > 0)
-                    labelText += " + " + attributes.getTemporaryAttribute(FUEL_CAPACITY);
-                break;
+                if(id == 0)
+                    return "FUEL CAPACITY";
+                else if (id == 1)
+                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(FUEL_CAPACITY));
+                return ship.getAttribute(FUEL_CAPACITY)+"";
             case FUEL_EFFICIENCY:
-                labelText += "Fuel efficiency: " + ship.getAttribute(FUEL_EFFICIENCY);
-                if(attributes.getTemporaryAttribute(FUEL_EFFICIENCY) > 0)
-                    labelText += " + " + attributes.getTemporaryAttribute(FUEL_EFFICIENCY);
-                break;
+                if(id == 0)
+                    return "FUEL EFFICIENCY";
+                else if (id == 1)
+                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(FUEL_EFFICIENCY));
+                return ship.getAttribute(FUEL_EFFICIENCY)+"";
             case RESOURCE_CAPACITY:
-                labelText += "Resource capacity: " + ship.getAttribute(RESOURCE_CAPACITY);
-                if(attributes.getTemporaryAttribute(RESOURCE_CAPACITY) > 0)
-                    labelText += " + " + attributes.getTemporaryAttribute(RESOURCE_CAPACITY);
-                break;
+                if(id == 0)
+                    return "RESOURCE CAPACITY";
+                else if (id == 1)
+                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(RESOURCE_CAPACITY));
+                return ship.getAttribute(RESOURCE_CAPACITY)+"";
         }
-
         return labelText;
     }
 

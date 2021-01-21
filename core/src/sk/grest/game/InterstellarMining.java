@@ -35,25 +35,31 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class InterstellarMining extends Game implements ConnectorEvent, DatabaseChangeListener {
 
-	// TUESDAY
-	// TODO FIX BUTTONS
-	// TODO SHIP SHOP (BASICALLY DONE)
-
 	// WEDNESDAY
-	// TODO FIX SCROLLING LAYOUT FOR RESOURCE_DIALOG, SHIPS_LIST AND SHIPS_SHOP
+	// TODO FIX SCROLLING LAYOUT FOR RESOURCE_DIALOG, SHIPS_LIST
 	// TODO FINISH SHIP UPGRADE WINDOW
 
 	// THURSDAY
 	// TODO PLANET SYSTEM LIST
-	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
+
+	// TODO FILL PLANETS WITH DIFFERENT RESOURCES
+	// TODO ABBILITIES AND NAMES FOR SHIPS
+	// TODO DIVIDE RESOURCES INTO GROUPS
 
 	// FRIDAY
 	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
 	// TODO REMEMBER NAME AND PASSWORD
 
 	// PROBLEMS THAT WILL WAIT
+	// TODO REMEMBER PASSWORD
 	// TODO CLEAN UP CODE
 	// TODO DATABASE CAN BE POSSIBLY MADE SIMPLER USING JOINs (IF THERE'S TIME)
+	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
+
+	// TODO STATS
+	// TODO ACHIEVEMENTS
+
+	// TODO COOL LOOKING NESTED TABLES
 
 	private Player player;
 
@@ -483,6 +489,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	@Override
 	public void onAttributesChanged(Ship ship, Attributes attributes) {
 		handler.updateShipInFleet(player.getID(), ship, this);
+		handler.updatePlayer();
 	}
 
 	@Override

@@ -28,6 +28,10 @@ public class GameConstants {
     public static final float TRILLION = 1000 * BILLION;
     public static final float QUADRILION = 1000 * TRILLION;
 
-
+    public static final String THOUSAND_SIGN = "K";
+    public static final String MILLION_SIGN = "M";
+    public static final String BILLION_SIGN = "B";
+    public static final String TRILLION_SIGN = "T";
+    public static final String QUADRILION_SIGN = "Q";
 
 }

@@ -83,7 +83,6 @@ public class Ship {
     public void saveAttributes(){
         // TODO FIX - POSSIBLY WRONG
         if(travelPlan == null || travelPlan.getCurrentState() == AT_THE_BASE){
-            attributes.saveAttributes();
             listener.onAttributesChanged(this, attributes);
         }else{
             // TOAST FOR UNABILITY TO UPGRADE WHILE AWAY FROM BASE
