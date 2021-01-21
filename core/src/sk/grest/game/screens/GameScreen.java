@@ -212,7 +212,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 // ADD ACTION
-                resourceInventoryDialog = new ResourceInventoryDialog("Inventory", game.getUISkin(), game.getPlayer());
+                resourceInventoryDialog = new ResourceInventoryDialog("Inventory", game.getUISkin(), game);
                 resourceInventoryDialog.show(stage);
             }
         });

@@ -215,6 +215,7 @@ public class DatabaseConnection {
                 sql += ShipInFleetTable.TRAVEL_SPEED_LVL + " = " + data.get(ShipInFleetTable.TRAVEL_SPEED_LVL) + ", ";
                 sql += ShipInFleetTable.MINING_SPEED_LVL + " = " + data.get(ShipInFleetTable.MINING_SPEED_LVL) + " ";
                 sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ShipInFleetTable.SHIP_ID + " = " + objectId;
+                Gdx.app.log("SQL", sql);
                 break;
             case ResourceAtBase.TABLE_NAME:
                 sql += ResourceAtBase.AMOUNT + " = " + data.get(ShipInFleetTable.AMOUNT);
@@ -226,6 +227,7 @@ public class DatabaseConnection {
                 sql += PlayerTable.EXPERIENCE + " = " + data.get(PlayerTable.EXPERIENCE);
                 sql += PlayerTable.MONEY + " = " + data.get(PlayerTable.MONEY);
                 sql += " WHERE " + PlayerTable.ID + " = " + data.get(PlayerTable.ID);
+                Gdx.app.log("SQL", sql);
                 break;
         }
 

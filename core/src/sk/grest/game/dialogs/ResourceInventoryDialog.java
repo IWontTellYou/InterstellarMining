@@ -2,39 +2,40 @@ package sk.grest.game.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-import java.util.Locale;
-
+import sk.grest.game.InterstellarMining;
 import sk.grest.game.defaults.ScreenDeafults;
-import sk.grest.game.entities.Player;
 import sk.grest.game.entities.resource.Resource;
-import sk.grest.game.listeners.ItemSelectedListener;
+import sk.grest.game.listeners.ItemOpenedListener;
+import sk.grest.game.listeners.ItemSoldListener;
 import sk.grest.game.other.Row;
 import sk.grest.game.other.SelectionTable;
 import sk.grest.game.other.SellBar;
 
-import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.all;
 
-public class ResourceInventoryDialog extends CustomDialog implements ItemSelectedListener<Resource> {
+public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedListener<Resource>, ItemSoldListener {
+
+    private static final int IMG = 0;
+    private static final int NAME = 1;
+    private static final int AMOUNT = 2;
+    private static final int STATE = 3;
 
     private ScrollPane pane;
     private SelectionTable<Resource> contentTable;
     private SellBar sellBar;
 
-    public ResourceInventoryDialog(String title, Skin skin, Player player) {
+    private InterstellarMining game;
+
+    public ResourceInventoryDialog(String title, Skin skin, InterstellarMining game) {
         super(title, skin);
 
-        sellBar = new SellBar(player.getResourcesAtBase().get(0), skin);
+        this.game = game;
+        sellBar = new SellBar(game.getPlayer().getResourcesAtBase().get(0), skin, game, this);
 
         float imageCellWidth = Gdx.graphics.getWidth()/20f;
         float nameCellWidth = Gdx.graphics.getWidth()/10f;
@@ -53,64 +54,67 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemSelecte
 
         Table infoPanel = new Table(getSkin());
 
-        Label imageLabel = new Label("", skin);
+        Label imageLabel = new Label("IMG", skin);
         infoPanel.add(imageLabel).
+                uniformX().
                 align(Align.center).
                 width(imageCellWidth).height(cellHeight);
 
-        Label nameLabel = new Label("", skin);
+        Label nameLabel = new Label("NAME", skin);
         infoPanel.add(nameLabel).
+                uniformX().
                 align(Align.center).
                 width(nameCellWidth).height(cellHeight);
 
-        Label destinationLabel = new Label("NAME", skin);
-        infoPanel.add(destinationLabel).
-                align(Align.center).
-                width(destinationCellWidth).height(cellHeight);
-
-        Label timeToArriveLabel = new Label("AMOUNT", skin);
-        infoPanel.add(timeToArriveLabel).
+        Label amountLabel = new Label("AMOUNT", skin);
+        infoPanel.add(amountLabel).
+                uniformX().
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight);
 
         Label stateLabel = new Label("STATE", skin);
         infoPanel.add(stateLabel).
+                uniformX().
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight).
                 row();
 
         getContentTable().add(infoPanel).row();
 
-        contentTable = new SelectionTable<>(skin);
+        contentTable = new SelectionTable<>(this, skin);
 
-        for (Resource r : player.getResourcesAtBase()) {
+        for (Resource r : game.getPlayer().getResourcesAtBase()) {
 
             Row<Resource> resourceRow = new Row<>();
             resourceRow.setItem(r);
-            resourceRow.setColors(Color.BLACK, Color.CYAN);
+            resourceRow.setColors(ScreenDeafults.DARK_BLUE, ScreenDeafults.CYAN_BLUE);
 
             Label resourceImage = new Label("img", skin);
             resourceRow.add(resourceImage).
+                    uniformX().
                     align(Align.center).
                     width(imageCellWidth).height(cellHeight);
 
             Label resourceName = new Label(r.getName(), skin);
             resourceRow.add(resourceName).
+                    uniformX().
                     align(Align.center).
                     width(nameCellWidth).height(cellHeight);
 
-            Label resourceAmount = new Label(String.format(Locale.getDefault(),"%.2f",r.getAmount()), skin);
+            Label resourceAmount = new Label(r.getAmount()+"", skin);
             resourceRow.add(resourceAmount).
+                    uniformX().
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight);
 
             Label resourceState = new Label(r.getState().toString(), skin);
             resourceRow.add(resourceState).
+                    uniformX().
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight).
                     row();
 
-            contentTable.add(resourceRow).fillX().row();
+            contentTable.addRow(resourceRow).fillX().row();
 
         }
 
@@ -119,22 +123,12 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemSelecte
         pane.setHeight(ScreenDeafults.DEFAULT_DIALOG_HEIGHT * 0.75f);
         pane.layout();
 
-        getContentTable().add(pane).fillX().row();
-        getContentTable().add(sellBar).fillX().row();
-
-        //sellBar.debug(Debug.table);
+        getContentTable().add(pane).uniformX().fillX().row();
+        getContentTable().add(sellBar).uniformX().fillX().row();
 
         Gdx.app.log("PARAMS", "Height: " + getHeight() + ", Width: " + getWidth());
 
-        final ResourceInventoryDialog resourceInventoryDialog = this;
-        TextButton closeBtn = new TextButton("CLOSE", skin);
-        closeBtn.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                resourceInventoryDialog.hide();
-            }
-        });
-        getButtonTable().add(closeBtn);
+        addCloseButton(this);
 
     }
 
@@ -143,12 +137,22 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemSelecte
     }
 
     @Override
-    public void onSelectedItemClicked(Row<Resource> r) {
-        sellBar.changeResource(r.getItem());
+    public void onItemOpenedListener(Resource item) {
+        sellBar.changeResource(item);
     }
 
     @Override
-    public void onUnselectedItemClicked() {
+    public void onItemSold() {
+        long num = Long.parseLong(sellBar.getAmount().getText());
+        Gdx.app.log(contentTable.getItemSelected().getName(), contentTable.getItemSelected().getAmount() - num+"");
+        if(contentTable.getItemSelected().getAmount() - num >= 0) {
+            game.getPlayer().increaseMoney(num * (long) contentTable.getItemSelected().getPrice());
+            contentTable.getItemSelected().subtractAmount(Integer.parseInt(sellBar.getAmount().getText()));
+            sellBar.changeResource(contentTable.getItemSelected());
+            game.getHandler().updatePlayer();
+            game.getHandler().updateResourceAtBase(game.getPlayer().getID(), contentTable.getItemSelected().getID(), contentTable.getItemSelected().getAmount(), game);
+        }
 
+        ((Label) contentTable.getRow(contentTable.getItemSelected()).getElement(AMOUNT)).setText((int) contentTable.getItemSelected().getAmount());
     }
 }

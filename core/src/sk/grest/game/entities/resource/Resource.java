@@ -8,10 +8,10 @@ public class Resource{
     private ResourceState state;
     private ResourceRarity rarity;
     private String name;
-    private float price;
-    private float amount;
+    private int price;
+    private int amount;
 
-    public Resource(int ID, String name, ResourceState state, ResourceRarity rarity, float price, float amount) {
+    public Resource(int ID, String name, ResourceState state, ResourceRarity rarity, int price, int amount) {
         this.ID = ID;
         this.state = state;
         this.rarity = rarity;
@@ -36,7 +36,7 @@ public class Resource{
         return name;
     }
 
-    public float getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -45,15 +45,15 @@ public class Resource{
         resource.amount = 0;
     }
 
-    public void subtractAmount(float amount){
+    public void subtractAmount(int amount){
         this.amount -= amount;
     }
 
-    public void setAmount(float amount){
+    public void setAmount(int amount){
         this.amount = amount;
     }
 
-    public float getAmount() {
+    public int getAmount() {
         return amount;
     }
 

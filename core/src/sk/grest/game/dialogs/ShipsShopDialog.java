@@ -44,7 +44,6 @@ public class ShipsShopDialog extends CustomDialog {
 
     private ScrollPane scrollingLayout;
     private Table layoutChild;
-    private Texture tableBack;
 
     private TextureRegionDrawable textureRegionDrawableBg;
 
@@ -52,12 +51,10 @@ public class ShipsShopDialog extends CustomDialog {
         super(title, skin);
 
         Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
-        bgPixmap.setColor(13/255f, 15/255f, 67/255f, 0.7f);
+        bgPixmap.setColor(DARK_BLUE);
         bgPixmap.fill();
 
         textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
-
-        tableBack = blank;
 
         layoutChild = new Table(skin);
 
@@ -81,7 +78,7 @@ public class ShipsShopDialog extends CustomDialog {
 
     }
 
-    private void rearangeTable(){
+    private void rearrangeTable(){
         layoutChild.clearChildren();
 
         layoutChild.add(new Label("", skin)).height(50).colspan(3).row();
@@ -153,7 +150,7 @@ public class ShipsShopDialog extends CustomDialog {
                     layoutChild.removeActor(shipShop.get(s));
                     game.getHandler().buyShip(s);
                     shipShop.remove(s);
-                    rearangeTable();
+                    rearrangeTable();
                 }
             }
         });

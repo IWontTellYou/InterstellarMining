@@ -268,12 +268,12 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 							this,
 							(Integer) data.get(ShipTable.ID),
 							(String) data.get(ShipTable.NAME),
-							(Float) data.get(ShipTable.MINING_SPEED),
-							(Float) data.get(ShipTable.TRAVEL_SPEED),
-							(Float) data.get(ShipTable.RESOURCE_CAPACITY),
-							(Float) data.get(ShipTable.FUEL_CAPACITY),
-							(Float) data.get(ShipTable.FUEL_EFFICIENCY),
-							(Float) data.get(ShipTable.PRICE),
+							(Integer) data.get(ShipTable.MINING_SPEED),
+							(Integer) data.get(ShipTable.TRAVEL_SPEED),
+							(Integer) data.get(ShipTable.RESOURCE_CAPACITY),
+							(Integer) data.get(ShipTable.FUEL_CAPACITY),
+							(Integer) data.get(ShipTable.FUEL_EFFICIENCY),
+							(Integer) data.get(ShipTable.PRICE),
 							0
 					);
 					shipsShop.add(ship);
@@ -311,7 +311,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 								(int) data.get(PlanetTable.ID),
 								(String) data.get(PlanetTable.NAME),
 								(String) data.get(PlanetTable.ASSET_ID),
-								(float) data.get(PlanetTable.DISTANCE),
+								(int) data.get(PlanetTable.DISTANCE),
 								(boolean) data.get(PlanetTable.HABITABLE),
 								(String) data.get(PlanetTable.INFO),
 								new ArrayList<Resource>()
@@ -336,7 +336,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 							(String) data.get(ResourceTable.NAME),
 							ResourceState.getState((Integer) data.get(ResourceTable.STATE_ID)),
 							ResourceRarity.getRarity((Integer) data.get(ResourceTable.RARITY_ID)),
-							(Float) data.get(ResourceTable.PRICE),
+							(Integer) data.get(ResourceTable.PRICE),
 							0
 					);
 					resources.add(resource);
@@ -400,7 +400,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 					if (data.get(ShipInFleetTable.TASK_TIME) != null && Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME)) != 0 && destination != null) {
 						long taskTime = Long.parseLong((String) data.get(ShipInFleetTable.TASK_TIME));
 						Resource resource = getResourceByID((Integer) data.get(ShipInFleetTable.RESOURCE_ID));
-						resource.setAmount((Float) data.get(ShipInFleetTable.AMOUNT));
+						resource.setAmount((Integer) data.get(ShipInFleetTable.AMOUNT));
 						TravelPlan plan = new TravelPlan(this, destination, ship, resource, taskTime);
 
 						if(plan.getCurrentState() == ShipState.AT_THE_BASE){
@@ -422,7 +422,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			case ResourceAtBase.TABLE_NAME:
 				for (Map<String, Object> data : tableData) {
 					Resource r = getResourceByID((Integer) data.get(ResourceAtBase.RESOURCE_ID));
-					r.setAmount((Float) data.get(ResourceAtBase.AMOUNT));
+					r.setAmount((Integer) data.get(ResourceAtBase.AMOUNT));
 					player.getResourcesAtBase().add(r);
 				}
 				handler.getTableWherePlayer(DiscoveredSystemsTable.TABLE_NAME, player.getID(), this);

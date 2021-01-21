@@ -14,6 +14,8 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
 import java.util.ArrayList;
 
+import sk.grest.game.listeners.ItemSelectedListener;
+
 public class Row<E> extends Table {
 
     private ArrayList<Actor> elements;
@@ -24,6 +26,7 @@ public class Row<E> extends Table {
     private Color selectedColor;
 
     boolean selected;
+    ItemSelectedListener<E> listener;
 
     public Row() {
         this.elements = new ArrayList<>();
@@ -37,10 +40,13 @@ public class Row<E> extends Table {
     }
 
     {
+
+        final Row<E> instance = this;
         this.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                setSelected(!selected);
+                setSelected(selected);
+                listener.onSelectedItemClicked(instance);
             }
 
             @Override
@@ -50,9 +56,14 @@ public class Row<E> extends Table {
 
             @Override
             public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
-                setColor(false);
+                if(!selected)
+                    setColor(false);
             }
         });
+    }
+
+    public void addListener(ItemSelectedListener<E> listener){
+        this.listener = listener;
     }
 
     public void setItem(E item) {

@@ -28,7 +28,7 @@ public class TravelPlan {
     private long[] schedule;
 
     private Resource resource;
-    private float resourceAmount;
+    private int resourceAmount;
 
     private boolean resourceMined;
     private boolean travelBegun;
@@ -121,7 +121,7 @@ public class TravelPlan {
     public Resource getResource() {
         return resource;
     }
-    public float getAmount() {
+    public int getAmount() {
         return resourceAmount;
     }
     public long getStartTime(){

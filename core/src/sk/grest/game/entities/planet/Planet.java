@@ -8,13 +8,13 @@ public class Planet {
 
     private int ID;
     private String name;
-    private float distance;
+    private int distance;
     private boolean habitable;
     private String info;
     private ArrayList<Resource> resources;
     private String assetId;
 
-    public Planet(int ID, String name, String assetId, float distance, boolean habitable, String info, ArrayList<Resource> resources) {
+    public Planet(int ID, String name, String assetId, int distance, boolean habitable, String info, ArrayList<Resource> resources) {
         this.ID = ID;
         this.name = name;
         this.assetId = assetId;
@@ -36,7 +36,7 @@ public class Planet {
         return assetId;
     }
 
-    public float getDistance() {
+    public int getDistance() {
         return distance;
     }
 

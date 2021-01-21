@@ -1,21 +1,31 @@
 package sk.grest.game.other;
 
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import java.util.ArrayList;
 
-public class SelectionTable<E> extends Table {
+import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.listeners.ItemOpenedListener;
+import sk.grest.game.listeners.ItemSelectedListener;
+
+public class SelectionTable<E> extends Table implements ItemSelectedListener<E> {
 
     private ArrayList<Row<E>> rows;
-    int currentRow;
+    private int currentRow;
+    private ItemOpenedListener<E> listener;
 
-    public SelectionTable() {
+    private E itemSelected;
+
+    public SelectionTable(ItemOpenedListener<E> listener) {
+        this.listener = listener;
     }
 
-    public SelectionTable(Skin skin) {
+    public SelectionTable(ItemOpenedListener<E> listener, Skin skin) {
         super(skin);
+        this.listener = listener;
     }
 
     {
@@ -30,10 +40,33 @@ public class SelectionTable<E> extends Table {
             return null;
     }
 
-    public Table getRow(int index){
-        return rows.get(index);
+
+    public Cell<Row<E>> addRow(Row<E> row){
+        row.addListener(this);
+        rows.add(row);
+        return add(row);
     }
 
+    public Row<E> getRow(E item){
+        for (Row<E> row : rows) {
+            if(row.getItem() == item)
+                return row;
+        }
+        return null;
+    }
 
+    public E getItemSelected() {
+        return itemSelected;
+    }
+
+    @Override
+    public void onSelectedItemClicked(Row<E> r) {
+        for (Row<E> row : rows) {
+            row.setSelected(false);
+        }
+        r.setSelected(true);
+        itemSelected = r.getItem();
+        listener.onItemOpenedListener(r.getItem());
+    }
 
 }

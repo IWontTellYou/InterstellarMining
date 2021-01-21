@@ -3,6 +3,7 @@ package sk.grest.game.defaults;
 import sk.grest.game.defaults.GameConstants.*;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -25,6 +26,11 @@ import static sk.grest.game.defaults.GameConstants.TRILLION;
 import static sk.grest.game.defaults.GameConstants.TRILLION_SIGN;
 
 public class ScreenDeafults {
+
+    // COLORS
+
+    public static final Color DARK_BLUE = new Color(0/255f, 3/255f, 199/255f, 1);
+    public static final Color CYAN_BLUE = new Color(45/255f, 221/255f, 252/255f, 1);
 
     public static Texture blank = new Texture(Gdx.files.internal("image/white_background.png"));
 

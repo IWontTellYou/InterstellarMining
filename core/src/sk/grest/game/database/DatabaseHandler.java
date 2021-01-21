@@ -125,7 +125,7 @@ public class DatabaseHandler {
         return connection;
     }
 
-    public void updateResourceAtBase(int playerId, int resourceId, float amount, ConnectorEvent listener){
+    public void updateResourceAtBase(int playerId, int resourceId, int amount, ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
         data.put(ResourceAtBase.RESOURCE_ID, resourceId);
         data.put(ResourceAtBase.AMOUNT, amount);

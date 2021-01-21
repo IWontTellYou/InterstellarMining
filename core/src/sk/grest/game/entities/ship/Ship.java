@@ -16,16 +16,16 @@ public class Ship {
     private String name;
 
     // PROPERTIES
-    private float miningSpeed;
-    private float travelSpeed;
-    private float resourceCapacity;
-    private float fuelCapacity;
-    private float fuelEfficiency;
+    private int miningSpeed;
+    private int travelSpeed;
+    private int resourceCapacity;
+    private int fuelCapacity;
+    private int fuelEfficiency;
 
     private Attributes attributes;
 
-    private float price;
-    private float upgradeLevel;
+    private int price;
+    private int upgradeLevel;
 
     // TRAVELING
     private TravelPlan travelPlan;
@@ -34,8 +34,8 @@ public class Ship {
 
     DatabaseChangeListener listener;
 
-    public Ship(DatabaseChangeListener listener, int id, String name, float miningSpeed, float travelSpeed, float resourceCapacity,
-                float fuelCapacity, float fuelEfficiency, float price, float upgradeLevel) {
+    public Ship(DatabaseChangeListener listener, int id, String name, int miningSpeed, int travelSpeed, int resourceCapacity,
+                int fuelCapacity, int fuelEfficiency, int price, int upgradeLevel) {
         this.listener = listener;
         this.id = id;
         this.name = name;
@@ -123,7 +123,7 @@ public class Ship {
         }
     }
 
-    public float getPrice() {
+    public int getPrice() {
         return price;
     }
 
@@ -152,7 +152,7 @@ public class Ship {
         return travelPlan;
     }
 
-    public float getUpgradeLevel() {
+    public int getUpgradeLevel() {
         return upgradeLevel;
     }
 
