@@ -14,6 +14,7 @@ import java.util.Objects;
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
 import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.entities.Player;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
 
@@ -32,20 +33,20 @@ public class UpgradeShipDialog extends CustomDialog {
 
     // InterstellarMining class will be here as temporary solution until I have regular graphichs for Buttons
 
-    public static final String BTN_PLUS_DEFAULT_UP = "tree-plus";
-    public static final String BTN_MINUS_DEFAULT_UP = "tree-minus";
     // TODO FIX (IT'S RED)
     public static final String BTN_DEFAULT_DOWN = "default-round-down";
+    public static final String BTN_PLUS_DEFAULT_UP = "tree-plus";
+    public static final String BTN_MINUS_DEFAULT_UP = "tree-minus";
 
     private Skin skin;
     private Ship ship;
     final private Label[] attributeLabels;
     final private Label[] priceLabels;
 
-    public UpgradeShipDialog(final InterstellarMining game, String title, Skin skinTest, final Ship ship) {
-        super(title, skinTest);
+    public UpgradeShipDialog(String title, Skin skin, final Player player, final Ship ship) {
+        super(title, skin);
 
-        this.skin = game.getUISkin();
+        this.skin = skin;
         this.ship = ship;
 
         attributeLabels = new Label[5];
@@ -82,10 +83,10 @@ public class UpgradeShipDialog extends CustomDialog {
             travelSpeedPlus.getButton().addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    if(game.getPlayer().getMoney() > attributes.getAttributePrice(getAttributeType(j))){
+                    if(player.getMoney() > attributes.getAttributePrice(getAttributeType(j))){
                         attributeLabels[j].setText(getLabelAtributeString(getAttributeType(j), 2));
                         priceLabels[j].setText(getLabelAtributeString(getAttributeType(j),1));
-                        game.getPlayer().decreaseMoney(attributes.getAttributePrice(getAttributeType(j)));
+                        player.decreaseMoney(attributes.getAttributePrice(getAttributeType(j)));
                         attributes.increaseAttribute(getAttributeType(j));
                         ship.saveAttributes();
                     }

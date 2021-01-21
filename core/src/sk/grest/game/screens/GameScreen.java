@@ -117,7 +117,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 Gdx.app.log("CLICK", "Clicked");
                 if(isOver(event.getStageX(), event.getStageY())){
                     Gdx.app.log("CLICK", "Clicked inside");
-                    upgradeShipDialog = new UpgradeShipDialog(game, "", game.getUISkin(), game.getPlayer().getShips().get(0));
+                    upgradeShipDialog = new UpgradeShipDialog("", game.getUISkin(), game.getPlayer(), game.getPlayer().getShips().get(0));
                     upgradeShipDialog.show(stage);
                 }
             }

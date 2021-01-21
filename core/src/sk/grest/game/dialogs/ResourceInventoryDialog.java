@@ -1,12 +1,15 @@
 package sk.grest.game.dialogs;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -15,13 +18,23 @@ import java.util.Locale;
 import sk.grest.game.defaults.ScreenDeafults;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.listeners.ItemSelectedListener;
+import sk.grest.game.other.Row;
+import sk.grest.game.other.SelectionTable;
+import sk.grest.game.other.SellBar;
 
-public class ResourceInventoryDialog extends CustomDialog {
+import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.all;
+
+public class ResourceInventoryDialog extends CustomDialog implements ItemSelectedListener<Resource> {
 
     private ScrollPane pane;
+    private SelectionTable<Resource> contentTable;
+    private SellBar sellBar;
 
     public ResourceInventoryDialog(String title, Skin skin, Player player) {
         super(title, skin);
+
+        sellBar = new SellBar(player.getResourcesAtBase().get(0), skin);
 
         float imageCellWidth = Gdx.graphics.getWidth()/20f;
         float nameCellWidth = Gdx.graphics.getWidth()/10f;
@@ -38,65 +51,66 @@ public class ResourceInventoryDialog extends CustomDialog {
 
         getContentTable().clearChildren();
 
-        Table contentTable = new Table(skin);
+        Table infoPanel = new Table(getSkin());
 
         Label imageLabel = new Label("", skin);
-        getContentTable().add(imageLabel).
+        infoPanel.add(imageLabel).
                 align(Align.center).
                 width(imageCellWidth).height(cellHeight);
 
         Label nameLabel = new Label("", skin);
-        contentTable.add(nameLabel).
+        infoPanel.add(nameLabel).
                 align(Align.center).
                 width(nameCellWidth).height(cellHeight);
 
         Label destinationLabel = new Label("NAME", skin);
-        contentTable.add(destinationLabel).
+        infoPanel.add(destinationLabel).
                 align(Align.center).
                 width(destinationCellWidth).height(cellHeight);
 
         Label timeToArriveLabel = new Label("AMOUNT", skin);
-        contentTable.add(timeToArriveLabel).
+        infoPanel.add(timeToArriveLabel).
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight);
 
         Label stateLabel = new Label("STATE", skin);
-        contentTable.add(stateLabel).
+        infoPanel.add(stateLabel).
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight).
                 row();
 
-        //
-        // END OF HEADER
-        //
+        getContentTable().add(infoPanel).row();
 
-
-        //
-        // TABLE DATA
-        //
+        contentTable = new SelectionTable<>(skin);
 
         for (Resource r : player.getResourcesAtBase()) {
 
+            Row<Resource> resourceRow = new Row<>();
+            resourceRow.setItem(r);
+            resourceRow.setColors(Color.BLACK, Color.CYAN);
+
             Label resourceImage = new Label("img", skin);
-            contentTable.add(resourceImage).
+            resourceRow.add(resourceImage).
                     align(Align.center).
                     width(imageCellWidth).height(cellHeight);
 
             Label resourceName = new Label(r.getName(), skin);
-            contentTable.add(resourceName).
+            resourceRow.add(resourceName).
                     align(Align.center).
                     width(nameCellWidth).height(cellHeight);
 
             Label resourceAmount = new Label(String.format(Locale.getDefault(),"%.2f",r.getAmount()), skin);
-            contentTable.add(resourceAmount).
+            resourceRow.add(resourceAmount).
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight);
 
             Label resourceState = new Label(r.getState().toString(), skin);
-            contentTable.add(resourceState).
+            resourceRow.add(resourceState).
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight).
                     row();
+
+            contentTable.add(resourceRow).fillX().row();
 
         }
 
@@ -105,7 +119,10 @@ public class ResourceInventoryDialog extends CustomDialog {
         pane.setHeight(ScreenDeafults.DEFAULT_DIALOG_HEIGHT * 0.75f);
         pane.layout();
 
-        getContentTable().add(pane);
+        getContentTable().add(pane).fillX().row();
+        getContentTable().add(sellBar).fillX().row();
+
+        //sellBar.debug(Debug.table);
 
         Gdx.app.log("PARAMS", "Height: " + getHeight() + ", Width: " + getWidth());
 
@@ -125,4 +142,13 @@ public class ResourceInventoryDialog extends CustomDialog {
         pane.act(delta);
     }
 
+    @Override
+    public void onSelectedItemClicked(Row<Resource> r) {
+        sellBar.changeResource(r.getItem());
+    }
+
+    @Override
+    public void onUnselectedItemClicked() {
+
+    }
 }

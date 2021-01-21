@@ -6,9 +6,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import java.util.ArrayList;
 
-public class SelectionTable extends Table {
+public class SelectionTable<E> extends Table {
 
-    private ArrayList<Row> rows;
+    private ArrayList<Row<E>> rows;
     int currentRow;
 
     public SelectionTable() {
@@ -21,10 +21,6 @@ public class SelectionTable extends Table {
     {
         rows = new ArrayList<>();
         currentRow = 0;
-    }
-
-    public void addRow(Row row){
-        this.add(row);
     }
 
     public Table getLastRow(){
