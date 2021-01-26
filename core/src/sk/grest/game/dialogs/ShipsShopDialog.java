@@ -19,10 +19,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.ship.Ship;
 
-import static sk.grest.game.defaults.ScreenDeafults.*;
+import static sk.grest.game.constants.ScreenConstants.*;
 import static sk.grest.game.entities.ship.Attributes.AttributeType;
 
 public class ShipsShopDialog extends CustomDialog {
@@ -51,7 +51,7 @@ public class ShipsShopDialog extends CustomDialog {
         super(title, skin);
 
         Pixmap bgPixmap = new Pixmap(1,1, Pixmap.Format.RGB565);
-        bgPixmap.setColor(DARK_BLUE);
+        bgPixmap.setColor(DARK_GRAY);
         bgPixmap.fill();
 
         textureRegionDrawableBg = new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
@@ -111,36 +111,36 @@ public class ShipsShopDialog extends CustomDialog {
         Label[][] stats = new Label[5][2];
 
         stats[TRAVEL_SPEED][0] = new Label("TRAVEL SPEED", skin);
-        table.add(stats[TRAVEL_SPEED][0]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth);
+        table.add(stats[TRAVEL_SPEED][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
         stats[TRAVEL_SPEED][1] = new Label(s.getAttribute(AttributeType.TRAVEL_SPEED) + "", skin);
         stats[TRAVEL_SPEED][1].setAlignment(Align.right);
-        table.add(stats[TRAVEL_SPEED][1]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth).row();
+        table.add(stats[TRAVEL_SPEED][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
 
         stats[MINING_SPEED][0] = new Label("MINING SPEED", skin);
-        table.add(stats[MINING_SPEED][0]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth);
+        table.add(stats[MINING_SPEED][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
         stats[MINING_SPEED][1] = new Label(s.getAttribute(AttributeType.MINING_SPEED) + "", skin);
         stats[MINING_SPEED][1].setAlignment(Align.right);
-        table.add(stats[MINING_SPEED][1]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth).row();
+        table.add(stats[MINING_SPEED][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
 
         stats[FUEL_EFFICIENCY][0] = new Label("FUEL EFFICIENCY", skin);
-        table.add(stats[FUEL_EFFICIENCY][0]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth);
+        table.add(stats[FUEL_EFFICIENCY][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
         stats[FUEL_EFFICIENCY][1] = new Label(s.getAttribute(AttributeType.FUEL_EFFICIENCY) + "", skin);
         stats[FUEL_EFFICIENCY][1].setAlignment(Align.right);
-        table.add(stats[FUEL_EFFICIENCY][1]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth).row();
+        table.add(stats[FUEL_EFFICIENCY][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
 
         stats[FUEL_CAPACITY][0] = new Label("FUEL CAPACITY", skin);
-        table.add(stats[FUEL_CAPACITY][0]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth);
+        table.add(stats[FUEL_CAPACITY][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
         stats[FUEL_CAPACITY][1] = new Label(s.getAttribute(AttributeType.FUEL_CAPACITY) + "", skin);
         stats[FUEL_CAPACITY][1].setAlignment(Align.right);
-        table.add(stats[FUEL_CAPACITY][1]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth).row();
+        table.add(stats[FUEL_CAPACITY][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
 
         stats[RESOURCE_CAPACITY][0] = new Label("RESOURCE CAPACITY", skin);
-        table.add(stats[RESOURCE_CAPACITY][0]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth);
+        table.add(stats[RESOURCE_CAPACITY][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
         stats[RESOURCE_CAPACITY][1] = new Label(s.getAttribute(AttributeType.RESOURCE_CAPACITY) + "", skin);
         stats[RESOURCE_CAPACITY][1].setAlignment(Align.right);
-        table.add(stats[RESOURCE_CAPACITY][1]).pad(ScreenDeafults.DEFAULT_PADDING).width(defaultActorWidth).row();
+        table.add(stats[RESOURCE_CAPACITY][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
 
-        TextButton buy = new TextButton("(BUY) " + ScreenDeafults.getMoneyFormat((long) s.getPrice()), game.getUISkin());
+        TextButton buy = new TextButton("(BUY) " + ScreenConstants.getMoneyFormat((long) s.getPrice()), game.getUISkin());
         buy.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

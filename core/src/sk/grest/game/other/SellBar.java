@@ -1,7 +1,6 @@
 package sk.grest.game.other;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -13,13 +12,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.database.DatabaseHandler;
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.ItemSoldListener;
-
-import static com.badlogic.gdx.scenes.scene2d.ui.Table.Debug.all;
 
 public class SellBar extends Table {
 
@@ -50,7 +46,7 @@ public class SellBar extends Table {
         Table col0 = new Table(getSkin());
         resourceName = new Label(resource.getName(), getSkin());
         col0.add(resourceName).align(Align.center).row();
-        resourcePrice = new Label(ScreenDeafults.getMoneyFormat((int) resource.getPrice()) + " per unit", getSkin());
+        resourcePrice = new Label(ScreenConstants.getMoneyFormat((int) resource.getPrice()) + " per unit", getSkin());
         col0.add(resourcePrice).align(Align.center).row();
 
         // COLUMN 1
@@ -118,15 +114,15 @@ public class SellBar extends Table {
         amountTable.add(amountOwned).align(Align.center);
 
         col1.add(decrease)
-                .pad(ScreenDeafults.DEFAULT_PADDING)
-                .size(ScreenDeafults.DEFAULT_ACTOR_WIDTH/6f)
+                .pad(ScreenConstants.DEFAULT_PADDING)
+                .size(ScreenConstants.DEFAULT_ACTOR_WIDTH/6f)
                 .align(Align.center);
         col1.add(amountTable)
-                .pad(ScreenDeafults.DEFAULT_PADDING)
+                .pad(ScreenConstants.DEFAULT_PADDING)
                 .align(Align.center);
         col1.add(increase)
-                .pad(ScreenDeafults.DEFAULT_PADDING)
-                .size(ScreenDeafults.DEFAULT_ACTOR_WIDTH/6f)
+                .pad(ScreenConstants.DEFAULT_PADDING)
+                .size(ScreenConstants.DEFAULT_ACTOR_WIDTH/6f)
                 .align(Align.center);
 
         sellButton = new TextButton("SELL", getSkin());
@@ -139,20 +135,20 @@ public class SellBar extends Table {
 
         add(col0)
                 .uniform()
-                .width(ScreenDeafults.DEFAULT_ACTOR_WIDTH)
-                .pad(ScreenDeafults.DEFAULT_PADDING)
+                .width(ScreenConstants.DEFAULT_ACTOR_WIDTH)
+                .pad(ScreenConstants.DEFAULT_PADDING)
                 .align(Align.center)
                 .left();
         add(col1)
-                .width(ScreenDeafults.DEFAULT_ACTOR_WIDTH*2)
-                .pad(ScreenDeafults.DEFAULT_PADDING)
+                .width(ScreenConstants.DEFAULT_ACTOR_WIDTH*2)
+                .pad(ScreenConstants.DEFAULT_PADDING)
                 .align(Align.center)
                 .center();
         add(sellButton)
                 .uniform()
-                .width(ScreenDeafults.DEFAULT_ACTOR_WIDTH/2f)
-                .height(ScreenDeafults.DEFAULT_ACTOR_HEIGHT/2f)
-                .pad(ScreenDeafults.DEFAULT_PADDING)
+                .width(ScreenConstants.DEFAULT_ACTOR_WIDTH/2f)
+                .height(ScreenConstants.DEFAULT_ACTOR_HEIGHT/2f)
+                .pad(ScreenConstants.DEFAULT_PADDING)
                 .align(Align.center)
                 .right();
     }
@@ -165,7 +161,7 @@ public class SellBar extends Table {
         this.resource = resource;
         Gdx.app.log(resource.getName(), resource.getAmount()+"");
         resourceName.setText(resource.getName());
-        resourcePrice.setText(ScreenDeafults.getMoneyFormat((int) resource.getPrice()) + " per unit");
+        resourcePrice.setText(ScreenConstants.getMoneyFormat((int) resource.getPrice()) + " per unit");
         amount.setText((int) resource.getAmount()+"");
         amountOwned.setText("max. "+(int) resource.getAmount());
     }

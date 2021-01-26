@@ -3,10 +3,6 @@ package sk.grest.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.Screen;
-import com.badlogic.gdx.assets.AssetManager;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.Sprite;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
@@ -15,12 +11,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
-import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
-import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
-
-import javax.xml.soap.Text;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
@@ -31,7 +23,7 @@ import sk.grest.game.dialogs.UpgradeShipDialog;
 import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.planet.PlanetStats;
@@ -104,7 +96,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             public boolean isOver(float x, float y){
                 Vector2 mouse = new Vector2(x, y);
-                return mouse.dst(ScreenDeafults.TOP_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
+                return mouse.dst(ScreenConstants.TOP_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
 
         });
@@ -131,7 +123,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             public boolean isOver(float x, float y) {
                 Vector2 mouse = new Vector2(x, y);
-                return mouse.dst(ScreenDeafults.TOP_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth();
+                return mouse.dst(ScreenConstants.TOP_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
         });
 
@@ -153,7 +145,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             public boolean isOver(float x, float y) {
                 Vector2 mouse = new Vector2(x, y);
-                return mouse.dst(ScreenDeafults.BOTTOM_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
+                return mouse.dst(ScreenConstants.BOTTOM_LEFT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
 
         });
@@ -176,7 +168,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             public boolean isOver(float x, float y) {
                 Vector2 mouse = new Vector2(x, y);
-                return mouse.dst(ScreenDeafults.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth();
+                return mouse.dst(ScreenConstants.BOTTOM_RIGHT) < table.getCell(backToMenu.getButton()).getActorWidth();
             }
         });
 
@@ -184,7 +176,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         shipsListButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                shipListDialog = new ShipListDialog("", game.getUISkin(), game.getPlayer().getShips());
+                shipListDialog = new ShipListDialog("", game.getUISkin(), game);
                 shipListDialog.show(stage);
             }
         });
@@ -275,7 +267,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             public boolean isOver(float x, float y){
                 Vector2 mouse = new Vector2(x, y);
-                return mouse.dst(ScreenDeafults.MIDDLE) < planetBtn.getButton().getWidth()/2;
+                return mouse.dst(ScreenConstants.MIDDLE) < planetBtn.getButton().getWidth()/2;
             }
 
         });
@@ -403,7 +395,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
     @Override
     public void render(float delta) {
-        ScreenDeafults.clear();
+        ScreenConstants.clear();
 
         if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
             game.getPlayer().increaseMoney(10000);
@@ -423,7 +415,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 s.update(delta);
             }
 
-            moneyLabel.setText(ScreenDeafults.getMoneyFormat(game.getPlayer().getMoney()));
+            moneyLabel.setText(ScreenConstants.getMoneyFormat(game.getPlayer().getMoney()));
 
             // START OF RENDERING SPRITES
             game.getBatch().begin();

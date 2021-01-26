@@ -1,6 +1,4 @@
-package sk.grest.game.defaults;
-
-import sk.grest.game.defaults.GameConstants.*;
+package sk.grest.game.constants;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
@@ -14,23 +12,15 @@ import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 import java.text.SimpleDateFormat;
 import java.util.Locale;
 
-import static sk.grest.game.defaults.GameConstants.BILLION;
-import static sk.grest.game.defaults.GameConstants.BILLION_SIGN;
-import static sk.grest.game.defaults.GameConstants.MILLION;
-import static sk.grest.game.defaults.GameConstants.MILLION_SIGN;
-import static sk.grest.game.defaults.GameConstants.QUADRILION;
-import static sk.grest.game.defaults.GameConstants.QUADRILION_SIGN;
-import static sk.grest.game.defaults.GameConstants.THOUSAND;
-import static sk.grest.game.defaults.GameConstants.THOUSAND_SIGN;
-import static sk.grest.game.defaults.GameConstants.TRILLION;
-import static sk.grest.game.defaults.GameConstants.TRILLION_SIGN;
-
-public class ScreenDeafults {
+public class ScreenConstants {
 
     // COLORS
-
+    public static final Color DARK_GRAY = new Color(96/255f,96/255f,96/255f, 1);
+    public static final Color LIGHT_GRAY = new Color(144/255f,144/255f,144/255f, 1);
     public static final Color DARK_BLUE = new Color(0/255f, 3/255f, 199/255f, 1);
     public static final Color CYAN_BLUE = new Color(45/255f, 221/255f, 252/255f, 1);
+    public static final Color RED = new Color(112/255f, 0/255f, 0/255f, 0.9f);
+    public static final Color TRANSPARENT = new Color(1f, 1f, 1f, 0f);
 
     public static Texture blank = new Texture(Gdx.files.internal("image/white_background.png"));
 
@@ -41,7 +31,6 @@ public class ScreenDeafults {
     public static final Vector2 BOTTOM_RIGHT = new Vector2(Gdx.graphics.getWidth(), 0);
     public static final Vector2 TOP_RIGHT = new Vector2(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     public static final Vector2 MIDDLE = new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
-
 
     public static final float DEFAULT_PADDING = 5f;
     public static final float DEFAULT_ACTOR_HEIGHT = 80f;
@@ -77,18 +66,18 @@ public class ScreenDeafults {
 
     public static String getMoneyFormat(long amount){
 
-        if(amount >= 100000 * QUADRILION){
+        if(amount >= 100000 * GameConstants.QUADRILION){
             return "TOO MUCH MONEY";
-        }else if(amount >= 100 * QUADRILION){
-            return String.format("%.0f", amount / QUADRILION) + QUADRILION_SIGN;
-        }else if(amount >= 100 * TRILLION) {
-            return String.format("%.0f", amount / TRILLION) + TRILLION_SIGN;
-        }else if(amount >= 100 * BILLION) {
-            return String.format("%.0f", amount / BILLION) + BILLION_SIGN;
-        }else if(amount >= 100 * MILLION){
-            return String.format("%.0f", amount / MILLION) + MILLION_SIGN;
-        }else if(amount >= 100 * THOUSAND){
-            return String.format("%.0f", amount / THOUSAND) + THOUSAND_SIGN;
+        }else if(amount >= 100 * GameConstants.QUADRILION){
+            return String.format("%.0f", amount / GameConstants.QUADRILION) + GameConstants.QUADRILION_SIGN;
+        }else if(amount >= 100 * GameConstants.TRILLION) {
+            return String.format("%.0f", amount / GameConstants.TRILLION) + GameConstants.TRILLION_SIGN;
+        }else if(amount >= 100 * GameConstants.BILLION) {
+            return String.format("%.0f", amount / GameConstants.BILLION) + GameConstants.BILLION_SIGN;
+        }else if(amount >= 100 * GameConstants.MILLION){
+            return String.format("%.0f", amount / GameConstants.MILLION) + GameConstants.MILLION_SIGN;
+        }else if(amount >= 100 * GameConstants.THOUSAND){
+            return String.format("%.0f", amount / GameConstants.THOUSAND) + GameConstants.THOUSAND_SIGN;
         }else
             return amount + "";
     }

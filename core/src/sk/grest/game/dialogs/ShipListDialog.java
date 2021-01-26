@@ -2,34 +2,37 @@ package sk.grest.game.dialogs;
 
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
+import sk.grest.game.listeners.ItemOpenedListener;
+import sk.grest.game.other.Row;
+import sk.grest.game.other.SelectionTable;
 
-public class ShipListDialog extends CustomDialog {
+public class ShipListDialog extends CustomDialog implements ItemOpenedListener<Ship> {
 
     private float timeLeft;
     private ArrayList<Label> toUpdate;
     private ArrayList<Ship> ships;
 
-    public ShipListDialog(String title, Skin skin, ArrayList<Ship> ships) {
+    private InterstellarMining game;
+
+    public ShipListDialog(String title, Skin skin, InterstellarMining game) {
         super(title, skin);
+
+        this.game = game;
 
         this.timeLeft = 1;
         this.toUpdate = new ArrayList<>();
-        this.ships = ships;
+        this.ships = game.getPlayer().getShips();
 
         float imageCellWidth = Gdx.graphics.getWidth()/20f;
         float nameCellWidth = Gdx.graphics.getWidth()/10f;
@@ -44,55 +47,55 @@ public class ShipListDialog extends CustomDialog {
         // HEADER
         //
 
-        Table contentTable = new Table(skin);
+        Table infoTable = new Table(skin);
 
         setBackground(InterstellarMining.back);
-        setSize(ScreenDeafults.DEFAULT_DIALOG_WIDTH, ScreenDeafults.DEFAULT_DIALOG_HEIGHT);
+        setSize(ScreenConstants.DEFAULT_DIALOG_WIDTH, ScreenConstants.DEFAULT_DIALOG_HEIGHT);
 
         Label imageLabel = new Label("", skin);
-        contentTable.add(imageLabel).
+        infoTable.add(imageLabel).
                 align(Align.center).
                 width(imageCellWidth).height(cellHeight);
 
         Label nameLabel = new Label("NAME", skin);
-        contentTable.add(nameLabel).
+        infoTable.add(nameLabel).
                 align(Align.center).
                 width(nameCellWidth).height(cellHeight);
 
         Label destinationLabel = new Label("DESTINATION", skin);
-        contentTable.add(destinationLabel).
+        infoTable.add(destinationLabel).
                 align(Align.center).
                 width(destinationCellWidth).height(cellHeight);
 
         Label timeToArriveLabel = new Label("ARRIVAL TIME", skin);
-        contentTable.add(timeToArriveLabel).
+        infoTable.add(timeToArriveLabel).
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight);
 
         Label stateLabel = new Label("STATE", skin);
-        contentTable.add(stateLabel).
+        infoTable.add(stateLabel).
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight).
                 row();
 
-        //
-        // END OF HEADER
-        //
+        getContentTable().add(infoTable).fillX().row();
 
-
-        //
-        // TABLE DATA
-        //
+        SelectionTable<Ship> shipList = new SelectionTable<Ship>(this, skin);
 
         for (Ship s : ships) {
 
+            Row<Ship> tableRow = new Row<>();
+            tableRow.setItem(s);
+            tableRow.addListener(shipList);
+            tableRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.LIGHT_GRAY);
+
             Label shipImage = new Label("img", skin);
-            contentTable.add(shipImage).
+            tableRow.add(shipImage).
                     align(Align.center).
                     width(imageCellWidth).height(cellHeight);
 
             Label shipName = new Label(s.getName(), skin);
-            contentTable.add(shipName).
+            tableRow.add(shipName).
                     align(Align.center).
                     width(nameCellWidth).height(cellHeight);
 
@@ -104,7 +107,7 @@ public class ShipListDialog extends CustomDialog {
 
             toUpdate.add(shipDestination);
 
-            contentTable.add(shipDestination).
+            tableRow.add(shipDestination).
                     align(Align.center).
                     width(destinationCellWidth).height(cellHeight);
 
@@ -114,28 +117,28 @@ public class ShipListDialog extends CustomDialog {
             if(s.getTimeLeft() == 0){
                 shipTimeToArrive = new Label("00:00:00", skin);
             }else{
-                shipTimeToArrive = new Label(ScreenDeafults.getTimeFormat(timeLeft), skin);
+                shipTimeToArrive = new Label(ScreenConstants.getTimeFormat(timeLeft), skin);
             }
 
-            contentTable.add(shipTimeToArrive).
+            tableRow.add(shipTimeToArrive).
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight);
-
-            contentTable.getRows();
 
             toUpdate.add(shipTimeToArrive);
 
             Label shipState = new Label(s.getState().toString(), skin);
 
-            contentTable.add(shipState).
+            tableRow.add(shipState).
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight).
                     row();
 
             toUpdate.add(shipState);
+
+            shipList.addRow(tableRow).row();
         }
 
-        getContentTable().add(contentTable).padBottom(100).row();
+        getContentTable().add(shipList).padBottom(100).row();
 
         addCloseButton(this);
 
@@ -150,7 +153,7 @@ public class ShipListDialog extends CustomDialog {
             for (int i = 0; i < toUpdate.size(); i+=3) {
                 if(ships.get(shipIndex).getState() != ShipState.AT_THE_BASE) {
                     toUpdate.get(i).setText(ships.get(shipIndex).getCurrentDestination().getName());
-                    toUpdate.get(i + 1).setText(ScreenDeafults.getTimeFormat(ships.get(shipIndex).getTimeLeft()));
+                    toUpdate.get(i + 1).setText(ScreenConstants.getTimeFormat(ships.get(shipIndex).getTimeLeft()));
                     toUpdate.get(i + 2).setText(ships.get(shipIndex).getState().toString());
                 }else {
                     toUpdate.get(i).setText("NONE");
@@ -164,4 +167,10 @@ public class ShipListDialog extends CustomDialog {
             timeLeft -= delta;
     }
 
+    @Override
+    public void onItemOpenedListener(Ship item) {
+        UpgradeShipDialog dialog = new UpgradeShipDialog(item.getName(), getSkin(), game.getPlayer(), item);
+        dialog.show(this.getStage());
+        this.hide();
+    }
 }

@@ -4,13 +4,13 @@ import com.badlogic.gdx.Gdx;
 
 import java.util.Arrays;
 
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.DatabaseChangeListener;
 
-import static sk.grest.game.defaults.GameConstants.BASE_DISTANCE;
-import static sk.grest.game.defaults.GameConstants.BASE_MINING_TIME;
+import static sk.grest.game.constants.GameConstants.BASE_DISTANCE;
+import static sk.grest.game.constants.GameConstants.BASE_MINING_TIME;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class TravelPlan {
@@ -61,11 +61,11 @@ public class TravelPlan {
         schedule[TO_HOME] = schedule[FROM_DEST] + travelTime;
 
         long currentTime = System.currentTimeMillis();
-        String log = "\n[CURRENT] " + ScreenDeafults.timeLeftFormat.format(currentTime);
-        log += "\n[FROM_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[FROM_HOME]);
-        log += "\n[TO_DESTINATION] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_DEST]);
-        log += "\n[FROM_DESTINATION] " + ScreenDeafults.timeLeftFormat.format(schedule[FROM_DEST]);
-        log += "\n[TO_HOME] " + ScreenDeafults.timeLeftFormat.format(schedule[TO_HOME]);
+        String log = "\n[CURRENT] " + ScreenConstants.timeLeftFormat.format(currentTime);
+        log += "\n[FROM_HOME] " + ScreenConstants.timeLeftFormat.format(schedule[FROM_HOME]);
+        log += "\n[TO_DESTINATION] " + ScreenConstants.timeLeftFormat.format(schedule[TO_DEST]);
+        log += "\n[FROM_DESTINATION] " + ScreenConstants.timeLeftFormat.format(schedule[FROM_DEST]);
+        log += "\n[TO_HOME] " + ScreenConstants.timeLeftFormat.format(schedule[TO_HOME]);
         Gdx.app.log("\nTIME_TRAVEL", log + "\n");
 
         travelBegun = true;

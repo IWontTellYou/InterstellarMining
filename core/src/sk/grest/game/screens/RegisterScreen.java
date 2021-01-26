@@ -16,20 +16,15 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.database.DatabaseConnection;
-import sk.grest.game.database.DatabaseConstants;
 import sk.grest.game.database.DatabaseHandler;
-import sk.grest.game.defaults.GameConstants;
-import sk.grest.game.defaults.ScreenDeafults;
-import sk.grest.game.entities.Player;
 
 import static sk.grest.game.database.DatabaseConnection.*;
 import static sk.grest.game.database.DatabaseConstants.*;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.EMAIL;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.NAME;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.TABLE_NAME;
-import static sk.grest.game.defaults.GameConstants.*;
-import static sk.grest.game.defaults.ScreenDeafults.*;
+import static sk.grest.game.constants.GameConstants.*;
+import static sk.grest.game.constants.ScreenConstants.*;
 
 public class RegisterScreen implements Screen, ConnectorEvent {
 
@@ -163,14 +158,15 @@ public class RegisterScreen implements Screen, ConnectorEvent {
             // START OF RENDERING SPRITES
             game.getBatch().begin();
 
+
             if (isNameInDatabase(nameInput.getText())) {
                 errorMessage.setText("Name is already in use!");
+            } else if(nameInput.getText().length() < 6) {
+                errorMessage.setText("User name is too short");
             } else if (isEmailInDatabase(emailInput.getText())) {
                 errorMessage.setText("Email is already in use!");
             } else if(!emailInput.getText().contains("@")){
                 errorMessage.setText("Email has to contain @ sign");
-            } else if(nameInput.getText().length() < 6) {
-                errorMessage.setText("User name is too short");
             } else if(passwordInput.getText().equals("")){
                 errorMessage.setText("Password has to 6+ characters long");
             } else if (!passwordInput.getText().equals(confirmPasswordInput.getText())) {

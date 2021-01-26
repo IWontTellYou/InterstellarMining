@@ -36,15 +36,11 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 public class InterstellarMining extends Game implements ConnectorEvent, DatabaseChangeListener {
 
 	// WEDNESDAY
-	// TODO FIX SCROLLING LAYOUT FOR RESOURCE_DIALOG, SHIPS_LIST
 	// TODO FINISH SHIP UPGRADE WINDOW
 
 	// THURSDAY
 	// TODO PLANET SYSTEM LIST
-
-	// TODO FILL PLANETS WITH DIFFERENT RESOURCES
-	// TODO ABBILITIES AND NAMES FOR SHIPS
-	// TODO DIVIDE RESOURCES INTO GROUPS
+	// TODO ABBILITIES FOR SHIPS IN DATABASE
 
 	// FRIDAY
 	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
@@ -60,6 +56,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	// TODO ACHIEVEMENTS
 
 	// TODO COOL LOOKING NESTED TABLES
+	// TODO CHANGE MOUSE CURSOR GRAPHICS
 
 	private Player player;
 

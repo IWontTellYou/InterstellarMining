@@ -7,7 +7,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 
 public class CustomDialog extends Dialog {
 
@@ -30,8 +30,8 @@ public class CustomDialog extends Dialog {
         getContentTable().clearChildren();
         getButtonTable().clearChildren();
 
-        setHeight(ScreenDeafults.DEFAULT_DIALOG_HEIGHT);
-        setWidth(ScreenDeafults.DEFAULT_DIALOG_WIDTH);
+        setHeight(ScreenConstants.DEFAULT_DIALOG_HEIGHT);
+        setWidth(ScreenConstants.DEFAULT_DIALOG_WIDTH);
 
     }
 
@@ -49,19 +49,19 @@ public class CustomDialog extends Dialog {
         });
         getButtonTable().row();
         getButtonTable().add(closeBtn)
-                .width(ScreenDeafults.DEFAULT_DIALOG_WIDTH/3f)
-                .height(ScreenDeafults.DEFAULT_DIALOG_HEIGHT/15f)
+                .width(ScreenConstants.DEFAULT_DIALOG_WIDTH/3f)
+                .height(ScreenConstants.DEFAULT_DIALOG_HEIGHT/15f)
                 .align(Align.center);
     }
 
     @Override
     public float getPrefWidth() {
-        return ScreenDeafults.DEFAULT_DIALOG_WIDTH;
+        return ScreenConstants.DEFAULT_DIALOG_WIDTH;
     }
 
     @Override
     public float getPrefHeight() {
-        return ScreenDeafults.DEFAULT_DIALOG_HEIGHT;
+        return ScreenConstants.DEFAULT_DIALOG_HEIGHT;
     }
 
 }

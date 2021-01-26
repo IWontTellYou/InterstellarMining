@@ -1,4 +1,4 @@
-package sk.grest.game.defaults;
+package sk.grest.game.constants;
 
 public class GameConstants {
 

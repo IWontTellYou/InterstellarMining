@@ -9,11 +9,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
-import java.util.Objects;
-
-import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
@@ -43,6 +40,8 @@ public class UpgradeShipDialog extends CustomDialog {
     final private Label[] attributeLabels;
     final private Label[] priceLabels;
 
+    Table upgradeLayout;
+
     public UpgradeShipDialog(String title, Skin skin, final Player player, final Ship ship) {
         super(title, skin);
 
@@ -62,7 +61,7 @@ public class UpgradeShipDialog extends CustomDialog {
 
         Image shipImage = new Image();
 
-        Table upgradeLayout = new Table(skin);
+        upgradeLayout = new Table(skin);
         //upgradeLayout.debug(Debug.all);
 
         final Attributes attributes = ship.getAttributes();
@@ -123,8 +122,6 @@ public class UpgradeShipDialog extends CustomDialog {
                 .height(defaultButtonHeight)
                 .align(Align.center);
 
-        getContentTable().debug(Debug.all);
-
         getContentTable().add(upgradeLayout).row();
 
     }
@@ -139,34 +136,43 @@ public class UpgradeShipDialog extends CustomDialog {
                 if(id == 0)
                     return "MINING SPEED";
                 else if (id == 1)
-                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(MINING_SPEED));
+                    return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(MINING_SPEED));
                 return ship.getAttribute(MINING_SPEED)+"";
             case TRAVEL_SPEED:
                 if(id == 0)
                     return "TRAVEL SPEED";
                 else if (id == 1)
-                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(TRAVEL_SPEED));
+                    return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(TRAVEL_SPEED));
                 return ship.getAttribute(TRAVEL_SPEED)+"";
             case FUEL_CAPACITY:
                 if(id == 0)
                     return "FUEL CAPACITY";
                 else if (id == 1)
-                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(FUEL_CAPACITY));
+                    return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(FUEL_CAPACITY));
                 return ship.getAttribute(FUEL_CAPACITY)+"";
             case FUEL_EFFICIENCY:
                 if(id == 0)
                     return "FUEL EFFICIENCY";
                 else if (id == 1)
-                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(FUEL_EFFICIENCY));
+                    return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(FUEL_EFFICIENCY));
                 return ship.getAttribute(FUEL_EFFICIENCY)+"";
             case RESOURCE_CAPACITY:
                 if(id == 0)
                     return "RESOURCE CAPACITY";
                 else if (id == 1)
-                    return ScreenDeafults.getMoneyFormat(attributes.getAttributePrice(RESOURCE_CAPACITY));
+                    return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(RESOURCE_CAPACITY));
                 return ship.getAttribute(RESOURCE_CAPACITY)+"";
         }
         return labelText;
     }
 
+    @Override
+    public float getPrefHeight() {
+        return getContentTable().getPrefHeight();
+    }
+
+    @Override
+    public float getPrefWidth() {
+        return getContentTable().getPrefWidth();
+    }
 }

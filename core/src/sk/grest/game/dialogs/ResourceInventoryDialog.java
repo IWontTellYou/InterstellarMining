@@ -1,7 +1,6 @@
 package sk.grest.game.dialogs;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -9,7 +8,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.defaults.ScreenDeafults;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.ItemOpenedListener;
 import sk.grest.game.listeners.ItemSoldListener;
@@ -87,7 +86,7 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
 
             Row<Resource> resourceRow = new Row<>();
             resourceRow.setItem(r);
-            resourceRow.setColors(ScreenDeafults.DARK_BLUE, ScreenDeafults.CYAN_BLUE);
+            resourceRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.DARK_GRAY);
 
             Label resourceImage = new Label("img", skin);
             resourceRow.add(resourceImage).
@@ -119,8 +118,8 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
         }
 
         pane = new ScrollPane(contentTable);
-        pane.setWidth(ScreenDeafults.DEFAULT_DIALOG_WIDTH * 0.8f);
-        pane.setHeight(ScreenDeafults.DEFAULT_DIALOG_HEIGHT * 0.75f);
+        pane.setWidth(ScreenConstants.DEFAULT_DIALOG_WIDTH * 0.8f);
+        pane.setHeight(ScreenConstants.DEFAULT_DIALOG_HEIGHT * 0.75f);
         pane.layout();
 
         getContentTable().add(pane).uniformX().fillX().row();
