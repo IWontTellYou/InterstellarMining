@@ -228,7 +228,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
             case TABLE_NAME:
                 handler.verifyPlayer(nameInput.getText(), passwordInput.getText(), this);
                 break;
-            case ShipInFleetTable.TABLE_NAME:
+            case PlayerShipTable.TABLE_NAME:
                 shipsInitialized++;
                 if(shipsInitialized == DEFAULT_SHIP_COUNT &&
                     systemsInitialized == game.getPlanetSystems().size() &&
@@ -237,7 +237,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
                     game.onFetchSuccess(0, TABLE_NAME, newPlayerData);
                 }
                 break;
-            case DiscoveredSystemsTable.TABLE_NAME:
+            case PlayerPlanetSystemTable.TABLE_NAME:
                 systemsInitialized++;
                 if(systemsInitialized == game.getPlanetSystems().size() &&
                     resourcesInitialized == game.getResources().size() &&
@@ -246,7 +246,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
                     game.onFetchSuccess(0, TABLE_NAME, newPlayerData);
                 }
                 break;
-            case ResourceAtBase.TABLE_NAME:
+            case PlayerResourceTable.TABLE_NAME:
                 resourcesInitialized++;
                 if(systemsInitialized == game.getPlanetSystems().size() &&
                     resourcesInitialized == game.getResources().size() &&

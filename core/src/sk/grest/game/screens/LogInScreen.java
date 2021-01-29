@@ -89,20 +89,22 @@ public class LogInScreen implements Screen {
     public void render(float delta) {
         clear();
 
-        // START OF RENDERING SPRITES
-        game.getBatch().begin();
+        if(game.isRegularDatabaseInitialized()) {
+            // START OF RENDERING SPRITES
+            game.getBatch().begin();
 
-        // STAGE RENDERING
-        stage.act(delta);
-        stage.draw();
+            // STAGE RENDERING
+            stage.act(delta);
+            stage.draw();
 
-        /*
-        font.setColor(Color.WHITE);
-        font.draw(game.getBatch(), Gdx.input.getX() + " " + Gdx.input.getY(), Gdx.graphics.getWidth()/2f, 100);
-        */
+            /*
+            font.setColor(Color.WHITE);
+            font.draw(game.getBatch(), Gdx.input.getX() + " " + Gdx.input.getY(), Gdx.graphics.getWidth()/2f, 100);
+            */
 
-        // END OF RENDERING SPRITES
-        game.getBatch().end();
+            // END OF RENDERING SPRITES
+            game.getBatch().end();
+        }
     }
 
     @Override

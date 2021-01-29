@@ -6,6 +6,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -63,7 +64,6 @@ public class ScreenConstants {
     }
 
     // MONEY DISPLAYING
-
     public static String getMoneyFormat(long amount){
 
         if(amount >= 100000 * GameConstants.QUADRILION){
@@ -81,4 +81,5 @@ public class ScreenConstants {
         }else
             return amount + "";
     }
+
 }

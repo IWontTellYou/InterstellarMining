@@ -18,7 +18,7 @@ import static sk.grest.game.database.DatabaseConstants.PlayerTable.NAME;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.PASSWORD;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.TABLE_NAME;
 import static sk.grest.game.database.DatabaseConstants.PLAYER_ID;
-import static sk.grest.game.database.DatabaseConstants.ShipInFleetTable.*;
+import static sk.grest.game.database.DatabaseConstants.PlayerShipTable.*;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class DatabaseHandler {
@@ -49,14 +49,14 @@ public class DatabaseHandler {
         connection.verifyPlayer(requestCode++, name, password, listener);
     }
 
-    public void writeIntoLoginHistorty(boolean in){
+    public void writeIntoPlayerLoginHistorty(boolean in){
         Map<String, Object> data = new HashMap<>();
         if(in)
-            data.put(LoginHistoryTable.LOGGED_IN, new Date(System.currentTimeMillis()).getTime());
+            data.put(PlayerLoginHistoryTable.LOGGED_IN, new Date(System.currentTimeMillis()).getTime());
         else
-            data.put(LoginHistoryTable.LOGGED_OUT, new Date(System.currentTimeMillis()).getTime());
-        data.put(LoginHistoryTable.PLAYER_ID, game.getPlayer().getID());
-        connection.addRow(requestCode++, LoginHistoryTable.TABLE_NAME, data, game);
+            data.put(PlayerLoginHistoryTable.LOGGED_OUT, new Date(System.currentTimeMillis()).getTime());
+        data.put(PlayerLoginHistoryTable.PLAYER_ID, game.getPlayer().getID());
+        connection.addRow(requestCode++, PlayerLoginHistoryTable.TABLE_NAME, data, game);
     }
 
     public void getPlayersTable(ConnectorEvent listener){
@@ -88,23 +88,23 @@ public class DatabaseHandler {
         for (int i = 0; i < game.getResources().size(); i++) {
             Map<String, Object> resourceData = new HashMap<>();
             resourceData.put(PLAYER_ID, playerId);
-            resourceData.put(ResourceAtBase.RESOURCE_ID, i+1);
-            resourceData.put(ResourceAtBase.AMOUNT, 0);
-            connection.addRow(requestCode++, ResourceAtBase.TABLE_NAME, resourceData, listener);
+            resourceData.put(PlayerResourceTable.RESOURCE_ID, i+1);
+            resourceData.put(PlayerResourceTable.AMOUNT, 0);
+            connection.addRow(requestCode++, PlayerResourceTable.TABLE_NAME, resourceData, listener);
         }
 
         for (int i = 0; i < game.getPlanetSystems().size(); i++) {
             Map<String, Object> planetSystemData = new HashMap<>();
-            planetSystemData.put(DiscoveredSystemsTable.PLAYER_ID, playerId);
-            planetSystemData.put(DiscoveredSystemsTable.PLANET_SYSTEM_ID, i+1);
-            planetSystemData.put(DiscoveredSystemsTable.UNLOCKED, i+1 == 1);
-            connection.addRow(requestCode++, DiscoveredSystemsTable.TABLE_NAME, planetSystemData, listener);
+            planetSystemData.put(PlayerPlanetSystemTable.PLAYER_ID, playerId);
+            planetSystemData.put(PlayerPlanetSystemTable.PLANET_SYSTEM_ID, i+1);
+            planetSystemData.put(PlayerPlanetSystemTable.UNLOCKED, i+1 == 1);
+            connection.addRow(requestCode++, PlayerPlanetSystemTable.TABLE_NAME, planetSystemData, listener);
         }
 
         Map<String, Object> basicShip = new HashMap<>();
         basicShip.put(PLAYER_ID, playerId);
         basicShip.put(SHIP_ID, 1);
-        connection.addRow(requestCode++, ShipInFleetTable.TABLE_NAME, basicShip, listener);
+        connection.addRow(requestCode++, PlayerShipTable.TABLE_NAME, basicShip, listener);
 
     }
 
@@ -112,7 +112,7 @@ public class DatabaseHandler {
         Map<String, Object> data = new HashMap<>();
         data.put(SHIP_ID, s.getId());
         data.put(PLAYER_ID, game.getPlayer().getID());
-        connection.addRow(requestCode++, ShipInFleetTable.TABLE_NAME, data, game);
+        connection.addRow(requestCode++, PlayerShipTable.TABLE_NAME, data, game);
 
         updatePlayer();
     }
@@ -125,14 +125,14 @@ public class DatabaseHandler {
         return connection;
     }
 
-    public void updateResourceAtBase(int playerId, int resourceId, int amount, ConnectorEvent listener){
+    public void updatePlayerResourceTable(int playerId, int resourceId, int amount, ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
-        data.put(ResourceAtBase.RESOURCE_ID, resourceId);
-        data.put(ResourceAtBase.AMOUNT, amount);
-        connection.updateRow(requestCode++, playerId, resourceId, ResourceAtBase.TABLE_NAME, data, listener);
+        data.put(PlayerResourceTable.RESOURCE_ID, resourceId);
+        data.put(PlayerResourceTable.AMOUNT, amount);
+        connection.updateRow(requestCode++, playerId, resourceId, PlayerResourceTable.TABLE_NAME, data, listener);
     }
 
-    public void updateShipInFleet(int playerId, Ship ship, ConnectorEvent listener){
+    public void updatePlayerShip(int playerId, Ship ship, ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
         data.put(DESTINATION_ID, (ship.getCurrentDestination() != null) ? ship.getCurrentDestination().getID() : null);
         data.put(RESOURCE_ID, (ship.getTravelPlan() != null && ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getResource().getID() : null);
@@ -143,7 +143,7 @@ public class DatabaseHandler {
         data.put(TRAVEL_SPEED_LVL, ship.getAttributes().getAttribute(TRAVEL_SPEED));
         data.put(MINING_SPEED_LVL, ship.getAttributes().getAttribute(MINING_SPEED));
         data.put(RESOURCE_CAPACITY_LVL, ship.getAttributes().getAttribute(RESOURCE_CAPACITY));
-        connection.updateRow(requestCode++, playerId, ship.getId(), ShipInFleetTable.TABLE_NAME, data, listener);
+        connection.updateRow(requestCode++, playerId, ship.getId(), PlayerShipTable.TABLE_NAME, data, listener);
     }
 
     public void getTable(String tableName, ConnectorEvent listener){

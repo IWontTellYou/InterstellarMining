@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.listeners.DatabaseChangeListener;
 
@@ -24,6 +25,8 @@ public class Player {
     private ArrayList<sk.grest.game.entities.ship.Ship> ships;
     private ArrayList<sk.grest.game.entities.planet.PlanetSystem> systemsDiscovered;
     private ArrayList<Resource> resourcesAtBase;
+    private ArrayList<Achievement> achievements;
+    private ArrayList<Research> researches;
 
     private InterstellarMining game;
 
@@ -37,12 +40,13 @@ public class Player {
         this.game = game;
         this.money = money;
 
-        this.ships = new ArrayList<>();
-        this.systemsDiscovered = new ArrayList<>();
-        this.resourcesAtBase = new ArrayList<>();
+        ships = new ArrayList<>();
+        systemsDiscovered = new ArrayList<>();
+        resourcesAtBase = new ArrayList<>();
+        researches = new ArrayList<>();
     }
 
-    public ArrayList<sk.grest.game.entities.ship.Ship> getShips() {
+    public ArrayList<Ship> getShips() {
         return ships;
     }
     public ArrayList<PlanetSystem> getSystemsDiscovered() {
@@ -70,6 +74,9 @@ public class Player {
             }
         }
         return resourcesWithAmount;
+    }
+    public ArrayList<Research> getResearches(){
+        return researches;
     }
 
     public long getMoney() { return money;}

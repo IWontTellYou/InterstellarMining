@@ -204,22 +204,22 @@ public class DatabaseConnection {
         String sql = "UPDATE " + tableName + " SET ";
 
         switch (tableName) {
-            case ShipInFleetTable.TABLE_NAME:
-                sql += ShipInFleetTable.DESTINATION_ID + " = " + data.get(ShipInFleetTable.DESTINATION_ID) + ", ";
-                sql += ShipInFleetTable.RESOURCE_ID + " = " + data.get(ShipInFleetTable.RESOURCE_ID) + ", ";
-                sql += ShipInFleetTable.AMOUNT + " = " + data.get(ShipInFleetTable.AMOUNT) + ", ";
-                sql += ShipInFleetTable.TASK_TIME + " = " + data.get(ShipInFleetTable.TASK_TIME) + ", ";
-                sql += ShipInFleetTable.FUEL_CAPACITY_LVL + " = " + data.get(ShipInFleetTable.FUEL_CAPACITY_LVL) + ", ";
-                sql += ShipInFleetTable.FUEL_EFFICIENCY_LVL + " = " + data.get(ShipInFleetTable.FUEL_EFFICIENCY_LVL) + ", ";
-                sql += ShipInFleetTable.RESOURCE_CAPACITY_LVL + " = " + data.get(ShipInFleetTable.RESOURCE_CAPACITY_LVL) + ", ";
-                sql += ShipInFleetTable.TRAVEL_SPEED_LVL + " = " + data.get(ShipInFleetTable.TRAVEL_SPEED_LVL) + ", ";
-                sql += ShipInFleetTable.MINING_SPEED_LVL + " = " + data.get(ShipInFleetTable.MINING_SPEED_LVL) + " ";
-                sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + ShipInFleetTable.SHIP_ID + " = " + objectId;
+            case PlayerShipTable.TABLE_NAME:
+                sql += PlayerShipTable.DESTINATION_ID + " = " + data.get(PlayerShipTable.DESTINATION_ID) + ", ";
+                sql += PlayerShipTable.RESOURCE_ID + " = " + data.get(PlayerShipTable.RESOURCE_ID) + ", ";
+                sql += PlayerShipTable.AMOUNT + " = " + data.get(PlayerShipTable.AMOUNT) + ", ";
+                sql += PlayerShipTable.TASK_TIME + " = " + data.get(PlayerShipTable.TASK_TIME) + ", ";
+                sql += PlayerShipTable.FUEL_CAPACITY_LVL + " = " + data.get(PlayerShipTable.FUEL_CAPACITY_LVL) + ", ";
+                sql += PlayerShipTable.FUEL_EFFICIENCY_LVL + " = " + data.get(PlayerShipTable.FUEL_EFFICIENCY_LVL) + ", ";
+                sql += PlayerShipTable.RESOURCE_CAPACITY_LVL + " = " + data.get(PlayerShipTable.RESOURCE_CAPACITY_LVL) + ", ";
+                sql += PlayerShipTable.TRAVEL_SPEED_LVL + " = " + data.get(PlayerShipTable.TRAVEL_SPEED_LVL) + ", ";
+                sql += PlayerShipTable.MINING_SPEED_LVL + " = " + data.get(PlayerShipTable.MINING_SPEED_LVL) + " ";
+                sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + PlayerShipTable.SHIP_ID + " = " + objectId;
                 Gdx.app.log("SQL", sql);
                 break;
-            case ResourceAtBase.TABLE_NAME:
-                sql += ResourceAtBase.AMOUNT + " = " + data.get(ShipInFleetTable.AMOUNT);
-                sql += " WHERE " + PLAYER_ID + " = " + playerId + " AND " + ResourceAtBase.RESOURCE_ID + " = " + objectId;
+            case PlayerResourceTable.TABLE_NAME:
+                sql += PlayerResourceTable.AMOUNT + " = " + data.get(PlayerShipTable.AMOUNT);
+                sql += " WHERE " + PLAYER_ID + " = " + playerId + " AND " + PlayerResourceTable.RESOURCE_ID + " = " + objectId;
                 Gdx.app.log("SQL", sql);
                 break;
             case PlayerTable.TABLE_NAME:

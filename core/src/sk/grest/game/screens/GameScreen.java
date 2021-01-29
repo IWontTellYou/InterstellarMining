@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.dialogs.ResearchDialog;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.ShipsShopDialog;
@@ -54,6 +55,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private ResourceInventoryDialog resourceInventoryDialog;
     private UpgradeShipDialog upgradeShipDialog;
     private ShipsShopDialog shipsShopDialog;
+    private ResearchDialog researchDialog;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -213,7 +215,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         otherButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // ADD ACTION
+                researchDialog = new ResearchDialog("", game.getUISkin());
+                researchDialog.show(stage);
             }
         });
 
@@ -397,20 +400,33 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     public void render(float delta) {
         ScreenConstants.clear();
 
-        if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
-            game.getPlayer().increaseMoney(10000);
+        if (game.isWholeDatabaseInitialized()){
 
-        game.getPlayer().update(delta);
+            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
+                game.getPlayer().increaseMoney(10000);
 
-        if(shipListDialog != null){
-            shipListDialog.update(delta);
-        }
+            game.getPlayer().update(delta);
 
-        if(resourceInventoryDialog != null){
-            resourceInventoryDialog.update(delta);
-        }
+            if(shipListDialog != null){
+                shipListDialog.update(delta);
+            }
 
-        if(game.isDatabaseInitialized()) {
+            if(resourceInventoryDialog != null){
+                resourceInventoryDialog.update(delta);
+            }
+
+            // SHAPE RENDERING
+
+            game.getRenderer().begin();
+
+            if(researchDialog != null){
+                researchDialog.render(game.getRenderer());
+            }
+
+            game.getRenderer().end();
+
+            // END OF SHAPE RENDERING
+
             for (Ship s : game.getPlayer().getShips()) {
                 s.update(delta);
             }

@@ -149,7 +149,7 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
             contentTable.getItemSelected().subtractAmount(Integer.parseInt(sellBar.getAmount().getText()));
             sellBar.changeResource(contentTable.getItemSelected());
             game.getHandler().updatePlayer();
-            game.getHandler().updateResourceAtBase(game.getPlayer().getID(), contentTable.getItemSelected().getID(), contentTable.getItemSelected().getAmount(), game);
+            game.getHandler().updatePlayerResourceTable(game.getPlayer().getID(), contentTable.getItemSelected().getID(), contentTable.getItemSelected().getAmount(), game);
         }
 
         ((Label) contentTable.getRow(contentTable.getItemSelected()).getElement(AMOUNT)).setText((int) contentTable.getItemSelected().getAmount());
