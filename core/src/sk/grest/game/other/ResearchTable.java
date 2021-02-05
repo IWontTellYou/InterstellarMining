@@ -1,67 +1,83 @@
 package sk.grest.game.other;
 
-import com.badlogic.gdx.scenes.scene2d.ui.Button;
+import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
-import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TextTooltip;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
+import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
-import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.Research;
 
 public class ResearchTable extends Table {
 
+    private TooltipManager manager;
     private ArrayList<Table> columns;
     private ArrayList<Line> lines;
     private ArrayList<ResearchActor> researchActors;
     //private ArrayList<Research> researches;
 
-    public ResearchTable(Skin skin /*ArrayList<Research> researches*/){
+    public ResearchTable(Skin skin, ArrayList<Research> researches){
         super(skin);
+
+        manager = new TooltipManager();
+        manager.instant();
+
         //this.researches = researches;
-        this.columns = new ArrayList<>();
+        //this.columns = new ArrayList<>();
         this.lines = new ArrayList<>();
         this.researchActors = new ArrayList<>();
 
-        for (ArrayList<Integer> row : testList()) {
-            Table newRow = new Table(getSkin());
-            boolean first = true;
-            for (int i : row) {
-                ResearchActor actor = new ResearchActor(testList().indexOf(row), row.indexOf(i), i+"", skin);
-                researchActors.add(actor);
-                newRow.add(actor)
-                        .width(ScreenConstants.DEFAULT_ACTOR_WIDTH)
-                        .height(ScreenConstants.DEFAULT_ACTOR_HEIGHT)
-                        .pad(50)
-                        .row();
-            }
-            columns.add(newRow);
-            add(newRow).pad(0,50,0,50);
+        for (Research r : researches) {
+            ResearchActor actor = new ResearchActor(r, skin);
+            actor.addListener(new TextTooltip(actor.getResearch().getInfo(), manager, skin));
+            researchActors.add(actor);
         }
-    }
 
-    public static ArrayList<ArrayList<Integer>> testList(){
-        ArrayList<ArrayList<Integer>> testList = new ArrayList<>();
-        for (int i = 0; i < 4; i++) {
-            ArrayList<Integer> row = new ArrayList<>();
-            for (int j = 0; j < i+1; j++) {
-                row.add(j);
-            }
-            testList.add(row);
+        Collections.sort(researchActors);
+
+        StringBuilder s = new StringBuilder();
+        for (ResearchActor a : researchActors) {
+            s.append(a.getResearch().getColumn());
         }
-        return testList;
+        System.out.println(s);
+
+        Table row = new Table();
+        int index = -1;
+        for (ResearchActor actor : researchActors) {
+            System.out.println(actor.getResearch().getColumn());
+            if (index != -1 && researchActors.get(index).getResearch().getColumn() < actor.getResearch().getColumn()){
+                add(row).pad(50,30,50,50).center();
+                row = new Table();
+                row.add(actor).pad(50,30,50,50).width(200).height(100).center().row();
+            }else {
+                row.add(actor).pad(50,30,50,50).width(200).height(100).center().row();
+            }
+            index++;
+        }
+        add(row).pad(50,30,50,50).center();
     }
 
     public ArrayList<Line> getLines() {
         return lines;
     }
 
-    public ResearchActor getActor(int row, int column){
+    public ResearchActor getActor(Research r){
         for (ResearchActor actor : researchActors) {
-            if(actor.getColumn() == column && actor.getRow() == row)
+            if(actor.getResearch().getId() == r.getId())
                 return actor;
         }
         return null;
     }
+
+    public void update(ShapeRenderer renderer){
+        for (Line l : lines) {
+            l.draw(renderer);
+        }
+    }
+
 }

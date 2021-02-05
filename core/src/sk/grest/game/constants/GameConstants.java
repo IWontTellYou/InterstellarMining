@@ -1,5 +1,6 @@
 package sk.grest.game.constants;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 
@@ -37,11 +38,11 @@ public class GameConstants {
     public static final String MILLION_SIGN = "M";
     public static final String BILLION_SIGN = "B";
     public static final String TRILLION_SIGN = "T";
-    public static final String QUADRILION_SIGN = "Q";
+    public static final String QUADRILLION_SIGN = "Q";
 
     // ACTOR COORDS TO STAGE COORDS
     public static Vector2 getStageLocation(Actor actor) {
-        return actor.localToStageCoordinates(new Vector2(0, 0));
+        return actor.getStage().stageToScreenCoordinates(actor.localToStageCoordinates(new Vector2(0,0)));
     }
 
 }

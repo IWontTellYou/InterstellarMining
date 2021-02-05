@@ -84,7 +84,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 	@Override
 	public void create () {
-
 		Gdx.app.log("Time", new Date(System.currentTimeMillis()).toString());
 
 		handler = DatabaseHandler.getInstance();
@@ -96,6 +95,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		planetSystems = new ArrayList<>();
 		researches = new ArrayList<>();
 		planets = new ArrayList<>();
+		achievements = new ArrayList<>();
 
 		defaultFont = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
 
@@ -175,6 +175,24 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	public ArrayList<Planet> getPlanets() {
 		return planets;
 	}
+	public ArrayList<Achievement> getAchievements() {
+		return achievements;
+	}
+	public ArrayList<Ship> getShipsNotOwned(){
+		ArrayList<Ship> shipsNotOwned = new ArrayList<>();
+		for (Ship shopShip : shipsShop) {
+			boolean shipOwned = false;
+			for (Ship playerShip : player.getShips()) {
+				if (playerShip.getId() == shopShip.getId()) {
+					shipOwned = true;
+					break;
+				}
+			}
+			if(!shipOwned)
+				shipsNotOwned.add(shopShip);
+		}
+		return shipsNotOwned;
+	}
 
 	// Get by ID methods
 	public Ship getShipByID(int id){
@@ -213,25 +231,15 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		}
 		return null;
 	}
-
-	public ArrayList<Ship> getShipsNotOwned(){
-		ArrayList<Ship> shipsNotOwned = new ArrayList<>();
-		for (Ship shopShip : shipsShop) {
-			boolean shipOwned = false;
-			for (Ship playerShip : player.getShips()) {
-				if (playerShip.getId() == shopShip.getId()) {
-					shipOwned = true;
-					break;
-				}
-			}
-			if(!shipOwned)
-				shipsNotOwned.add(shopShip);
+	public Achievement getAchievementByID(int id){
+		for (Achievement a : achievements) {
+			if(a.getId() == id)
+				return a;
 		}
-		return shipsNotOwned;
+		return null;
 	}
 
 	// Get by name methods
-
 	public Planet getPlanetByName(String name){
 		for (Planet p : planets){
 			if (p.getName().equals(name))
@@ -253,84 +261,88 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		switch (tableName){
 			// 1ST
 			case PlanetSystemTable.TABLE_NAME:
-				dataInit.initializePlanetSystemTable(requestCode, tableName, tableData);
+				dataInit.initializePlanetSystemTable(tableData);
 				handler.getTable(PlanetTable.TABLE_NAME, this);
 				break;
 
 			// 2ND
 			case PlanetTable.TABLE_NAME:
-				dataInit.initializePlanetTable(requestCode, tableName, tableData);
+				dataInit.initializePlanetTable(tableData);
 				handler.getTable(ResourceTable.TABLE_NAME,this);
 				break;
 
 			// 3RD
 			case ResourceTable.TABLE_NAME:
-				dataInit.initializeResourceTable(requestCode, tableName, tableData);
+				dataInit.initializeResourceTable(tableData);
 				handler.getTable(PlanetResourceTable.TABLE_NAME, this);
 				break;
 
 			// 4TH
 			case PlanetResourceTable.TABLE_NAME:
-				dataInit.initializePlanetResourceTable(requestCode, tableName, tableData);
+				dataInit.initializePlanetResourceTable(tableData);
 				handler.getTable(ResearchTable.TABLE_NAME, this);
 				break;
 
 			// 5TH
 			case ResearchTable.TABLE_NAME:
-				dataInit.initializeResearchTable(requestCode, tableName, tableData);
+				dataInit.initializeResearchTable(tableData);
 				handler.getTable(ResearchRequirementTable.TABLE_NAME,this);
 				break;
 
 			// 6TH
 			case ResearchRequirementTable.TABLE_NAME:
-				dataInit.initializeResearchRequirementTable(requestCode, tableName, tableData);
+				dataInit.initializeResearchRequirementTable(tableData);
 				handler.getTable(ShipTable.TABLE_NAME, this);
 				break;
 
 			// 7TH
 			case ShipTable.TABLE_NAME:
-				dataInit.initializeShipTable(requestCode, tableName, tableData);
+				dataInit.initializeShipTable(tableData);
 				handler.getTable(AchievementTable.TABLE_NAME, this);
 				break;
 
 			// 8TH
 			case AchievementTable.TABLE_NAME:
-				dataInit.initializeAchievementTable(requestCode, tableName, tableData);
+				dataInit.initializeAchievementTable(tableData);
 				break;
 
 			// PLAYER INITIALIZATION
 
 			// 1ST
 			case PlayerTable.TABLE_NAME:
-				dataInit.initializePlayerTable(requestCode, tableName, tableData);
-
+				dataInit.initializePlayerTable(tableData);
 				handler.writeIntoPlayerLoginHistorty(true);
 				handler.getTableWherePlayer(PlayerResearchTable.TABLE_NAME, player.getID(),this);
 				break;
 
 			// 2ND
 			case PlayerResearchTable.TABLE_NAME:
-				dataInit.initializePlayerResearchTable(requestCode, tableName, tableData);
+				dataInit.initializePlayerResearchTable(tableData);
 				handler.getTable(PlayerShipTable.TABLE_NAME, this);
 				break;
 
 			// 3RD
 			case PlayerShipTable.TABLE_NAME:
-				dataInit.initializePlayerShipTable(requestCode, tableName, tableData);
+				dataInit.initializePlayerShipTable(tableData);
 				handler.getTableWherePlayer(PlayerResourceTable.TABLE_NAME, player.getID(), this);
 				break;
 
 			// 4TH
 			case PlayerResourceTable.TABLE_NAME:
-				dataInit.initializePlayerResourceTable(requestCode, tableName, tableData);
+				dataInit.initializePlayerResourceTable(tableData);
 				handler.getTableWherePlayer(PlayerPlanetSystemTable.TABLE_NAME, player.getID(), this);
 				break;
 
 			// 5TH
 			case PlayerPlanetSystemTable.TABLE_NAME:
-				dataInit.initializePlayerPlanetSystemTable(requestCode, tableName, tableData);
+				dataInit.initializePlayerPlanetSystemTable(tableData);
+				handler.getTable(PlayerAchievementTable.TABLE_NAME, this);
 				break;
 
+			// 6TH
+			case PlayerAchievementTable.TABLE_NAME:
+				dataInit.initializePlayerAchievementTable(tableData);
+				break;
 		}
 	}
 	@Override

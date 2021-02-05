@@ -44,6 +44,7 @@ public class Player {
         systemsDiscovered = new ArrayList<>();
         resourcesAtBase = new ArrayList<>();
         researches = new ArrayList<>();
+        achievements = new ArrayList<>();
     }
 
     public ArrayList<Ship> getShips() {
@@ -55,11 +56,10 @@ public class Player {
     public ArrayList<Resource> getResourcesAtBase() {
         return resourcesAtBase;
     }
+    public ArrayList<Ship> getShipsAtBase(){
+        ArrayList<Ship> ships = new ArrayList<>();
 
-    public ArrayList<sk.grest.game.entities.ship.Ship> getShipsAtBase(){
-        ArrayList<sk.grest.game.entities.ship.Ship> ships = new ArrayList<>();
-
-        for (sk.grest.game.entities.ship.Ship s : this.ships) {
+        for (Ship s : this.ships) {
             if(s.getState().equals(ShipState.AT_THE_BASE))
                 ships.add(s);
         }
@@ -77,6 +77,9 @@ public class Player {
     }
     public ArrayList<Research> getResearches(){
         return researches;
+    }
+    public ArrayList<Achievement> getAchievements() {
+        return achievements;
     }
 
     public long getMoney() { return money;}

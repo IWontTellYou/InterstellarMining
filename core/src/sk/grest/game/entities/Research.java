@@ -10,19 +10,22 @@ public class Research {
     private String effect;
     private int cost;
 
-    private ArrayList<Research> reseachesRequired;
+    private int column;
+
+    private ArrayList<Research> researchesRequired;
 
     private boolean unlocked;
 
-    public Research(int id, String name, String info, String effect, int cost, int level, int upgradeTime) {
+    public Research(int id, String name, String info, String effect, int cost, int level, int upgradeTime, int column) {
         this.id = id;
         this.name = name;
         this.info = info;
         this.effect = effect;
         this.cost = cost;
+        this.column = column;
 
         unlocked = false;
-        reseachesRequired = new ArrayList<>();
+        researchesRequired = new ArrayList<>();
     }
 
     public void setUnlocked(boolean unlocked) {
@@ -47,9 +50,15 @@ public class Research {
     public int getCost() {
         return cost;
     }
+    public int getColumn() {
+        return column;
+    }
 
     public void addResearchRequired(Research research){
-        reseachesRequired.add(research);
+        researchesRequired.add(research);
+    }
+    public ArrayList<Research> getResearchesRequired() {
+        return researchesRequired;
     }
 
 }

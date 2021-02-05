@@ -69,7 +69,7 @@ public class ScreenConstants {
         if(amount >= 100000 * GameConstants.QUADRILION){
             return "TOO MUCH MONEY";
         }else if(amount >= 100 * GameConstants.QUADRILION){
-            return String.format("%.0f", amount / GameConstants.QUADRILION) + GameConstants.QUADRILION_SIGN;
+            return String.format("%.0f", amount / GameConstants.QUADRILION) + GameConstants.QUADRILLION_SIGN;
         }else if(amount >= 100 * GameConstants.TRILLION) {
             return String.format("%.0f", amount / GameConstants.TRILLION) + GameConstants.TRILLION_SIGN;
         }else if(amount >= 100 * GameConstants.BILLION) {

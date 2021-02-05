@@ -6,24 +6,29 @@ import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 
 import sk.grest.game.entities.Research;
 
-public class ResearchActor extends TextButton {
+public class ResearchActor extends TextButton implements Comparable<ResearchActor> {
 
-    //private Research research;
-    private int column;
-    private int row;
+    private Research research;
 
-    public ResearchActor(int row, int column, /*Research research*/String title, Skin skin) {
-        super(title, skin);
-        this.row = row;
-        this.column = column;
-        //this.research = research;
+    public ResearchActor(Research research, Skin skin) {
+        super(research.getName(), skin);
+        this.research = research;
     }
 
-    public int getColumn() {
-        return column;
+    public Research getResearch() {
+        return research;
+    }
+    public void setResearch(Research research) {
+        this.research = research;
     }
 
-    public int getRow() {
-        return row;
+    @Override
+    public int compareTo(ResearchActor researchActor) {
+        if(research.getColumn() == researchActor.getResearch().getColumn())
+            return 0;
+        else if(research.getColumn() > researchActor.getResearch().getColumn())
+            return 1;
+        else
+            return -1;
     }
 }

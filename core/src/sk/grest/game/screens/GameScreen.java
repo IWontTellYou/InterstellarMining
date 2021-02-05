@@ -2,6 +2,7 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -33,7 +34,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
     private static final float PANEL_WIDTH = 175;
     private static final float PANEL_HEIGHT = 620;
-
 
     private static final String BASE_PLANET_NAME = "Earth";
 
@@ -215,7 +215,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         otherButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                researchDialog = new ResearchDialog("", game.getUISkin());
+                researchDialog = new ResearchDialog("", game.getUISkin(), game);
                 researchDialog.show(stage);
             }
         });
@@ -415,16 +415,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 resourceInventoryDialog.update(delta);
             }
 
-            // SHAPE RENDERING
-
-            game.getRenderer().begin();
-
-            if(researchDialog != null){
-                researchDialog.render(game.getRenderer());
-            }
-
-            game.getRenderer().end();
-
             // END OF SHAPE RENDERING
 
             for (Ship s : game.getPlayer().getShips()) {
@@ -450,6 +440,17 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             // END OF RENDERING SPRITES
             game.getBatch().end();
+
+            // SHAPE RENDERING
+
+            game.getRenderer().begin();
+
+            if(researchDialog != null){
+                researchDialog.render(game.getRenderer());
+            }
+
+            game.getRenderer().end();
+
         }
     }
 

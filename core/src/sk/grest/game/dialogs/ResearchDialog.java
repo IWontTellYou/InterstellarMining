@@ -8,6 +8,9 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.DragListener;
 
+import java.util.ArrayList;
+
+import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.Research;
 import sk.grest.game.other.Line;
 import sk.grest.game.other.ResearchTable;
@@ -15,10 +18,13 @@ import sk.grest.game.other.ResearchTable;
 public class ResearchDialog extends CustomDialog {
 
     private ResearchTable table;
+    private InterstellarMining game;
 
-    public ResearchDialog(String title, Skin skin) {
+    public ResearchDialog(String title, Skin skin, InterstellarMining game) {
         super(title, skin);
-        table = new ResearchTable(skin);
+        table = new ResearchTable(skin, game.getResearches());
+
+        this.game = game;
 
         ScrollPane pane = new ScrollPane(table);
         pane.addListener(new DragListener(){
@@ -49,8 +55,6 @@ public class ResearchDialog extends CustomDialog {
     }
 
     public void render(ShapeRenderer renderer){
-        for (Line line : table.getLines()) {
-            line.draw(renderer);
-        }
+        table.update(renderer);
     }
 }

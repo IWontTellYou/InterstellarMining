@@ -9,12 +9,16 @@ public class DatabaseConstants {
     public static final class AchievementTable {
         public static final String TABLE_NAME = "achievement";
         public static final String ID = "id";
+        public static final String NAME = "name";
+        public static final String INFO = "info";
+        public static final String TYPE = "type";
     }
 
     public static final class PlayerAchievementTable {
         public static final String TABLE_NAME = "player_achievement";
         public static final String ID = "id";
         public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
+        public static final String CURRENT_AMOUNT = "current_amount";
     }
 
     public static final class PlayerTable {
@@ -138,6 +142,7 @@ public class DatabaseConstants {
         public static final String EFFECT = "effect";
         public static final String UPGRADE_TIME = "upgrade_time";
         public static final String PRICE = "research_price";
+        public static final String COLUMN = "col";
     }
 
     public static final class ResearchRequirementTable{
