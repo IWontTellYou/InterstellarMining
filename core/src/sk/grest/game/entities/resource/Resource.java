@@ -8,14 +8,16 @@ public class Resource{
     private ResourceState state;
     private ResourceRarity rarity;
     private String name;
+    private String assetName;
     private int price;
     private int amount;
 
-    public Resource(int ID, String name, ResourceState state, ResourceRarity rarity, int price, int amount) {
+    public Resource(int ID, String name, String assetName, ResourceState state, ResourceRarity rarity, int price, int amount) {
         this.ID = ID;
         this.state = state;
         this.rarity = rarity;
         this.name = name;
+        this.assetName = assetName;
         this.price = price;
         this.amount = amount;
     }
@@ -30,6 +32,10 @@ public class Resource{
 
     public ResourceRarity getRarity() {
         return rarity;
+    }
+
+    public String getAssetName() {
+        return assetName;
     }
 
     public String getName() {
@@ -65,7 +71,7 @@ public class Resource{
     }
 
     public static Resource clone(Resource resource){
-        return new Resource(resource.ID, resource.name, resource.state, resource.rarity, resource.price, resource.amount);
+        return new Resource(resource.ID, resource.name, resource.assetName, resource.state, resource.rarity, resource.price, resource.amount);
     }
 
 }

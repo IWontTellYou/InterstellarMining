@@ -108,44 +108,86 @@ right_panel
   orig: 174, 617
   offset: 0, 0
   index: -1
+iridium_ingot
+  rotate: false
+  xy: 7329, 3780
+  size: 426, 305
+  orig: 426, 305
+  offset: 0, 0
+  index: -1
+gold_ingot
+  rotate: false
+  xy: 6483, 1826
+  size: 396, 305
+  orig: 396, 305
+  offset: 0, 0
+  index: -1
+iron_ingot
+  rotate: false
+  xy: 7757, 3780
+  size: 396, 305
+  orig: 396, 305
+  offset: 0, 0
+  index: -1
+osmium_ingot
+  rotate: false
+  xy: 7329, 3473
+  size: 396, 305
+  orig: 396, 305
+  offset: 0, 0
+  index: -1
+platinum_ingot
+  rotate: false
+  xy: 6483, 1519
+  size: 396, 305
+  orig: 396, 305
+  offset: 0, 0
+  index: -1
 options_over
   rotate: false
-  xy: 7329, 3968
+  xy: 6881, 2014
   size: 474, 117
   orig: 474, 117
   offset: 0, 0
   index: -1
 options_up
   rotate: false
-  xy: 6483, 2014
+  xy: 6881, 1895
   size: 474, 117
   orig: 474, 117
   offset: 0, 0
   index: -1
 play_over
   rotate: false
-  xy: 7805, 3971
+  xy: 7727, 3664
   size: 306, 114
   orig: 306, 114
   offset: 0, 0
   index: -1
 play_up
   rotate: false
-  xy: 7329, 3852
+  xy: 6881, 1779
   size: 306, 114
   orig: 306, 114
   offset: 0, 0
   index: -1
+left_top_button_pressed
+  rotate: false
+  xy: 8035, 3622
+  size: 156, 156
+  orig: 156, 156
+  offset: 0, 0
+  index: -1
 exit_over
   rotate: false
-  xy: 6483, 1898
+  xy: 7357, 2017
   size: 246, 114
   orig: 246, 114
   offset: 0, 0
   index: -1
 exit_up
   rotate: false
-  xy: 6959, 2017
+  xy: 6881, 1663
   size: 246, 114
   orig: 246, 114
   offset: 0, 0
@@ -166,105 +208,98 @@ left_top_button
   index: -1
 right_bottom_button
   rotate: false
-  xy: 7329, 3690
+  xy: 7727, 3502
   size: 161, 160
   orig: 161, 160
   offset: 0, 0
   index: -1
 right_top_button
   rotate: false
-  xy: 6483, 1738
+  xy: 6307, 1191
   size: 159, 158
   orig: 159, 158
   offset: 0, 0
   index: -1
-left_top_button_pressed
-  rotate: false
-  xy: 6307, 1193
-  size: 156, 156
-  orig: 156, 156
-  offset: 0, 0
-  index: -1
 right_top_button_pressed
   rotate: false
-  xy: 7329, 3533
+  xy: 6881, 1506
   size: 155, 155
   orig: 155, 155
   offset: 0, 0
   index: -1
 achievement
   rotate: false
-  xy: 6483, 1586
+  xy: 7357, 1865
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 achievement_pressed
   rotate: false
-  xy: 7492, 3700
+  xy: 7189, 1743
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 home
   rotate: false
-  xy: 6731, 1862
+  xy: 7341, 1713
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 home_pressed
   rotate: false
-  xy: 7207, 1981
+  xy: 7509, 1865
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 7359, 1981
+  xy: 7493, 1713
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 settings_pressed
   rotate: false
-  xy: 7511, 1981
+  xy: 7038, 1511
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 ships
   rotate: false
-  xy: 6883, 1862
+  xy: 7152, 3151
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 ships_pressed
   rotate: false
-  xy: 7035, 1865
+  xy: 7141, 2999
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 shop
   rotate: false
-  xy: 7187, 1829
+  xy: 7141, 2847
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 shop_pressed
   rotate: false
-  xy: 7339, 1829
+  xy: 7141, 2695
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 white_background
   rotate: false
-  xy: 6307, 1092
+  xy: 7890, 3563
   size: 97, 99
   orig: 97, 99
   offset: 0, 0

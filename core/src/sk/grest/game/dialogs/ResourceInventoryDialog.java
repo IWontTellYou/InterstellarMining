@@ -1,6 +1,7 @@
 package sk.grest.game.dialogs;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -88,11 +89,27 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
             resourceRow.setItem(r);
             resourceRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.DARK_GRAY);
 
-            Label resourceImage = new Label("img", skin);
-            resourceRow.add(resourceImage).
-                    uniformX().
-                    align(Align.center).
-                    width(imageCellWidth).height(cellHeight);
+            if(!r.getAssetName().equals("")) {
+                Image resourceImg = new Image(game.getSpriteSkin(), r.getAssetName());
+                resourceRow.add(resourceImg).
+                        uniformX().
+                        align(Align.center).
+                        width(30).height(30);
+            }else{
+
+                Image resourceImg = new Image(game.getSpriteSkin(), "iron_ingot");
+                resourceRow.add(resourceImg).
+                        uniformX().
+                        align(Align.center).
+                        width(30).height(30);
+                /*
+                Label resourceImage = new Label("img", skin);
+                resourceRow.add(resourceImage).
+                        uniformX().
+                        align(Align.center).
+                        width(imageCellWidth).height(cellHeight);
+                */
+            }
 
             Label resourceName = new Label(r.getName(), skin);
             resourceRow.add(resourceName).

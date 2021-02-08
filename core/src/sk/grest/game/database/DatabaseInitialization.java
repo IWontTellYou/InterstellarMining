@@ -155,6 +155,7 @@ public class DatabaseInitialization {
             Resource resource = new Resource(
                     (Integer) data.get(ResourceTable.ID),
                     (String) data.get(ResourceTable.NAME),
+                    (String) data.get(ResourceTable.ASSET_NAME),
                     ResourceState.getState((Integer) data.get(ResourceTable.STATE)),
                     ResourceRarity.getRarity((Integer) data.get(ResourceTable.RARITY)),
                     (Integer) data.get(ResourceTable.PRICE),
