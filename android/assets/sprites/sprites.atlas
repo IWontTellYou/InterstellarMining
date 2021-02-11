@@ -94,212 +94,247 @@ title
   orig: 1351, 279
   offset: 0, 0
   index: -1
-left_panel
+plate_blue
   rotate: false
-  xy: 7152, 3465
-  size: 175, 620
-  orig: 175, 620
+  xy: 7152, 3585
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
-right_panel
+plate_dark
   rotate: false
-  xy: 6307, 1514
-  size: 174, 617
-  orig: 174, 617
+  xy: 6307, 1631
+  size: 500, 500
+  orig: 500, 500
+  offset: 0, 0
+  index: -1
+plate_grey
+  rotate: false
+  xy: 7654, 3585
+  size: 500, 500
+  orig: 500, 500
   offset: 0, 0
   index: -1
 iridium_ingot
   rotate: false
-  xy: 7329, 3780
+  xy: 7152, 3278
   size: 426, 305
   orig: 426, 305
   offset: 0, 0
   index: -1
 gold_ingot
   rotate: false
-  xy: 6483, 1826
+  xy: 6307, 1324
   size: 396, 305
   orig: 396, 305
   offset: 0, 0
   index: -1
 iron_ingot
   rotate: false
-  xy: 7757, 3780
+  xy: 6809, 1826
   size: 396, 305
   orig: 396, 305
   offset: 0, 0
   index: -1
 osmium_ingot
   rotate: false
-  xy: 7329, 3473
+  xy: 7580, 3278
   size: 396, 305
   orig: 396, 305
   offset: 0, 0
   index: -1
 platinum_ingot
   rotate: false
-  xy: 6483, 1519
+  xy: 7207, 1826
   size: 396, 305
   orig: 396, 305
   offset: 0, 0
   index: -1
+left_panel
+  rotate: false
+  xy: 7141, 2626
+  size: 175, 620
+  orig: 175, 620
+  offset: 0, 0
+  index: -1
+right_panel
+  rotate: false
+  xy: 7318, 2659
+  size: 174, 617
+  orig: 174, 617
+  offset: 0, 0
+  index: -1
 options_over
   rotate: false
-  xy: 6881, 2014
+  xy: 6809, 1707
   size: 474, 117
   orig: 474, 117
   offset: 0, 0
   index: -1
 options_up
   rotate: false
-  xy: 6881, 1895
+  xy: 7494, 3159
   size: 474, 117
   orig: 474, 117
   offset: 0, 0
   index: -1
 play_over
   rotate: false
-  xy: 7727, 3664
+  xy: 6307, 1208
   size: 306, 114
   orig: 306, 114
   offset: 0, 0
   index: -1
 play_up
   rotate: false
-  xy: 6881, 1779
+  xy: 7285, 1710
   size: 306, 114
   orig: 306, 114
   offset: 0, 0
   index: -1
-left_top_button_pressed
+hydrogen
   rotate: false
-  xy: 8035, 3622
-  size: 156, 156
-  orig: 156, 156
+  xy: 7494, 2957
+  size: 200, 200
+  orig: 200, 200
+  offset: 0, 0
+  index: -1
+oxygen
+  rotate: false
+  xy: 7696, 2957
+  size: 200, 200
+  orig: 200, 200
   offset: 0, 0
   index: -1
 exit_over
   rotate: false
-  xy: 7357, 2017
+  xy: 6307, 1092
   size: 246, 114
   orig: 246, 114
   offset: 0, 0
   index: -1
 exit_up
   rotate: false
-  xy: 6881, 1663
+  xy: 7494, 2841
   size: 246, 114
   orig: 246, 114
   offset: 0, 0
   index: -1
 left_bottom_button
   rotate: false
-  xy: 7152, 3303
+  xy: 7978, 3423
   size: 162, 160
   orig: 162, 160
   offset: 0, 0
   index: -1
 left_top_button
   rotate: false
-  xy: 6307, 1351
+  xy: 7141, 2463
   size: 160, 161
   orig: 160, 161
   offset: 0, 0
   index: -1
 right_bottom_button
   rotate: false
-  xy: 7727, 3502
+  xy: 7494, 2679
   size: 161, 160
   orig: 161, 160
   offset: 0, 0
   index: -1
 right_top_button
   rotate: false
-  xy: 6307, 1191
+  xy: 7978, 3263
   size: 159, 158
   orig: 159, 158
   offset: 0, 0
   index: -1
+left_top_button_pressed
+  rotate: false
+  xy: 7742, 2799
+  size: 156, 156
+  orig: 156, 156
+  offset: 0, 0
+  index: -1
 right_top_button_pressed
   rotate: false
-  xy: 6881, 1506
+  xy: 6705, 1474
   size: 155, 155
   orig: 155, 155
   offset: 0, 0
   index: -1
 achievement
   rotate: false
-  xy: 7357, 1865
+  xy: 6705, 1322
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 achievement_pressed
   rotate: false
-  xy: 7189, 1743
+  xy: 7970, 3111
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 home
   rotate: false
-  xy: 7341, 1713
+  xy: 7898, 2959
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 home_pressed
   rotate: false
-  xy: 7509, 1865
+  xy: 7900, 2807
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 settings
   rotate: false
-  xy: 7493, 1713
+  xy: 6862, 1555
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 settings_pressed
   rotate: false
-  xy: 7038, 1511
+  xy: 7014, 1555
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 ships
   rotate: false
-  xy: 7152, 3151
+  xy: 7166, 1555
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 ships_pressed
   rotate: false
-  xy: 7141, 2999
+  xy: 7318, 1558
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 shop
   rotate: false
-  xy: 7141, 2847
+  xy: 7470, 1558
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 shop_pressed
   rotate: false
-  xy: 7141, 2695
+  xy: 6862, 1403
   size: 150, 150
   orig: 150, 150
   offset: 0, 0
   index: -1
 white_background
   rotate: false
-  xy: 7890, 3563
+  xy: 7014, 1454
   size: 97, 99
   orig: 97, 99
   offset: 0, 0

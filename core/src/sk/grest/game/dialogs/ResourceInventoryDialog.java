@@ -142,8 +142,6 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
         getContentTable().add(pane).uniformX().fillX().row();
         getContentTable().add(sellBar).uniformX().fillX().row();
 
-        Gdx.app.log("PARAMS", "Height: " + getHeight() + ", Width: " + getWidth());
-
         addCloseButton(this);
 
     }

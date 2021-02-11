@@ -1,20 +1,19 @@
 package sk.grest.game.other;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.ui.Button;
 
 import sk.grest.game.constants.GameConstants;
-import sk.grest.game.entities.Research;
+import sk.grest.game.dialogs.research.ResearchActor;
 
 
 public class Line {
 
-    private ResearchActor[] buttons;
+    private sk.grest.game.dialogs.research.ResearchActor[] buttons;
     private Vector2[] lineVectors;
 
-    Line(ResearchActor start, ResearchActor end){
+    Line(sk.grest.game.dialogs.research.ResearchActor start, sk.grest.game.dialogs.research.ResearchActor end){
         buttons = new ResearchActor[]{start, end};
         setLineVectors();
     }

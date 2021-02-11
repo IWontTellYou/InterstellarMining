@@ -1,11 +1,13 @@
 package sk.grest.game.other;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
+import com.badlogic.gdx.scenes.scene2d.Touchable;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -42,6 +44,7 @@ public class Row<E> extends Table {
     {
 
         final Row<E> instance = this;
+        this.setTouchable(Touchable.enabled);
         this.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {

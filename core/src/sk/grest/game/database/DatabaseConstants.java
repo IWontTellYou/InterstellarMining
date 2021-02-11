@@ -117,6 +117,25 @@ public class DatabaseConstants {
         public static final String FUEL_EFFICIENCY_LVL = "fuel_efficiency_lvl";
     }
 
+    public static final class PlayerFactoryTable{
+        public static final String TABLE_NAME = "player_factory";
+        public static final String ID = "id";
+        public static final String RESOURCE_ID = "resource_id";
+        public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
+        public static final String START_TIME = "start_time";
+        public static final String COUNT = "count";
+    }
+
+    public static final class FactoryRecipeTable{
+        public static final String TABLE_NAME = "factory_recipe";
+        public static final String ID = "id";
+        public static final String RESOURCE_ID = "resource_id";
+        public static final String RESOURCE_REQUIRED_ID = "resource_required_id";
+        public static final String AMOUNT = "amount";
+        public static final String DURATION = "duration";
+        public static final String TYPE = "type";
+    }
+
     /*
     public static final class ResourceInShipTable{
         public static final String TABLE_NAME = "resource_in_ship";

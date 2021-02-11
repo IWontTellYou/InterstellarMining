@@ -2,7 +2,6 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
-import com.badlogic.gdx.InputMultiplexer;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
@@ -16,7 +15,8 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.dialogs.ResearchDialog;
+import sk.grest.game.dialogs.factory.FactoryDialog;
+import sk.grest.game.dialogs.research.ResearchDialog;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.ShipsShopDialog;
@@ -56,6 +56,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private UpgradeShipDialog upgradeShipDialog;
     private ShipsShopDialog shipsShopDialog;
     private ResearchDialog researchDialog;
+    private FactoryDialog factoryDialog;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -63,6 +64,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         this.travelSettingDialog = null;
         this.shipListDialog = null;
         this.shipsShopDialog = null;
+        this.factoryDialog = null;
 
         stage = new Stage(new ScreenViewport());
 
@@ -197,7 +199,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         achievementsButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
             }
         });
 
@@ -224,7 +225,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         settingsButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // ADD ACTION
+                factoryDialog = new FactoryDialog("", game.getUISkin(), game);
+                factoryDialog.show(stage);
             }
         });
 

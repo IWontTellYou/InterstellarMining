@@ -40,10 +40,11 @@ public class SelectionTable<E> extends Table implements ItemSelectedListener<E> 
             return null;
     }
 
-
     public Cell<Row<E>> addRow(Row<E> row){
         row.addListener(this);
         rows.add(row);
+        if(rows.size() == 1)
+            onSelectedItemClicked(row);
         return add(row);
     }
 

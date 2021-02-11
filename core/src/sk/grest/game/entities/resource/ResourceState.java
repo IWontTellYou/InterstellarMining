@@ -3,7 +3,9 @@ package sk.grest.game.entities.resource;
 public enum ResourceState {
     LIQUID,
     SOLID,
-    GAS;
+    GAS,
+    PRODUCT,
+    FUEL;
 
     public static ResourceState getState(int id){
         switch (id){
@@ -13,6 +15,10 @@ public enum ResourceState {
                 return SOLID;
             case 3:
                 return GAS;
+            case 4:
+                return PRODUCT;
+            case 5:
+                return FUEL;
         }
         return null;
     }
@@ -25,6 +31,10 @@ public enum ResourceState {
                 return 2;
             case GAS:
                 return 3;
+            case PRODUCT:
+                return 4;
+            case FUEL:
+                return 5;
         }
 
         return -1;

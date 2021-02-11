@@ -82,6 +82,14 @@ public class Player {
         return achievements;
     }
 
+    public Resource getResource(int id){
+        for (Resource r : resourcesAtBase) {
+            if(r.getID() == id)
+                return r;
+        }
+        return null;
+    }
+
     public long getMoney() { return money;}
     public void increaseMoney(long amount) {
         money += amount;

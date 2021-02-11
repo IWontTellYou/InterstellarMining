@@ -11,6 +11,7 @@ import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.planet.PlanetSystem;
+import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.resource.ResourceRarity;
 import sk.grest.game.entities.resource.ResourceState;
@@ -28,7 +29,7 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.TRAVEL_SPEED;
 
 public class DatabaseInitialization {
 
-    public static final int TABLE_COUNT = 14;
+    public static final int TABLE_COUNT = 16;
 
     public static final int ACHIEVEMENT_TABLE = 0;
     public static final int PLANET_SYSTEM_TABLE = 1;
@@ -38,13 +39,15 @@ public class DatabaseInitialization {
     public static final int RESEARCH_TABLE = 5;
     public static final int RESEARCH_REQUIREMENT_TABLE = 6;
     public static final int RESOURCE_TABLE = 7;
+    public static final int FACTORY_RECIPE = 8;
 
-    public static final int PLAYER_TABLE = 8;
-    public static final int PLAYER_ACHIEVEMENT_TABLE = 9;
-    public static final int PLAYER_RESEARCH_TABLE = 10;
-    public static final int PLAYER_RESOURCE_TABLE = 11;
-    public static final int PLAYER_PLANET_SYSTEM_TABLE = 12;
-    public static final int PLAYER_SHIP_TABLE = 13;
+    public static final int PLAYER_TABLE = 9;
+    public static final int PLAYER_ACHIEVEMENT_TABLE = 10;
+    public static final int PLAYER_RESEARCH_TABLE = 11;
+    public static final int PLAYER_RESOURCE_TABLE = 12;
+    public static final int PLAYER_PLANET_SYSTEM_TABLE = 13;
+    public static final int PLAYER_SHIP_TABLE = 14;
+    public static final int PLAYER_FACTORY = 15;
 
     private InterstellarMining game;
     private boolean[] tables;
@@ -62,7 +65,7 @@ public class DatabaseInitialization {
     }
 
     public boolean isRegularDatabaseInitialized(){
-        for (int i = 0; i < 8; i++) {
+        for (int i = 0; i < 9; i++) {
             if(!tables[i]) return false;
         }
         return true;
@@ -200,6 +203,28 @@ public class DatabaseInitialization {
         Gdx.app.log(AchievementTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[ACHIEVEMENT_TABLE] = true;
     }
+    public void initializeFactoryRecipe(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            FactoryItem item = game.getFactoryItemByID((Integer) data.get(FactoryRecipeTable.RESOURCE_ID));
+            if(item == null){
+                item = new FactoryItem(
+                        game.getResourceByID((Integer) data.get(FactoryRecipeTable.RESOURCE_ID)),
+                        0,
+                        0,
+                        (Integer) data.get(FactoryRecipeTable.DURATION),
+                        (Integer) data.get(FactoryRecipeTable.TYPE)
+                );
+                game.getFactoryItems().add(item);
+            }
+
+            item.addItemNecessary(
+                    game.getResourceByID((Integer) data.get(FactoryRecipeTable.RESOURCE_REQUIRED_ID)),
+                    (Integer) data.get(FactoryRecipeTable.AMOUNT));
+
+        }
+        Gdx.app.log(FactoryRecipeTable.TABLE_NAME, "INITIALIZATION DONE!");
+        tables[FACTORY_RECIPE] = true;
+    }
 
     public void initializePlayerTable(ArrayList<Map<String, Object>> tableData){
         Gdx.app.log("LOGIN", "Login succesfull");
@@ -329,5 +354,17 @@ public class DatabaseInitialization {
         Gdx.app.log(AchievementTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_ACHIEVEMENT_TABLE] = true;
     }
-
+    public void initializePlayerFactory(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            int resourceID = (Integer) data.get(PlayerFactoryTable.RESOURCE_ID);
+            for (FactoryItem item : game.getFactoryItems()) {
+                if(item.getResource().getID() == resourceID){
+                    item.setStartTime(Long.parseLong((String) data.get(PlayerFactoryTable.START_TIME)));
+                    item.setCount((Integer) data.get(PlayerFactoryTable.COUNT));
+                }
+            }
+        }
+        Gdx.app.log(PlayerFactoryTable.TABLE_NAME, "INITIALIZATION DONE!");
+        tables[PLAYER_FACTORY] = true;
+    }
 }

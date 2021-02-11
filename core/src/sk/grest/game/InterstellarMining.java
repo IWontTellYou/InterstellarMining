@@ -21,6 +21,7 @@ import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
+import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.entities.ship.Attributes;
@@ -81,6 +82,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	private ArrayList<Planet> planets;
 	private ArrayList<Research> researches;
 	private ArrayList<Achievement> achievements;
+	private ArrayList<FactoryItem> factoryItems;
 
 	@Override
 	public void create () {
@@ -96,6 +98,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		researches = new ArrayList<>();
 		planets = new ArrayList<>();
 		achievements = new ArrayList<>();
+		factoryItems = new ArrayList<>();
 
 		defaultFont = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
 
@@ -193,6 +196,18 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		}
 		return shipsNotOwned;
 	}
+	public ArrayList<FactoryItem> getFactoryItems() {
+		return factoryItems;
+	}
+	public ArrayList<FactoryItem> getFactoryItemsByType(int type){
+		ArrayList<FactoryItem> itemsByType = new ArrayList<>();
+		for (FactoryItem item : factoryItems) {
+			if(item.getType() == type){
+				itemsByType.add(item);
+			}
+		}
+		return itemsByType;
+	}
 
 	// Get by ID methods
 	public Ship getShipByID(int id){
@@ -235,6 +250,14 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		for (Achievement a : achievements) {
 			if(a.getId() == id)
 				return a;
+		}
+		return null;
+	}
+	public FactoryItem getFactoryItemByID(int id){
+		for (FactoryItem item : factoryItems) {
+			if(item.getResource().getID() == id){
+				return item;
+			}
 		}
 		return null;
 	}
@@ -304,6 +327,12 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 8TH
 			case AchievementTable.TABLE_NAME:
 				dataInit.initializeAchievementTable(tableData);
+				handler.getTable(FactoryRecipeTable.TABLE_NAME, this);
+				break;
+
+			// 9TH
+			case FactoryRecipeTable.TABLE_NAME:
+				dataInit.initializeFactoryRecipe(tableData);
 				break;
 
 			// PLAYER INITIALIZATION
@@ -342,6 +371,12 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 6TH
 			case PlayerAchievementTable.TABLE_NAME:
 				dataInit.initializePlayerAchievementTable(tableData);
+				handler.getTable(PlayerFactoryTable.TABLE_NAME, this);
+				break;
+
+			// 7TH
+			case PlayerFactoryTable.TABLE_NAME:
+				dataInit.initializePlayerFactory(tableData);
 				break;
 		}
 	}
