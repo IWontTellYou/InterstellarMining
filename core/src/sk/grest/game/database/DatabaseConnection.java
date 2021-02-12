@@ -11,6 +11,8 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import sk.grest.game.entities.Player;
+
 import static sk.grest.game.database.DatabaseConstants.*;
 
 public class DatabaseConnection {
@@ -127,6 +129,9 @@ public class DatabaseConnection {
                     Statement statement = connection.createStatement();
                     String sql = "SELECT * FROM " + tableName + " WHERE "
                             + DatabaseConstants.PLAYER_ID + " = " + playerID;
+                    if(tableName.equals(PlayerFactoryTable.TABLE_NAME))
+                        sql += " ORDER BY " + PlayerFactoryTable.START_TIME + " ASC";
+
                     ResultSet result = statement.executeQuery(sql);
                     ArrayList<Map<String, Object>> requestData = new ArrayList<>();
 
@@ -169,7 +174,6 @@ public class DatabaseConnection {
         taskThread.setDaemon(true);
         taskThread.start();
     }
-
     public void updateRow(final int requestCode, final int playerId, final int objectId, final String tableName, final Map<String, Object> data, final ConnectorEvent eventListener) {
         taskThread = new Thread(new Runnable() {
             @Override
@@ -209,6 +213,7 @@ public class DatabaseConnection {
         taskThread.start();
 
     }
+
     public void disconnect() {
         Gdx.app.log("DISCONECT", "Disconected");
         try {

@@ -364,7 +364,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 6TH
 			case PlayerAchievementTable.TABLE_NAME:
 				dataInit.initializePlayerAchievementTable(tableData);
-				handler.getTable(PlayerFactoryTable.TABLE_NAME, this);
+				handler.getTableWherePlayer(PlayerFactoryTable.TABLE_NAME, player.getID(),this);
 				break;
 
 			// 7TH

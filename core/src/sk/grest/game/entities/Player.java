@@ -1,8 +1,10 @@
 package sk.grest.game.entities;
 
 import java.util.ArrayList;
+import java.util.Collections;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.dialogs.factory.FactoryQueue;
 import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.resource.FactoryItem;
@@ -108,6 +110,7 @@ public class Player {
     public void clearQueue(){
         queue.clear();
     }
+    public void reverseQueue() {Collections.reverse(queue);}
 
     // MONEY
     public long getMoney() { return money;}
@@ -140,6 +143,7 @@ public class Player {
         return experience;
     }
 
+
     @Override
     public String toString() {
         return "Player{" +
@@ -150,6 +154,13 @@ public class Player {
                 ", level=" + level +
                 ", experience=" + experience +
                 '}';
+    }
+    public String getFactoryToString(){
+        StringBuilder s = new StringBuilder();
+        for (FactoryItem item : queue) {
+            s.append(ScreenConstants.getTimeFormat(item.getStartTime())).append(" ").append(item.getCount()).append("\n");
+        }
+        return s.toString();
     }
 
     public void update(float delta){

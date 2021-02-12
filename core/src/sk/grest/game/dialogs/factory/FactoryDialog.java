@@ -57,7 +57,6 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         super(title, skin);
         this.game = game;
 
-        clearChildren();
         rows = new ArrayList<>();
         itemsNeeded = new ArrayList<>();
         itemsOwned = new ArrayList<>();
@@ -166,13 +165,13 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         layoutTable.add(itemList).width(ITEM_LIST_WIDTH);
         layoutTable.add(helpTable).width(ITEM_LIST_WIDTH);
 
-        add(layoutTable).width(ITEM_LIST_WIDTH).pad(ITEM_LIST_HEIGHT).top().row();
+        getContentTable().add(layoutTable).width(ITEM_LIST_WIDTH).pad(ITEM_LIST_HEIGHT).top().row();
 
         queue = new FactoryQueue(skin, game.getSpriteSkin(), game.getPlayer().getQueue(), game);
-        queue.setColor(Color.BLUE);
-        add(queue).width(ITEM_LIST_WIDTH).bottom();
+        getContentTable().add(queue).width(ITEM_LIST_WIDTH).bottom();
 
         addCloseButton(this);
+
     }
 
     private Resource getResourceById(int id){

@@ -3,6 +3,7 @@ package sk.grest.game.database;
 import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Map;
 
 import sk.grest.game.InterstellarMining;
@@ -377,8 +378,6 @@ public class DatabaseInitialization {
                 }
             }
         }
-
-        Gdx.app.log("ITEMS DELETED", itemsDeleted + " items deleted");
 
         Gdx.app.log(PlayerFactoryTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_FACTORY] = true;

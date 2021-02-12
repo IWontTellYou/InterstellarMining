@@ -94,7 +94,9 @@ public class FactoryQueue extends Table implements FactoryItemFinishedListener {
         }
         list.get(list.size()-1).setItem(null);
 
-        game.getPlayer().getResource(item.getResource().getID()).addAmount(item.getCount());
+        Player player = game.getPlayer();
+        player.getResource(item.getResource().getID()).addAmount(item.getCount());
+        player.getQueue().remove(item);
         game.getHandler().updatePlayerResourceTable(item.getResource().getID());
         game.getHandler().removePlayerFactoryRow(item.getResource().getID(), item.getStartTime(), item.getCount());
 
