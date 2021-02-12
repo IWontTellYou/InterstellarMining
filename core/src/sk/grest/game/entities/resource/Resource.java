@@ -51,6 +51,11 @@ public class Resource{
         resource.amount = 0;
     }
 
+    public void addAmount(int amount){
+        this.amount += amount;
+    }
+
+
     public void subtractAmount(int amount){
         this.amount -= amount;
     }
@@ -65,9 +70,7 @@ public class Resource{
 
     @Override
     public String toString() {
-
         return name + " (" + rarity.toString() + ")";
-
     }
 
     public static Resource clone(Resource resource){

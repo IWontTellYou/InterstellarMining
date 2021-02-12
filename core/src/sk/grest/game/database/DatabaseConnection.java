@@ -157,7 +157,7 @@ public class DatabaseConnection {
                     Statement stm = connection.createStatement();
                     String sql = getAddRowSQL(tableName, data);
 
-                    // Gdx.app.log("SQL_QUERRY", sql);
+                    // Gdx.app.log("SQL_QUERY", sql);
 
                     stm.executeUpdate(sql);
                     eventListener.onUpdateSuccess(requestCode, tableName);
@@ -186,7 +186,29 @@ public class DatabaseConnection {
         taskThread.setDaemon(true);
         taskThread.start();
     }
+    public void deleteRow(final int requestCode, final String tableName, final Map<String, Object> data, final ConnectorEvent eventListener){
+        // DELETE FROM table_name WHERE condition;
 
+        taskThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    Statement stm = connection.createStatement();
+                    String sql = getDeleteRowSQL(tableName, data);
+
+                    //Gdx.app.log("DELETE QUERY", sql);
+
+                    stm.executeUpdate(sql);
+                    eventListener.onDeleteSuccess(requestCode, tableName);
+                } catch (SQLException e) {
+                    eventListener.onResultFailed(requestCode, e.getMessage());
+                }
+            }
+        });
+        taskThread.setDaemon(true);
+        taskThread.start();
+
+    }
     public void disconnect() {
         Gdx.app.log("DISCONECT", "Disconected");
         try {
@@ -215,19 +237,19 @@ public class DatabaseConnection {
                 sql += PlayerShipTable.TRAVEL_SPEED_LVL + " = " + data.get(PlayerShipTable.TRAVEL_SPEED_LVL) + ", ";
                 sql += PlayerShipTable.MINING_SPEED_LVL + " = " + data.get(PlayerShipTable.MINING_SPEED_LVL) + " ";
                 sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + PlayerShipTable.SHIP_ID + " = " + objectId;
-                Gdx.app.log("SQL", sql);
+                //Gdx.app.log("SQL", sql);
                 break;
             case PlayerResourceTable.TABLE_NAME:
                 sql += PlayerResourceTable.AMOUNT + " = " + data.get(PlayerShipTable.AMOUNT);
                 sql += " WHERE " + PLAYER_ID + " = " + playerId + " AND " + PlayerResourceTable.RESOURCE_ID + " = " + objectId;
-                Gdx.app.log("SQL", sql);
+                //Gdx.app.log("SQL", sql);
                 break;
             case PlayerTable.TABLE_NAME:
                 sql += PlayerTable.LEVEL + " = " + data.get(PlayerTable.LEVEL) + ", ";
                 sql += PlayerTable.EXPERIENCE + " = " + data.get(PlayerTable.EXPERIENCE);
                 sql += PlayerTable.MONEY + " = " + data.get(PlayerTable.MONEY);
                 sql += " WHERE " + PlayerTable.ID + " = " + data.get(PlayerTable.ID);
-                Gdx.app.log("SQL", sql);
+                //Gdx.app.log("SQL", sql);
                 break;
         }
 
@@ -258,7 +280,22 @@ public class DatabaseConnection {
 
         return "INSERT INTO " + tableName + "(" + keyNames + ") VALUES (" + keyValues + ")";
     }
+    private String getDeleteRowSQL(final String tableName, final Map<String, Object> data){
 
+        StringBuilder sql = new StringBuilder();
+        sql.append("DELETE FROM ").append(tableName).append(" WHERE ");
+
+        int counter = 0;
+        for (String s : data.keySet()) {
+            if(counter < data.size()-1)
+                sql.append(s).append(" = ").append(data.get(s)).append(" AND ");
+            else
+                sql.append(s).append(" = ").append(data.get(s));
+            counter++;
+        }
+
+        return sql.toString();
+    }
 
     public interface ConnectorEvent {
         void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData);
@@ -267,6 +304,7 @@ public class DatabaseConnection {
         void onConnectionFailed();
         void onResultFailed(int requestCode, String message);
         void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData);
+        void onDeleteSuccess(int requestCode, String message);
     }
 
 }

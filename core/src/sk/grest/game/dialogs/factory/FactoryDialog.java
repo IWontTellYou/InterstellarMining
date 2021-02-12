@@ -3,37 +3,34 @@ package sk.grest.game.dialogs.factory;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
-import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
 import java.util.Objects;
 
-import javax.xml.soap.Text;
-
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.constants.GameConstants;
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.dialogs.CustomDialog;
 import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.ItemOpenedListener;
-import sk.grest.game.other.DigitFilter;
-import sk.grest.game.other.Row;
+import sk.grest.game.other.SelectionRow;
 import sk.grest.game.other.SelectionTable;
+
+import static sk.grest.game.constants.ScreenConstants.DEFAULT_PADDING;
 
 public class FactoryDialog extends CustomDialog implements ItemOpenedListener<FactoryItem> {
 
     public static final int ICON_SIZE = 40;
 
     public static final int ITEM_LIST_WIDTH = 500;
+    public static final int ITEM_LIST_HEIGHT = 100;
 
     private ArrayList<FactoryItem> factoryItems;
     private FactoryQueue queue;
@@ -56,7 +53,7 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
     private ArrayList<Resource> itemsOwned;
     private ArrayList<Resource> itemsNeeded;
 
-    public FactoryDialog(String title, Skin skin, InterstellarMining game) {
+    public FactoryDialog(String title, Skin skin, final InterstellarMining game) {
         super(title, skin);
         this.game = game;
 
@@ -89,9 +86,9 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         amount = new Label("0", skin);
         amount.setAlignment(Align.center);
 
-        itemList = new SelectionTable<>(this, skin);
+        itemList = new SelectionTable<>(this, skin, true);
         for (FactoryItem item : factoryItems) {
-            Row<FactoryItem> row = new Row<>(skin);
+            SelectionRow<FactoryItem> row = new SelectionRow<>(skin);
             row.setItem(item);
             row.setColors(ScreenConstants.LIGHT_GRAY, ScreenConstants.DARK_GRAY);
 
@@ -111,7 +108,7 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
             row.add(new Label(item.getResource().getName(), skin))
                     .uniformX()
                     .expandX();
-            itemList.addRow(row).width(ITEM_LIST_WIDTH).pad(ScreenConstants.DEFAULT_PADDING).row();
+            itemList.addRow(row).size(ITEM_LIST_WIDTH, ITEM_LIST_HEIGHT).pad(DEFAULT_PADDING).row();
         }
 
         itemsNeeded = itemList.getItemSelected().getItemsNecessary();
@@ -120,6 +117,7 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         }
 
         itemView = new Table(skin);
+        itemView.background(ScreenConstants.getBackground(ScreenConstants.LIGHT_GRAY));
         onItemOpenedListener(itemList.getItemSelected());
         count = 0;
         updateView(1);
@@ -130,38 +128,49 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         TextButton fuelFactory = new TextButton("FUEL", skin);
 
         Table choiceBox = new Table(skin);
-        choiceBox.add(plateFactory).size(ICON_SIZE).pad(ScreenConstants.DEFAULT_PADDING);
-        choiceBox.add(fuelFactory).size(ICON_SIZE).pad(ScreenConstants.DEFAULT_PADDING);
+        choiceBox.add(plateFactory).size(ICON_SIZE).pad(DEFAULT_PADDING);
+        choiceBox.add(fuelFactory).size(ICON_SIZE).pad(DEFAULT_PADDING);
 
         Table amountControls = new Table(skin);
-        amountControls.add(decrease).size(ICON_SIZE).pad(ScreenConstants.DEFAULT_PADDING);
-        amountControls.add(amount).width(ITEM_LIST_WIDTH/4f).pad(ScreenConstants.DEFAULT_PADDING);
-        amountControls.add(increase).size(ICON_SIZE).pad(ScreenConstants.DEFAULT_PADDING);
+        amountControls.add(decrease).size(ICON_SIZE).pad(DEFAULT_PADDING);
+        amountControls.add(amount).width(ITEM_LIST_WIDTH/4f).pad(DEFAULT_PADDING);
+        amountControls.add(increase).size(ICON_SIZE).pad(DEFAULT_PADDING);
 
-        TextButton confirm = new TextButton("CREATE", skin);
+        TextButton confirm = new TextButton("START", skin);
         confirm.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                FactoryItem item = itemList.getItemSelected();
-                item.setCount(Integer.parseInt(amount.getText().toString()));
-                queue.addItem(item);
+                if(queue.getUsedSlotsCount() != FactoryQueue.MAX_ITEMS) {
+                    try {
+                        FactoryItem item = (FactoryItem) itemList.getItemSelected().clone();
+                        item.setCount(Integer.parseInt(amount.getText().toString()));
+                        queue.addItem(item);
+
+                        for (FactoryRecipeRow row : rows) {
+                            row.update(game.getPlayer().getResource(row.getResource().getID()));
+                        }
+
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
+                }
             }
         });
 
-        helpTable.add(choiceBox).right().top().row();
+        helpTable.add(choiceBox).right().row();
         helpTable.add(amountControls).row();
-        helpTable.add(itemView).center().row();
-        helpTable.add(confirm).center().row();
+        helpTable.add(itemView).center().pad(DEFAULT_PADDING).row();
+        helpTable.add(confirm).center().size(ITEM_LIST_WIDTH/6f, ITEM_LIST_WIDTH/12f).row();
 
-        Table helpTable2 = new Table(skin);
-        helpTable2.add(itemList).width(ITEM_LIST_WIDTH);
-        helpTable2.add(helpTable).width(ITEM_LIST_WIDTH);
+        Table layoutTable = new Table(skin);
+        layoutTable.add(itemList).width(ITEM_LIST_WIDTH);
+        layoutTable.add(helpTable).width(ITEM_LIST_WIDTH);
 
-        add(helpTable2).size(ITEM_LIST_WIDTH, ITEM_LIST_WIDTH).row();
+        add(layoutTable).width(ITEM_LIST_WIDTH).pad(ITEM_LIST_HEIGHT).top().row();
 
-        queue = new FactoryQueue(skin, game.getSpriteSkin(), game);
+        queue = new FactoryQueue(skin, game.getSpriteSkin(), game.getPlayer().getQueue(), game);
         queue.setColor(Color.BLUE);
-        add(queue).size(ITEM_LIST_WIDTH, ITEM_LIST_WIDTH);
+        add(queue).width(ITEM_LIST_WIDTH).bottom();
 
         addCloseButton(this);
     }
@@ -193,9 +202,12 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         for (Resource r : itemsNeeded) {
             FactoryRecipeRow row = new FactoryRecipeRow(getSkin(), game.getSpriteSkin(), r, Objects.requireNonNull(getResourceById(r.getID())));
             rows.add(row);
-            itemView.add(row).width(FactoryRecipeRow.WIDTH).row();
-            Gdx.app.log(itemsNeeded.indexOf(r)+"", row.toString());
+            itemView.add(row).width(FactoryRecipeRow.WIDTH).uniformX().row();
         }
+
+        amount.setText(count+"");
+        updateView(count);
+
     }
 
     @Override

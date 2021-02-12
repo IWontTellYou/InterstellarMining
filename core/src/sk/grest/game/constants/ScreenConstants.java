@@ -3,6 +3,7 @@ package sk.grest.game.constants;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
@@ -82,4 +83,10 @@ public class ScreenConstants {
             return amount + "";
     }
 
+    public static TextureRegionDrawable getBackground(Color color){
+        Pixmap bgPixmap = new Pixmap(1,1,Pixmap.Format.RGBA8888);
+        bgPixmap.setColor(color);
+        bgPixmap.fill();
+        return new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
+    }
 }

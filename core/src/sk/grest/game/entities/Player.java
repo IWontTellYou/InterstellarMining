@@ -3,7 +3,9 @@ package sk.grest.game.entities;
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.dialogs.factory.FactoryQueue;
 import sk.grest.game.entities.planet.PlanetSystem;
+import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
@@ -22,11 +24,13 @@ public class Player {
     private int level;
     private int experience;
 
-    private ArrayList<sk.grest.game.entities.ship.Ship> ships;
-    private ArrayList<sk.grest.game.entities.planet.PlanetSystem> systemsDiscovered;
+    private ArrayList<Ship> ships;
+    private ArrayList<PlanetSystem> systemsDiscovered;
     private ArrayList<Resource> resourcesAtBase;
     private ArrayList<Achievement> achievements;
     private ArrayList<Research> researches;
+
+    private ArrayList<FactoryItem> queue;
 
     private InterstellarMining game;
 
@@ -45,16 +49,11 @@ public class Player {
         resourcesAtBase = new ArrayList<>();
         researches = new ArrayList<>();
         achievements = new ArrayList<>();
+        queue = new ArrayList<>();
     }
 
     public ArrayList<Ship> getShips() {
         return ships;
-    }
-    public ArrayList<PlanetSystem> getSystemsDiscovered() {
-        return systemsDiscovered;
-    }
-    public ArrayList<Resource> getResourcesAtBase() {
-        return resourcesAtBase;
     }
     public ArrayList<Ship> getShipsAtBase(){
         ArrayList<Ship> ships = new ArrayList<>();
@@ -66,6 +65,21 @@ public class Player {
 
         return ships;
     }
+
+    public ArrayList<PlanetSystem> getSystemsDiscovered() {
+        return systemsDiscovered;
+    }
+    public ArrayList<Research> getResearches(){
+        return researches;
+    }
+    public ArrayList<Achievement> getAchievements() {
+        return achievements;
+    }
+
+    // RESOURCE
+    public ArrayList<Resource> getResourcesAtBase() {
+        return resourcesAtBase;
+    }
     public ArrayList<Resource> getResourcesWithAmount(){
         ArrayList<Resource> resourcesWithAmount = new ArrayList<>();
         for (Resource r : resourcesAtBase) {
@@ -75,13 +89,6 @@ public class Player {
         }
         return resourcesWithAmount;
     }
-    public ArrayList<Research> getResearches(){
-        return researches;
-    }
-    public ArrayList<Achievement> getAchievements() {
-        return achievements;
-    }
-
     public Resource getResource(int id){
         for (Resource r : resourcesAtBase) {
             if(r.getID() == id)
@@ -90,6 +97,19 @@ public class Player {
         return null;
     }
 
+    // QUEUE
+    public ArrayList<FactoryItem> getQueue(){
+        return queue;
+    }
+    public void addToQueue(FactoryItem item){
+        if(queue.size() < FactoryQueue.MAX_ITEMS)
+            queue.add(item);
+    }
+    public void clearQueue(){
+        queue.clear();
+    }
+
+    // MONEY
     public long getMoney() { return money;}
     public void increaseMoney(long amount) {
         money += amount;

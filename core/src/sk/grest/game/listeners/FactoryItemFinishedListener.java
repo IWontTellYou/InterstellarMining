@@ -1,7 +1,7 @@
 package sk.grest.game.listeners;
 
-import sk.grest.game.dialogs.factory.FactoryActor;
+import sk.grest.game.entities.resource.FactoryItem;
 
 public interface FactoryItemFinishedListener {
-    void onFactoryItemFinished(FactoryActor item);
+    void onFactoryItemFinished(FactoryItem item);
 }

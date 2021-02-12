@@ -417,6 +417,10 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 resourceInventoryDialog.update(delta);
             }
 
+            if(factoryDialog != null){
+                factoryDialog.update(delta);
+            }
+
             // END OF SHAPE RENDERING
 
             for (Ship s : game.getPlayer().getShips()) {

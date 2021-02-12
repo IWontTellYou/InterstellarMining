@@ -1,6 +1,5 @@
 package sk.grest.game.other;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
@@ -18,7 +17,7 @@ import java.util.ArrayList;
 
 import sk.grest.game.listeners.ItemSelectedListener;
 
-public class Row<E> extends Table {
+public class SelectionRow<E> extends Table {
 
     private ArrayList<Actor> elements;
     private E item;
@@ -30,12 +29,12 @@ public class Row<E> extends Table {
     boolean selected;
     ItemSelectedListener<E> listener;
 
-    public Row() {
+    public SelectionRow() {
         this.elements = new ArrayList<>();
         this.selected = false;
     }
 
-    public Row(Skin skin) {
+    public SelectionRow(Skin skin) {
         super(skin);
         this.elements = new ArrayList<>();
         this.selected = false;
@@ -43,7 +42,7 @@ public class Row<E> extends Table {
 
     {
 
-        final Row<E> instance = this;
+        final SelectionRow<E> instance = this;
         this.setTouchable(Touchable.enabled);
         this.addListener(new ClickListener(){
             @Override

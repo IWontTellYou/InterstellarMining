@@ -6,7 +6,10 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
 
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.resource.Resource;
+
+import static sk.grest.game.constants.ScreenConstants.DEFAULT_PADDING;
 
 public class FactoryRecipeRow extends Table {
 
@@ -36,9 +39,23 @@ public class FactoryRecipeRow extends Table {
         name = new Label(needed.getName(), skin);
         amountInfo = new Label(count*needed.getAmount() + " / " + owned.getAmount(), skin);
 
-        add(icon).size(FactoryDialog.ICON_SIZE);
-        add(name).align(Align.center);
-        add(amountInfo);
+        add(icon)
+                .size(FactoryDialog.ICON_SIZE)
+                .padRight(DEFAULT_PADDING).padLeft(DEFAULT_PADDING)
+                .expandX().uniformX()
+                .align(Align.center);
+        add(name)
+                .padRight(DEFAULT_PADDING).padLeft(DEFAULT_PADDING)
+                .expandX().uniformX()
+                .align(Align.center);
+        add(amountInfo)
+                .padRight(DEFAULT_PADDING).padLeft(DEFAULT_PADDING)
+                .expandX().uniformX()
+                .align(Align.center);
+    }
+
+    public Resource getResource() {
+        return needed;
     }
 
     public boolean testCount(int count){
@@ -50,6 +67,14 @@ public class FactoryRecipeRow extends Table {
     public void setCount(int count){
         this.count = count;
         amountInfo.setText(count*needed.getAmount() + " / " + owned.getAmount());
+    }
+
+    public void update(Resource owned){
+        this.owned = owned;
+        if(testCount(1))
+            setCount(1);
+        else
+            setCount(0);
     }
 
     @Override

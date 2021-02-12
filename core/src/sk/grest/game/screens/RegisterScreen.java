@@ -279,4 +279,9 @@ public class RegisterScreen implements Screen, ConnectorEvent {
         handler.addPlayerData(tableData, this);
 
     }
+
+    @Override
+    public void onDeleteSuccess(int requestCode, String message) {
+
+    }
 }

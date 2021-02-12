@@ -49,7 +49,7 @@ public class DatabaseHandler {
         connection.verifyPlayer(requestCode++, name, password, listener);
     }
 
-    public void writeIntoPlayerLoginHistorty(boolean in){
+    public void writeIntoPlayerLoginHistory(boolean in){
         Map<String, Object> data = new HashMap<>();
         if(in)
             data.put(PlayerLoginHistoryTable.LOGGED_IN, new Date(System.currentTimeMillis()).getTime());
@@ -125,11 +125,11 @@ public class DatabaseHandler {
         return connection;
     }
 
-    public void updatePlayerResourceTable(int playerId, int resourceId, int amount, ConnectorEvent listener){
+    public void updatePlayerResourceTable(int resourceId){
         Map<String, Object> data = new HashMap<>();
         data.put(PlayerResourceTable.RESOURCE_ID, resourceId);
-        data.put(PlayerResourceTable.AMOUNT, amount);
-        connection.updateRow(requestCode++, playerId, resourceId, PlayerResourceTable.TABLE_NAME, data, listener);
+        data.put(PlayerResourceTable.AMOUNT, game.getPlayer().getResource(resourceId).getAmount());
+        connection.updateRow(requestCode++, game.getPlayer().getID(), resourceId, PlayerResourceTable.TABLE_NAME, data, game);
     }
 
     public void updatePlayerShip(int playerId, Ship ship, ConnectorEvent listener){
@@ -153,4 +153,23 @@ public class DatabaseHandler {
     public void getTableWherePlayer(String tableName, int playerID, ConnectorEvent listener){
         connection.getTableWherePlayer(requestCode++, tableName, playerID, listener);
     }
+
+    public void addPlayerFactoryRow(int resourceID, long startTime, int count){
+        Map<String, Object> data = new HashMap<>();
+        data.put(PlayerFactoryTable.RESOURCE_ID, resourceID);
+        data.put(PlayerFactoryTable.START_TIME, startTime);
+        data.put(PlayerFactoryTable.COUNT, count);
+        data.put(PlayerFactoryTable.PLAYER_ID, game.getPlayer().getID());
+        connection.addRow(requestCode++, PlayerFactoryTable.TABLE_NAME, data, game);
+    }
+
+    public void removePlayerFactoryRow(int resourceID, long startTime, int count){
+        Map<String, Object> data = new HashMap<>();
+        data.put(PlayerFactoryTable.RESOURCE_ID, resourceID);
+        data.put(PlayerFactoryTable.START_TIME, startTime);
+        data.put(PlayerFactoryTable.COUNT, count);
+        data.put(PlayerFactoryTable.PLAYER_ID, game.getPlayer().getID());
+        connection.deleteRow(requestCode++, PlayerFactoryTable.TABLE_NAME, data, game);
+    }
+
 }

@@ -355,15 +355,31 @@ public class DatabaseInitialization {
         tables[PLAYER_ACHIEVEMENT_TABLE] = true;
     }
     public void initializePlayerFactory(ArrayList<Map<String, Object>> tableData){
+        int itemsDeleted = 0;
         for (Map<String, Object> data : tableData) {
             int resourceID = (Integer) data.get(PlayerFactoryTable.RESOURCE_ID);
             for (FactoryItem item : game.getFactoryItems()) {
                 if(item.getResource().getID() == resourceID){
-                    item.setStartTime(Long.parseLong((String) data.get(PlayerFactoryTable.START_TIME)));
-                    item.setCount((Integer) data.get(PlayerFactoryTable.COUNT));
+                    try {
+                        FactoryItem queueItem = (FactoryItem) item.clone();
+                        queueItem.setStartTime(Long.parseLong((String) data.get(PlayerFactoryTable.START_TIME)));
+                        queueItem.setCount((Integer) data.get(PlayerFactoryTable.COUNT));
+                        if(queueItem.getTimeLeftMillis() > 0)
+                            game.getPlayer().addToQueue(queueItem);
+                        else {
+                            game.getHandler().removePlayerFactoryRow(
+                                    queueItem.getResource().getID(), queueItem.getStartTime(), queueItem.getCount());
+                            itemsDeleted++;
+                        }
+                    } catch (CloneNotSupportedException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }
+
+        Gdx.app.log("ITEMS DELETED", itemsDeleted + " items deleted");
+
         Gdx.app.log(PlayerFactoryTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_FACTORY] = true;
     }

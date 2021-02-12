@@ -14,7 +14,7 @@ import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.listeners.ItemOpenedListener;
-import sk.grest.game.other.Row;
+import sk.grest.game.other.SelectionRow;
 import sk.grest.game.other.SelectionTable;
 
 public class ShipListDialog extends CustomDialog implements ItemOpenedListener<Ship> {
@@ -80,11 +80,11 @@ public class ShipListDialog extends CustomDialog implements ItemOpenedListener<S
 
         getContentTable().add(infoTable).fillX().row();
 
-        SelectionTable<Ship> shipList = new SelectionTable<Ship>(this, skin);
+        SelectionTable<Ship> shipList = new SelectionTable<>(this, skin, false);
 
         for (Ship s : ships) {
 
-            Row<Ship> tableRow = new Row<>();
+            SelectionRow<Ship> tableRow = new SelectionRow<>();
             tableRow.setItem(s);
             tableRow.addListener(shipList);
             tableRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.LIGHT_GRAY);

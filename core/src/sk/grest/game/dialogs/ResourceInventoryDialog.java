@@ -13,7 +13,7 @@ import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.ItemOpenedListener;
 import sk.grest.game.listeners.ItemSoldListener;
-import sk.grest.game.other.Row;
+import sk.grest.game.other.SelectionRow;
 import sk.grest.game.other.SelectionTable;
 import sk.grest.game.other.SellBar;
 
@@ -81,11 +81,11 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
 
         getContentTable().add(infoPanel).row();
 
-        contentTable = new SelectionTable<>(this, skin);
+        contentTable = new SelectionTable<>(this, skin, true);
 
         for (Resource r : game.getPlayer().getResourcesAtBase()) {
 
-            Row<Resource> resourceRow = new Row<>();
+            SelectionRow<Resource> resourceRow = new SelectionRow<>();
             resourceRow.setItem(r);
             resourceRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.DARK_GRAY);
 
@@ -164,7 +164,7 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
             contentTable.getItemSelected().subtractAmount(Integer.parseInt(sellBar.getAmount().getText()));
             sellBar.changeResource(contentTable.getItemSelected());
             game.getHandler().updatePlayer();
-            game.getHandler().updatePlayerResourceTable(game.getPlayer().getID(), contentTable.getItemSelected().getID(), contentTable.getItemSelected().getAmount(), game);
+            game.getHandler().updatePlayerResourceTable(contentTable.getItemSelected().getID());
         }
 
         ((Label) contentTable.getRow(contentTable.getItemSelected()).getElement(AMOUNT)).setText((int) contentTable.getItemSelected().getAmount());

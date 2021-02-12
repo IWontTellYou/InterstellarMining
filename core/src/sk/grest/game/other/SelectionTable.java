@@ -1,31 +1,33 @@
 package sk.grest.game.other;
 
-import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 
 import java.util.ArrayList;
 
-import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.ItemOpenedListener;
 import sk.grest.game.listeners.ItemSelectedListener;
 
 public class SelectionTable<E> extends Table implements ItemSelectedListener<E> {
 
-    private ArrayList<Row<E>> rows;
+    private ArrayList<SelectionRow<E>> rows;
     private int currentRow;
     private ItemOpenedListener<E> listener;
 
     private E itemSelected;
 
-    public SelectionTable(ItemOpenedListener<E> listener) {
+    private boolean defaultItem;
+
+    public SelectionTable(ItemOpenedListener<E> listener, boolean defaultItem) {
         this.listener = listener;
+        this.defaultItem = defaultItem;
     }
 
-    public SelectionTable(ItemOpenedListener<E> listener, Skin skin) {
+    public SelectionTable(ItemOpenedListener<E> listener, Skin skin, boolean defaultItem) {
         super(skin);
         this.listener = listener;
+        this.defaultItem = defaultItem;
     }
 
     {
@@ -40,16 +42,16 @@ public class SelectionTable<E> extends Table implements ItemSelectedListener<E> 
             return null;
     }
 
-    public Cell<Row<E>> addRow(Row<E> row){
+    public Cell<SelectionRow<E>> addRow(SelectionRow<E> row){
         row.addListener(this);
         rows.add(row);
-        if(rows.size() == 1)
+        if(defaultItem && rows.size() == 1)
             onSelectedItemClicked(row);
         return add(row);
     }
 
-    public Row<E> getRow(E item){
-        for (Row<E> row : rows) {
+    public SelectionRow<E> getRow(E item){
+        for (SelectionRow<E> row : rows) {
             if(row.getItem() == item)
                 return row;
         }
@@ -61,8 +63,8 @@ public class SelectionTable<E> extends Table implements ItemSelectedListener<E> 
     }
 
     @Override
-    public void onSelectedItemClicked(Row<E> r) {
-        for (Row<E> row : rows) {
+    public void onSelectedItemClicked(SelectionRow<E> r) {
+        for (SelectionRow<E> row : rows) {
             row.setSelected(false);
         }
         r.setSelected(true);

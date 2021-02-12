@@ -4,11 +4,10 @@ import java.util.ArrayList;
 
 import sk.grest.game.constants.ScreenConstants;
 
-public class FactoryItem {
+public class FactoryItem implements Cloneable {
 
     public static final int PLATE = 1;
     public static final int FUEL = 2;
-
 
     private final int defaultDuration;
     private int duration;
@@ -29,12 +28,21 @@ public class FactoryItem {
         this.itemsNecessary = new ArrayList<>();
     }
 
-    public void setStartTime(long time){
-        this.startTime = time;
+    public void setCount(int count) {
+        this.count = count;
+        this.duration = defaultDuration * count;
     }
 
-    public void setCount(int count){
-        this.count = count;
+    public void setStartTime(long startTime){
+        this.startTime = startTime;
+    }
+
+    public String getDuration(){
+        return ScreenConstants.getTimeFormat(duration);
+    }
+
+    public int getDurationMillis(){
+        return duration;
     }
 
     public String getTimeLeft(){
@@ -42,6 +50,13 @@ public class FactoryItem {
             return null;
         }else
             return ScreenConstants.getTimeFormat(duration - (System.currentTimeMillis() - startTime));
+    }
+
+    public int getTimeLeftMillis(){
+        if(System.currentTimeMillis() - startTime > duration){
+            return 0;
+        }else
+            return (int) (duration - (System.currentTimeMillis() - startTime));
     }
 
     public Resource getResource() {
@@ -56,6 +71,10 @@ public class FactoryItem {
         return type;
     }
 
+    public long getStartTime() {
+        return startTime;
+    }
+
     public ArrayList<Resource> getItemsNecessary(){
         return itemsNecessary;
     }
@@ -66,4 +85,8 @@ public class FactoryItem {
         itemsNecessary.add(resource);
     }
 
+    @Override
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }

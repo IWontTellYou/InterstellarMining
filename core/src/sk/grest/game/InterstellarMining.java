@@ -10,7 +10,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -23,19 +22,13 @@ import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
 import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
-import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
-import sk.grest.game.entities.ship.TravelPlan;
-import sk.grest.game.entities.resource.ResourceRarity;
-import sk.grest.game.entities.resource.ResourceState;
 import sk.grest.game.listeners.DatabaseChangeListener;
-import sk.grest.game.screens.GameScreen;
 import sk.grest.game.screens.MainMenuScreen;
 
 import static sk.grest.game.database.DatabaseConnection.*;
 import static sk.grest.game.database.DatabaseConstants.*;
-import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class InterstellarMining extends Game implements ConnectorEvent, DatabaseChangeListener {
 
@@ -340,7 +333,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 1ST
 			case PlayerTable.TABLE_NAME:
 				dataInit.initializePlayerTable(tableData);
-				handler.writeIntoPlayerLoginHistorty(true);
+				handler.writeIntoPlayerLoginHistory(true);
 				handler.getTableWherePlayer(PlayerResearchTable.TABLE_NAME, player.getID(),this);
 				break;
 
@@ -383,6 +376,11 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	@Override
 	public void onUpdateSuccess(int requestCode, String tableName) {
 	}
+
+	@Override
+	public void onDeleteSuccess(int requestCode, String tableName) {
+	}
+
 	@Override
 	public void onConnect() {
 		Gdx.app.log("DATABASE", "Database successfully connected!");
@@ -420,7 +418,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			if (resource.getID() == r.getID()) {
 				r.addAmount(resource);
 				Gdx.app.log("RESOURCE", r.getAmount() + "");
-				handler.updatePlayerResourceTable(player.getID(), r.getID(), r.getAmount(), this);
+				handler.updatePlayerResourceTable(r.getID());
 				handler.updatePlayerShip(player.getID(), ship, this);
 			}
 		}
