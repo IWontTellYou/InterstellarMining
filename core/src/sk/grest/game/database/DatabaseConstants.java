@@ -99,6 +99,15 @@ public class DatabaseConstants {
         public static final String PRICE = "price";
     }
 
+    public static final class UpgradeRecipeTable{
+        public static final String TABLE_NAME = "upgrade_recipe";
+        public static final String ID = "id";
+        public static final String LEVEL = "level";
+        public static final String TYPE = "type";
+        public static final String RESOURCE_REQUIRED_ID = "resource_required_id";
+        public static final String AMOUNT = "amount";
+    }
+
     public static final class PlayerShipTable{
         public static final String TABLE_NAME = "player_ship";
         public static final String ID = "id";

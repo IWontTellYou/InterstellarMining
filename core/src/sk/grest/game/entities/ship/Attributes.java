@@ -13,6 +13,7 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.RESOURCE_CAPA
 public class Attributes {
 
     public static final int BASE_PRICE = 50;
+    public static final float MULTIPLIER = 1.01f;
 
     private DatabaseChangeListener listener;
 
@@ -74,15 +75,15 @@ public class Attributes {
     public int getAttributePrice(AttributeType type){
         switch (type){
             case MINING_SPEED:
-                return (int) (BASE_PRICE * Math.pow(1.1f, miningSpeedLvl));
+                return (int) (BASE_PRICE * Math.pow(MULTIPLIER, miningSpeedLvl));
             case TRAVEL_SPEED:
-                return (int) (BASE_PRICE * Math.pow(1.1f, travelSpeedLvl));
+                return (int) (BASE_PRICE * Math.pow(MULTIPLIER, travelSpeedLvl));
             case FUEL_CAPACITY:
-                return (int) (BASE_PRICE * Math.pow(1.1f, fuelCapacityLvl));
+                return (int) (BASE_PRICE * Math.pow(MULTIPLIER, fuelCapacityLvl));
             case FUEL_EFFICIENCY:
-                return (int) (BASE_PRICE * Math.pow(1.1f, fuelEfficiencyLvl));
+                return (int) (BASE_PRICE * Math.pow(MULTIPLIER, fuelEfficiencyLvl));
             case RESOURCE_CAPACITY:
-                return (int) (BASE_PRICE * Math.pow(1.1f, resourceCapacityLvl));
+                return (int) (BASE_PRICE * Math.pow(MULTIPLIER, resourceCapacityLvl));
             default:
                 return 0;
         }

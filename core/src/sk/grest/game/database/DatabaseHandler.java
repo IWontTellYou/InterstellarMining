@@ -143,6 +143,7 @@ public class DatabaseHandler {
         data.put(TRAVEL_SPEED_LVL, ship.getAttributes().getAttribute(TRAVEL_SPEED));
         data.put(MINING_SPEED_LVL, ship.getAttributes().getAttribute(MINING_SPEED));
         data.put(RESOURCE_CAPACITY_LVL, ship.getAttributes().getAttribute(RESOURCE_CAPACITY));
+        data.put(UPGRADE_LEVEL, ship.getUpgradeLevel());
         connection.updateRow(requestCode++, playerId, ship.getId(), PlayerShipTable.TABLE_NAME, data, listener);
     }
 

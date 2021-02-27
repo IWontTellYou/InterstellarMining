@@ -32,7 +32,6 @@ public class CustomDialog extends Dialog {
 
         setHeight(ScreenConstants.DEFAULT_DIALOG_HEIGHT);
         setWidth(ScreenConstants.DEFAULT_DIALOG_WIDTH);
-
     }
 
     public void update(float delta){

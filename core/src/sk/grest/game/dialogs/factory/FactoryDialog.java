@@ -5,6 +5,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
+import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -139,7 +140,7 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         confirm.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                if(queue.getUsedSlotsCount() != FactoryQueue.MAX_ITEMS) {
+                if(count > 0 && queue.getUsedSlotsCount() != FactoryQueue.MAX_ITEMS) {
                     try {
                         FactoryItem item = (FactoryItem) itemList.getItemSelected().clone();
                         item.setCount(Integer.parseInt(amount.getText().toString()));
@@ -161,14 +162,17 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         helpTable.add(itemView).center().pad(DEFAULT_PADDING).row();
         helpTable.add(confirm).center().size(ITEM_LIST_WIDTH/6f, ITEM_LIST_WIDTH/12f).row();
 
+        ScrollPane listScroll = new ScrollPane(itemList);
+        listScroll.setForceScroll(false, true);
+
         Table layoutTable = new Table(skin);
-        layoutTable.add(itemList).width(ITEM_LIST_WIDTH);
+        layoutTable.add(listScroll).width(ITEM_LIST_WIDTH);
         layoutTable.add(helpTable).width(ITEM_LIST_WIDTH);
 
         getContentTable().add(layoutTable).width(ITEM_LIST_WIDTH).pad(ITEM_LIST_HEIGHT).top().row();
 
         queue = new FactoryQueue(skin, game.getSpriteSkin(), game.getPlayer().getQueue(), game);
-        getContentTable().add(queue).width(ITEM_LIST_WIDTH).bottom();
+        getContentTable().add(queue).width(ITEM_LIST_WIDTH).padBottom(DEFAULT_PADDING).bottom();
 
         addCloseButton(this);
 
@@ -204,6 +208,22 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
             itemView.add(row).width(FactoryRecipeRow.WIDTH).uniformX().row();
         }
 
+        boolean test = true;
+        for (FactoryRecipeRow row : rows) {
+            if(!row.testCount(1))
+                test = false;
+        }
+
+        for (FactoryRecipeRow row : rows) {
+            if(test) {
+                count = 1;
+                row.setCount(1);
+            }else {
+                count = 0;
+                row.setCount(0);
+            }
+        }
+
         amount.setText(count+"");
         updateView(count);
 
@@ -211,7 +231,6 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
 
     @Override
     public void onItemOpenedListener(FactoryItem item) {
-
         if(itemView == null)
             return;
 

@@ -21,7 +21,7 @@ import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.ShipsShopDialog;
 import sk.grest.game.dialogs.TravelSettingDialog;
-import sk.grest.game.dialogs.UpgradeShipDialog;
+import sk.grest.game.dialogs.upgrade.UpgradeShipDialog;
 import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
@@ -110,12 +110,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                Gdx.app.log("CLICK", "Clicked");
-                if(isOver(event.getStageX(), event.getStageY())){
-                    Gdx.app.log("CLICK", "Clicked inside");
-                    upgradeShipDialog = new UpgradeShipDialog("", game.getUISkin(), game.getPlayer(), game.getPlayer().getShips().get(0));
-                    upgradeShipDialog.show(stage);
-                }
+
             }
 
             @Override

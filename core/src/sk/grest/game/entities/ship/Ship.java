@@ -171,6 +171,11 @@ public class Ship {
         }
     }
 
+    public void upgrade(){
+        if(upgradeLevel < 4)
+            upgradeLevel++;
+    }
+
     @Override
     public String toString() {
         return name + " " + "(Level " + (int) upgradeLevel + ")";

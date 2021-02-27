@@ -1,5 +1,7 @@
 package sk.grest.game.entities;
 
+import com.badlogic.gdx.Gdx;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -67,6 +69,13 @@ public class Player {
 
         return ships;
     }
+    public Ship getShipByID(int id){
+        for (Ship s : ships) {
+            if(s.getId() == id)
+                return s;
+        }
+        return null;
+    }
 
     public ArrayList<PlanetSystem> getSystemsDiscovered() {
         return systemsDiscovered;
@@ -101,11 +110,13 @@ public class Player {
 
     // QUEUE
     public ArrayList<FactoryItem> getQueue(){
+        Gdx.app.log("SIZE", queue.size()+" items");
         return queue;
     }
     public void addToQueue(FactoryItem item){
         if(queue.size() < FactoryQueue.MAX_ITEMS)
             queue.add(item);
+        Gdx.app.log("SIZE", item.getResource().getName() + " added at " + item.getStartTime());
     }
     public void clearQueue(){
         queue.clear();

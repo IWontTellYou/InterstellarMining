@@ -11,8 +11,10 @@ import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.constants.ScreenConstants;
+import sk.grest.game.dialogs.upgrade.UpgradeShipDialog;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
+import sk.grest.game.entities.upgrade.UpgradeRecipe;
 import sk.grest.game.listeners.ItemOpenedListener;
 import sk.grest.game.other.SelectionRow;
 import sk.grest.game.other.SelectionTable;
@@ -169,7 +171,7 @@ public class ShipListDialog extends CustomDialog implements ItemOpenedListener<S
 
     @Override
     public void onItemOpenedListener(Ship item) {
-        UpgradeShipDialog dialog = new UpgradeShipDialog(item.getName(), getSkin(), game.getPlayer(), item);
+        UpgradeShipDialog dialog = new UpgradeShipDialog(item.getName(), game, game.getPlayer(), item, game.getUpgradeRecipesByType(UpgradeRecipe.SHIP_UPGRADE));
         dialog.show(this.getStage());
         this.hide();
     }

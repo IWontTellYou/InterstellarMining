@@ -19,6 +19,7 @@ import sk.grest.game.entities.resource.ResourceState;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.entities.ship.TravelPlan;
+import sk.grest.game.entities.upgrade.UpgradeRecipe;
 import sk.grest.game.screens.GameScreen;
 
 import static sk.grest.game.database.DatabaseConstants.*;
@@ -30,7 +31,7 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.TRAVEL_SPEED;
 
 public class DatabaseInitialization {
 
-    public static final int TABLE_COUNT = 16;
+    public static final int TABLE_COUNT = 17;
 
     public static final int ACHIEVEMENT_TABLE = 0;
     public static final int PLANET_SYSTEM_TABLE = 1;
@@ -41,14 +42,15 @@ public class DatabaseInitialization {
     public static final int RESEARCH_REQUIREMENT_TABLE = 6;
     public static final int RESOURCE_TABLE = 7;
     public static final int FACTORY_RECIPE = 8;
+    public static final int UPGRADE_RECIPE = 9;
 
-    public static final int PLAYER_TABLE = 9;
-    public static final int PLAYER_ACHIEVEMENT_TABLE = 10;
-    public static final int PLAYER_RESEARCH_TABLE = 11;
-    public static final int PLAYER_RESOURCE_TABLE = 12;
-    public static final int PLAYER_PLANET_SYSTEM_TABLE = 13;
-    public static final int PLAYER_SHIP_TABLE = 14;
-    public static final int PLAYER_FACTORY = 15;
+    public static final int PLAYER_TABLE = 10;
+    public static final int PLAYER_ACHIEVEMENT_TABLE = 11;
+    public static final int PLAYER_RESEARCH_TABLE = 12;
+    public static final int PLAYER_RESOURCE_TABLE = 13;
+    public static final int PLAYER_PLANET_SYSTEM_TABLE = 14;
+    public static final int PLAYER_SHIP_TABLE = 15;
+    public static final int PLAYER_FACTORY = 16;
 
     private InterstellarMining game;
     private boolean[] tables;
@@ -66,7 +68,7 @@ public class DatabaseInitialization {
     }
 
     public boolean isRegularDatabaseInitialized(){
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 10; i++) {
             if(!tables[i]) return false;
         }
         return true;
@@ -226,6 +228,24 @@ public class DatabaseInitialization {
         Gdx.app.log(FactoryRecipeTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[FACTORY_RECIPE] = true;
     }
+    public void initializeUpgradeRecipe(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            int level = (Integer) data.get(UpgradeRecipeTable.LEVEL);
+            int type = (Integer) data.get(UpgradeRecipeTable.TYPE);
+            UpgradeRecipe recipe = game.getUpgradeRecipe(level, type);
+            if(recipe == null){
+                recipe = new UpgradeRecipe(level, type);
+                game.getUpgradeRecipes().add(recipe);
+            }
+
+            recipe.addResourceNeeded(
+                    game.getResourceByID((Integer) data.get(UpgradeRecipeTable.RESOURCE_REQUIRED_ID)),
+                    (Integer) data.get(UpgradeRecipeTable.AMOUNT));
+
+        }
+        Gdx.app.log(UpgradeRecipeTable.TABLE_NAME, "INITIALIZATION DONE!");
+        tables[UPGRADE_RECIPE] = true;
+    }
 
     public void initializePlayerTable(ArrayList<Map<String, Object>> tableData){
         Gdx.app.log("LOGIN", "Login succesfull");
@@ -356,7 +376,6 @@ public class DatabaseInitialization {
         tables[PLAYER_ACHIEVEMENT_TABLE] = true;
     }
     public void initializePlayerFactory(ArrayList<Map<String, Object>> tableData){
-        int itemsDeleted = 0;
         for (Map<String, Object> data : tableData) {
             int resourceID = (Integer) data.get(PlayerFactoryTable.RESOURCE_ID);
             for (FactoryItem item : game.getFactoryItems()) {
@@ -370,7 +389,6 @@ public class DatabaseInitialization {
                         else {
                             game.getHandler().removePlayerFactoryRow(
                                     queueItem.getResource().getID(), queueItem.getStartTime(), queueItem.getCount());
-                            itemsDeleted++;
                         }
                     } catch (CloneNotSupportedException e) {
                         e.printStackTrace();

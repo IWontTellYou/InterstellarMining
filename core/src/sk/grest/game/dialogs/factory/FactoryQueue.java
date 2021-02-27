@@ -36,10 +36,6 @@ public class FactoryQueue extends Table implements FactoryItemFinishedListener {
         }
     }
 
-    public FactoryQueue(){
-
-    }
-
     public void addItem(FactoryItem item){
 
         int time = 0;
@@ -67,6 +63,7 @@ public class FactoryQueue extends Table implements FactoryItemFinishedListener {
                         player.getResource(r.getID()).subtractAmount(r.getAmount()*item.getCount());
                         game.getHandler().updatePlayerResourceTable(r.getID());
                     }
+                    player.addToQueue(item);
 
                     game.getHandler().addPlayerFactoryRow(item.getResource().getID(), item.getStartTime(), item.getCount());
 

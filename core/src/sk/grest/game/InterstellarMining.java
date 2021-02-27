@@ -24,6 +24,7 @@ import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
+import sk.grest.game.entities.upgrade.UpgradeRecipe;
 import sk.grest.game.listeners.DatabaseChangeListener;
 import sk.grest.game.screens.MainMenuScreen;
 
@@ -32,12 +33,8 @@ import static sk.grest.game.database.DatabaseConstants.*;
 
 public class InterstellarMining extends Game implements ConnectorEvent, DatabaseChangeListener {
 
-	// WEDNESDAY
-	// TODO FINISH SHIP UPGRADE WINDOW
-
 	// THURSDAY
 	// TODO PLANET SYSTEM LIST
-	// TODO ABBILITIES FOR SHIPS IN DATABASE
 
 	// FRIDAY
 	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
@@ -46,13 +43,11 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	// PROBLEMS THAT WILL WAIT
 	// TODO REMEMBER PASSWORD
 	// TODO CLEAN UP CODE
-	// TODO DATABASE CAN BE POSSIBLY MADE SIMPLER USING JOINs (IF THERE'S TIME)
 	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
 
 	// TODO STATS
 	// TODO ACHIEVEMENTS
 
-	// TODO COOL LOOKING NESTED TABLES
 	// TODO CHANGE MOUSE CURSOR GRAPHICS
 
 	private Player player;
@@ -67,7 +62,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	private BitmapFont defaultFont;
 
 	private Skin spriteSkin;
-	private Skin uiskin;
+	private Skin uiSkin;
 
 	private ArrayList<Ship> shipsShop;
 	private ArrayList<Resource> resources;
@@ -76,6 +71,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	private ArrayList<Research> researches;
 	private ArrayList<Achievement> achievements;
 	private ArrayList<FactoryItem> factoryItems;
+	private ArrayList<UpgradeRecipe> upgradeRecipes;
 
 	@Override
 	public void create () {
@@ -92,6 +88,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		planets = new ArrayList<>();
 		achievements = new ArrayList<>();
 		factoryItems = new ArrayList<>();
+		upgradeRecipes = new ArrayList<>();
 
 		defaultFont = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
 
@@ -102,8 +99,8 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprites.atlas"));
 		spriteSkin = new Skin(area);
 
-		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiskin.atlas"));
-		uiskin = new Skin(Gdx.files.internal("skins\\uiskin.json"), uiarea);
+		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiSkin.atlas"));
+		uiSkin = new Skin(Gdx.files.internal("skins\\uiSkin.json"), uiarea);
 
 		back = spriteSkin.getDrawable("actor_background");
 
@@ -118,7 +115,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	@Override
 	public void dispose () {
 		batch.dispose();
-		uiskin.dispose();
+		uiSkin.dispose();
 		spriteSkin.dispose();
 		handler.getConnection().disconnect();
 	}
@@ -142,7 +139,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		return spriteSkin.getDrawable("background");
 	}
 	public Skin getUISkin() {
-		return uiskin;
+		return uiSkin;
 	}
 	public Skin getSpriteSkin() {return spriteSkin;}
 	public DatabaseHandler getHandler() {
@@ -201,6 +198,17 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		}
 		return itemsByType;
 	}
+	public ArrayList<UpgradeRecipe> getUpgradeRecipes() {
+		return upgradeRecipes;
+	}
+	public ArrayList<UpgradeRecipe> getUpgradeRecipesByType(int type) {
+		ArrayList<UpgradeRecipe> recipesByType = new ArrayList<>();
+		for (UpgradeRecipe recipe : upgradeRecipes) {
+			if(recipe.getType() == type)
+				recipesByType.add(recipe);
+		}
+		return recipesByType;
+	}
 
 	// Get by ID methods
 	public Ship getShipByID(int id){
@@ -254,19 +262,19 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		}
 		return null;
 	}
+	public UpgradeRecipe getUpgradeRecipe(int level, int type){
+		for (UpgradeRecipe recipe : upgradeRecipes) {
+			if(recipe.getLevel() == level && recipe.getType() == type)
+				return recipe;
+		}
+		return null;
+	}
 
 	// Get by name methods
 	public Planet getPlanetByName(String name){
 		for (Planet p : planets){
 			if (p.getName().equals(name))
 				return p;
-		}
-		return null;
-	}
-	public PlanetSystem getPlanetSystemByID(String name){
-		for (PlanetSystem pS : planetSystems){
-			if (pS.getName().equals(name))
-				return pS;
 		}
 		return null;
 	}
@@ -320,10 +328,16 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 8TH
 			case AchievementTable.TABLE_NAME:
 				dataInit.initializeAchievementTable(tableData);
-				handler.getTable(FactoryRecipeTable.TABLE_NAME, this);
+				handler.getTable(UpgradeRecipeTable.TABLE_NAME, this);
 				break;
 
 			// 9TH
+			case UpgradeRecipeTable.TABLE_NAME:
+				dataInit.initializeUpgradeRecipe(tableData);
+				handler.getTable(FactoryRecipeTable.TABLE_NAME, this);
+				break;
+
+			// 10TH
 			case FactoryRecipeTable.TABLE_NAME:
 				dataInit.initializeFactoryRecipe(tableData);
 				break;

@@ -53,6 +53,18 @@ public class DatabaseConnection {
         connectionThread.setDaemon(true);
         connectionThread.start();
     }
+    public void disconnect() {
+        Gdx.app.log("DISCONECT", "Disconected");
+        try {
+            if (taskThread.isAlive())
+                taskThread.interrupt();
+            if (connectionThread.isAlive())
+                taskThread.interrupt();
+            connection.close();
+        } catch (SQLException e) {
+            Gdx.app.log("SQL_ERROR", e.getMessage());
+        }
+    }
 
     public void verifyPlayer(final int requestCode, final String username, final String password, final ConnectorEvent eventListener){
         taskThread = new Thread(new Runnable() {
@@ -119,7 +131,6 @@ public class DatabaseConnection {
         taskThread.setDaemon(true);
         taskThread.start();
     }
-
     public void getTableWherePlayer(final int requestCode, final String tableName, final int playerID, final ConnectorEvent eventListener){
         taskThread = new Thread(new Runnable() {
             @Override
@@ -214,19 +225,6 @@ public class DatabaseConnection {
 
     }
 
-    public void disconnect() {
-        Gdx.app.log("DISCONECT", "Disconected");
-        try {
-            if (taskThread.isAlive())
-                taskThread.interrupt();
-            if (connectionThread.isAlive())
-                taskThread.interrupt();
-            connection.close();
-        } catch (SQLException e) {
-            Gdx.app.log("SQL_ERROR", e.getMessage());
-        }
-    }
-
     private String getUpdateSQL(String tableName, int playerId, int objectId, Map<String, Object> data){
         String sql = "UPDATE " + tableName + " SET ";
 
@@ -240,7 +238,8 @@ public class DatabaseConnection {
                 sql += PlayerShipTable.FUEL_EFFICIENCY_LVL + " = " + data.get(PlayerShipTable.FUEL_EFFICIENCY_LVL) + ", ";
                 sql += PlayerShipTable.RESOURCE_CAPACITY_LVL + " = " + data.get(PlayerShipTable.RESOURCE_CAPACITY_LVL) + ", ";
                 sql += PlayerShipTable.TRAVEL_SPEED_LVL + " = " + data.get(PlayerShipTable.TRAVEL_SPEED_LVL) + ", ";
-                sql += PlayerShipTable.MINING_SPEED_LVL + " = " + data.get(PlayerShipTable.MINING_SPEED_LVL) + " ";
+                sql += PlayerShipTable.MINING_SPEED_LVL + " = " + data.get(PlayerShipTable.MINING_SPEED_LVL) + ", ";
+                sql += PlayerShipTable.UPGRADE_LEVEL + " = " + data.get(PlayerShipTable.UPGRADE_LEVEL) + " ";
                 sql += "WHERE " + PLAYER_ID + " = " + playerId + " AND " + PlayerShipTable.SHIP_ID + " = " + objectId;
                 //Gdx.app.log("SQL", sql);
                 break;
@@ -251,7 +250,7 @@ public class DatabaseConnection {
                 break;
             case PlayerTable.TABLE_NAME:
                 sql += PlayerTable.LEVEL + " = " + data.get(PlayerTable.LEVEL) + ", ";
-                sql += PlayerTable.EXPERIENCE + " = " + data.get(PlayerTable.EXPERIENCE);
+                sql += PlayerTable.EXPERIENCE + " = " + data.get(PlayerTable.EXPERIENCE) + ", ";
                 sql += PlayerTable.MONEY + " = " + data.get(PlayerTable.MONEY);
                 sql += " WHERE " + PlayerTable.ID + " = " + data.get(PlayerTable.ID);
                 //Gdx.app.log("SQL", sql);

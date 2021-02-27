@@ -155,4 +155,13 @@ public class TravelPlan {
         }
     }
 
+    public static int getDistance(Planet p){
+        return (int) (p.getDistance() * BASE_DISTANCE);
+    }
+    public static int getTime(Ship s, Planet p) {
+        int travelTime = (int) (p.getDistance() * BASE_DISTANCE / s.getAttribute(TRAVEL_SPEED));
+        int miningTime = (int) (s.getAttribute(RESOURCE_CAPACITY) * BASE_MINING_TIME / s.getAttribute(MINING_SPEED));
+        return (int) 2 * travelTime + miningTime;
+    }
+
 }
