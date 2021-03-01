@@ -8,10 +8,8 @@ import com.badlogic.gdx.utils.Align;
 import java.util.ArrayList;
 
 import sk.grest.game.InterstellarMining;
-import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.OnStatsChangedListener;
-import sk.grest.game.entities.planet.Planet;
 
 public class PlanetStats {
 
@@ -29,13 +27,13 @@ public class PlanetStats {
     private InterstellarMining game;
     private OnStatsChangedListener listener;
 
-    public PlanetStats(InterstellarMining game, OnStatsChangedListener listener, PlanetSystem system, int currentPlanetIndex) {
+    public PlanetStats(InterstellarMining game, OnStatsChangedListener listener, ArrayList<Planet> planets, int currentPlanetIndex) {
 
         this.game = game;
         this.listener = listener;
 
         this.currentPlanetIndex = currentPlanetIndex;
-        this.planetSystem = system.getPlanets();
+        this.planetSystem = planets;
 
         //this.systemName = system.getName();
 
@@ -49,19 +47,8 @@ public class PlanetStats {
         this.currentPlanet = planetSystem.get(currentPlanetIndex);
 
     }
-    public PlanetStats(InterstellarMining game, OnStatsChangedListener listener, PlanetSystem system) {
-        this(game, listener, system, 0);
-    }
-
-    public void changePlanetSystem(PlanetSystem system){
-        changePlanetSystem(system, 0);
-    }
-    public void changePlanetSystem(PlanetSystem system, int currentPlanetIndex){
-        this.planetSystem = system.getPlanets();
-        //this.systemName = system.getName();
-        this.currentPlanetIndex = currentPlanetIndex;
-        resetTable();
-        currentPlanet = planetSystem.get(currentPlanetIndex);
+    public PlanetStats(InterstellarMining game, OnStatsChangedListener listener, ArrayList<Planet> planets) {
+        this(game, listener, planets, 0);
     }
 
     public void resetTable(){

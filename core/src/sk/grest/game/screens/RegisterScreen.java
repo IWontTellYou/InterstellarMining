@@ -220,9 +220,13 @@ public class RegisterScreen implements Screen, ConnectorEvent {
     public void onUpdateSuccess(int requestCode, String tableName) {
         Gdx.app.log("TABLE", tableName);
 
+        // TODO FIX REGISTRATION
+
         //Gdx.app.log("TABLE_UPDATE", "SHIPS: " + shipsInitialized + " / " + DEFAULT_SHIP_COUNT +
         //                                        " SYSTEMS: " + systemsInitialized + " / " + game.getPlanetSystems().size()+
         //                                        " RESOURCES: " + resourcesInitialized + "/" + game.getResources().size());
+
+        /*
 
         switch (tableName){
             case TABLE_NAME:
@@ -231,13 +235,13 @@ public class RegisterScreen implements Screen, ConnectorEvent {
             case PlayerShipTable.TABLE_NAME:
                 shipsInitialized++;
                 if(shipsInitialized == DEFAULT_SHIP_COUNT &&
-                    systemsInitialized == game.getPlanetSystems().size() &&
+                    //systemsInitialized == game.getPlanetSystems().size() &&
                     resourcesInitialized == game.getResources().size()){
 
                     game.onFetchSuccess(0, TABLE_NAME, newPlayerData);
                 }
                 break;
-            case PlayerPlanetSystemTable.TABLE_NAME:
+            case PlayerPlanetTable.TABLE_NAME:
                 systemsInitialized++;
                 if(systemsInitialized == game.getPlanetSystems().size() &&
                     resourcesInitialized == game.getResources().size() &&
@@ -256,6 +260,9 @@ public class RegisterScreen implements Screen, ConnectorEvent {
                 }
                 break;
         }
+
+
+         */
 
     }
     @Override

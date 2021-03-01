@@ -69,12 +69,12 @@ public class DatabaseConstants {
         public static final String PERCENTAGE_MINED = "percentage_mined";
     }
 
-    public static final class PlayerPlanetSystemTable {
-        public static final String TABLE_NAME = "player_planet_system";
+    public static final class PlayerPlanetTable {
+        public static final String TABLE_NAME = "player_planet";
         public static final String ID = "id";
         public static final String PLANET_SYSTEM_ID = "planet_system_id";
         public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
-        public static final String UNLOCKED = "unlocked";
+        public static final String FOUND = "found";
     }
 
     public static final class ResourceTable {
@@ -124,6 +124,16 @@ public class DatabaseConstants {
         public static final String RESOURCE_CAPACITY_LVL = "resource_capacity_lvl";
         public static final String FUEL_CAPACITY_LVL = "fuel_capacity_lvl";
         public static final String FUEL_EFFICIENCY_LVL = "fuel_efficiency_lvl";
+    }
+
+    public static final class PlayerObservatoryTable{
+        public static final String TABLE_NAME = "player_observatory";
+        public static final String ID = "id";
+        public static final String END_TIME = "end_time";
+        public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
+        public static final String PLANET_ID = "planet_id";
+        public static final String SPEED_LVL = "speed_lvl";
+        public static final String ACCURACY_LVL = "accuracy_lvl";
     }
 
     public static final class PlayerFactoryTable{

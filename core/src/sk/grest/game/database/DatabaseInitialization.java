@@ -3,15 +3,14 @@ package sk.grest.game.database;
 import com.badlogic.gdx.Gdx;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.Map;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.Achievement;
+import sk.grest.game.entities.Observatory;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
 import sk.grest.game.entities.planet.Planet;
-import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.resource.ResourceRarity;
@@ -34,23 +33,23 @@ public class DatabaseInitialization {
     public static final int TABLE_COUNT = 17;
 
     public static final int ACHIEVEMENT_TABLE = 0;
-    public static final int PLANET_SYSTEM_TABLE = 1;
-    public static final int PLANET_TABLE = 2;
-    public static final int PLANET_RESOURCE_TABLE = 3;
-    public static final int SHIP_TABLE = 4;
-    public static final int RESEARCH_TABLE = 5;
-    public static final int RESEARCH_REQUIREMENT_TABLE = 6;
-    public static final int RESOURCE_TABLE = 7;
-    public static final int FACTORY_RECIPE = 8;
-    public static final int UPGRADE_RECIPE = 9;
+    public static final int PLANET_TABLE = 1;
+    public static final int PLANET_RESOURCE_TABLE = 2;
+    public static final int SHIP_TABLE = 3;
+    public static final int RESEARCH_TABLE = 4;
+    public static final int RESEARCH_REQUIREMENT_TABLE = 5;
+    public static final int RESOURCE_TABLE = 6;
+    public static final int FACTORY_RECIPE = 7;
+    public static final int UPGRADE_RECIPE = 8;
 
-    public static final int PLAYER_TABLE = 10;
-    public static final int PLAYER_ACHIEVEMENT_TABLE = 11;
-    public static final int PLAYER_RESEARCH_TABLE = 12;
-    public static final int PLAYER_RESOURCE_TABLE = 13;
-    public static final int PLAYER_PLANET_SYSTEM_TABLE = 14;
-    public static final int PLAYER_SHIP_TABLE = 15;
-    public static final int PLAYER_FACTORY = 16;
+    public static final int PLAYER_TABLE = 9;
+    public static final int PLAYER_ACHIEVEMENT_TABLE = 10;
+    public static final int PLAYER_RESEARCH_TABLE = 11;
+    public static final int PLAYER_RESOURCE_TABLE = 12;
+    public static final int PLAYER_PLANET_SYSTEM_TABLE = 13;
+    public static final int PLAYER_SHIP_TABLE = 14;
+    public static final int PLAYER_FACTORY = 15;
+    public static final int PLAYER_OBSERVATORY = 16;
 
     private InterstellarMining game;
     private boolean[] tables;
@@ -68,7 +67,7 @@ public class DatabaseInitialization {
     }
 
     public boolean isRegularDatabaseInitialized(){
-        for (int i = 0; i < 10; i++) {
+        for (int i = 0; i < 9; i++) {
             if(!tables[i]) return false;
         }
         return true;
@@ -82,22 +81,18 @@ public class DatabaseInitialization {
 
     public void initializePlanetTable(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
-            for (PlanetSystem pS : game.getPlanetSystems()) {
-                Planet planet = new Planet(
-                        (int) data.get(PlanetTable.ID),
-                        (String) data.get(PlanetTable.NAME),
-                        (String) data.get(PlanetTable.ASSET_ID),
-                        (int) data.get(PlanetTable.DISTANCE),
-                        (boolean) data.get(PlanetTable.HABITABLE),
-                        (String) data.get(PlanetTable.INFO),
-                        new ArrayList<Resource>()
-                );
-                game.getPlanets().add(planet);
-
-                if(pS.getId() == (Integer) data.get(PlanetTable.PLANET_SYSTEM_ID))
-                    pS.getPlanets().add(planet);
-            }
+            Planet planet = new Planet(
+                    (int) data.get(PlanetTable.ID),
+                    (String) data.get(PlanetTable.NAME),
+                    (String) data.get(PlanetTable.ASSET_ID),
+                    (int) data.get(PlanetTable.DISTANCE),
+                    (boolean) data.get(PlanetTable.HABITABLE),
+                    (String) data.get(PlanetTable.INFO),
+                    new ArrayList<Resource>()
+            );
+            game.getPlanets().add(planet);
         }
+
         Gdx.app.log(PlanetTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLANET_TABLE] = true;
     }
@@ -114,22 +109,6 @@ public class DatabaseInitialization {
 
         Gdx.app.log(PlanetResourceTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLANET_RESOURCE_TABLE] = true;
-    }
-    public void initializePlanetSystemTable(ArrayList<Map<String, Object>> tableData){
-        for (Map<String, Object> data : tableData) {
-            PlanetSystem system = new PlanetSystem(
-                    (Integer) data.get(PlanetSystemTable.ID),
-                    (String) data.get(PlanetSystemTable.STAR_NAME),
-                    (String) data.get(PlanetSystemTable.NAME),
-                    (Integer) data.get(PlanetSystemTable.UNLOCK_LVL),
-                    false,
-                    new ArrayList<Planet>()
-            );
-            game.getPlanetSystems().add(system);
-        }
-
-        Gdx.app.log(PlanetSystemTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[PLANET_SYSTEM_TABLE] = true;
     }
     public void initializeResearchTable(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
@@ -279,24 +258,13 @@ public class DatabaseInitialization {
         Gdx.app.log(PlayerTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_TABLE] = true;
     }
-    public void initializePlayerPlanetSystemTable(ArrayList<Map<String, Object>> tableData){
+    public void initializePlayerPlanetTable(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
-            PlanetSystem pS = game.getPlanetSystemByID((Integer) data.get(PlayerPlanetSystemTable.PLANET_SYSTEM_ID));
-
-            PlanetSystem system = new PlanetSystem(
-                    pS.getId(),
-                    pS.getStarName(),
-                    pS.getName(),
-                    pS.getUnlockLvl(),
-                    (Boolean) data.get(PlayerPlanetSystemTable.UNLOCKED),
-                    pS.getPlanets()
-            );
-
-            game.getPlayer().getSystemsDiscovered().add(system);
-
+            Planet p = game.getPlanetByID((Integer) data.get(PlayerPlanetTable.ID));
+            p.setFound((boolean) data.get(PlayerPlanetTable.FOUND));
         }
 
-        Gdx.app.log(PlayerPlanetSystemTable.TABLE_NAME, "INITIALIZATION DONE!");
+        Gdx.app.log(PlayerPlanetTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_PLANET_SYSTEM_TABLE] = true;
 
     }
@@ -400,4 +368,27 @@ public class DatabaseInitialization {
         Gdx.app.log(PlayerFactoryTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_FACTORY] = true;
     }
+    public void initializePlayerObservatory(ArrayList<Map<String, Object>> tableData) {
+        for (Map<String, Object> data : tableData) {
+            Observatory observatory = new Observatory(
+                    (Integer) data.get(PlayerObservatoryTable.SPEED_LVL),
+                    (Integer) data.get(PlayerObservatoryTable.ACCURACY_LVL)
+            );
+
+            if (data.get(PlayerObservatoryTable.PLANET_ID) != null) {
+                int planet_id = (Integer) data.get(PlayerObservatoryTable.PLANET_ID);
+                observatory.setPlanet(game.getPlanetByID(planet_id));
+            } else {
+                observatory.setPlanet(null);
+                String time = (String) data.get(PlayerObservatoryTable.END_TIME);
+                observatory.setSearch((time == null) ? 0 : Long.parseLong(time));
+
+                game.getPlayer().setObservatory(observatory);
+            }
+
+            Gdx.app.log(PlayerObservatoryTable.TABLE_NAME, "INITIALIZATION DONE!");
+            tables[PLAYER_OBSERVATORY] = true;
+        }
+    }
+
 }

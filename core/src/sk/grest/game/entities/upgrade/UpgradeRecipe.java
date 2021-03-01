@@ -4,10 +4,12 @@ import java.util.ArrayList;
 
 import sk.grest.game.entities.resource.Resource;
 
-public class UpgradeRecipe {
+public class UpgradeRecipe implements Comparable<UpgradeRecipe> {
 
     public static final int SHIP_UPGRADE = 1;
-    public static final int OBSERVATORY_UPGRADE = 2;
+
+    public static final int OBSERVATORY_SPEED = 2;
+    public static final int OBSERVATORY_ACCURACY = 3;
 
     private int level;
     private ArrayList<Resource> resourcesNeeded;
@@ -33,5 +35,10 @@ public class UpgradeRecipe {
         Resource resource = Resource.clone(r);
         resource.setAmount(amount);
         resourcesNeeded.add(resource);
+    }
+
+    @Override
+    public int compareTo(UpgradeRecipe recipe) {
+        return Integer.compare(this.getLevel(), recipe.getLevel());
     }
 }

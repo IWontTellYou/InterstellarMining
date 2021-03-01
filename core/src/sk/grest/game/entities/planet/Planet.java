@@ -9,7 +9,7 @@ public class Planet {
     private int ID;
     private String name;
     private int distance;
-    private boolean habitable;
+    private boolean found;
     private String info;
     private ArrayList<Resource> resources;
     private String assetId;
@@ -19,7 +19,6 @@ public class Planet {
         this.name = name;
         this.assetId = assetId;
         this.distance = distance;
-        this.habitable = habitable;
         this.info = info;
         this.resources = resources;
     }
@@ -27,23 +26,21 @@ public class Planet {
     public int getID() {
         return ID;
     }
-
     public String getName() {
         return name;
     }
-
     public String getAssetId() {
         return assetId;
     }
-
     public int getDistance() {
         return distance;
     }
-
-    public boolean isHabitable() {
-        return habitable;
+    public boolean isFound() {
+        return found;
     }
-
+    public void setFound(boolean found){
+        this.found = found;
+    }
     public String getInfo() {
         return info;
     }

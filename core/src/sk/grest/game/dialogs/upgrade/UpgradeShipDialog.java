@@ -33,13 +33,12 @@ public class UpgradeShipDialog extends CustomDialog {
 
     private UpgradeTable upgradeLayout;
     private UpgradeResourceView upgradeRecipe;
-    private ArrayList<UpgradeRecipe> recipes;
+    private UpgradeRecipe[] recipes;
 
-    public UpgradeShipDialog(String title, InterstellarMining game, final Player player, final Ship ship, ArrayList<UpgradeRecipe> recipes) {
+    public UpgradeShipDialog(String title, InterstellarMining game, final Player player, final Ship ship, UpgradeRecipe[] recipes) {
         super(title, game.getUISkin());
 
         this.ship = ship;
-
         this.recipes = recipes;
 
         Image shipImage = new Image();
@@ -52,7 +51,7 @@ public class UpgradeShipDialog extends CustomDialog {
                 .height(ScreenConstants.DEFAULT_DIALOG_HEIGHT/2f)
                 .row();
 
-        upgradeRecipe = new UpgradeResourceView(game, recipes, ship, player);
+        upgradeRecipe = new UpgradeResourceView(game, recipes, ship, player, 0);
         getContentTable().add(upgradeRecipe)
                 .width(ScreenConstants.DEFAULT_DIALOG_WIDTH)
                 .height(ScreenConstants.DEFAULT_ACTOR_HEIGHT)

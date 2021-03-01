@@ -131,7 +131,7 @@ public class UpgradeTable extends Table {
 
     public boolean increaseAttribute(Ship s, Attributes.AttributeType type){
         Attributes attributes = s.getAttributes();
-        switch (s.getUpgradeLevel()){
+        switch (s.getLevel(0)){
             case 0:
                 return attributes.getAttribute(type) < 20;
             case 1:

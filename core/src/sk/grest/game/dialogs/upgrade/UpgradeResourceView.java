@@ -14,10 +14,12 @@ import sk.grest.game.InterstellarMining;
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.controls.Button;
 import sk.grest.game.dialogs.factory.FactoryQueue;
+import sk.grest.game.entities.Observatory;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
+import sk.grest.game.entities.upgrade.Upgradable;
 import sk.grest.game.entities.upgrade.UpgradeRecipe;
 
 import static sk.grest.game.constants.ScreenConstants.DEFAULT_PADDING;
@@ -28,25 +30,26 @@ public class UpgradeResourceView extends Table {
     public static final int DEFAULT_ITEM_SIZE = 125;
 
     private InterstellarMining game;
-    private Ship ship;
+    private Upgradable upgradable;
     private Player player;
-    private ArrayList<UpgradeRecipe> recipes;
+    private UpgradeRecipe[] recipes;
+    private int type;
 
-    public UpgradeResourceView(final InterstellarMining game, final ArrayList<UpgradeRecipe> recipes, final Ship ship, final Player player){
+    public UpgradeResourceView(final InterstellarMining game, final UpgradeRecipe[] recipes,
+                               final Upgradable upgradable, final Player player, int type){
         super(game.getUISkin());
         this.game = game;
-        this.ship = ship;
+        this.upgradable = upgradable;
         this.player = player;
         this.recipes = recipes;
-
+        this.type = type;
         resetView(getRecipe());
-
     }
 
     private void resetView(final UpgradeRecipe recipe){
         clearChildren();
 
-        if(recipe == null && ship.getUpgradeLevel() == 4){
+        if(recipe == null && upgradable.getLevel(type) == upgradable.getMaxLevel(type)){
 
             Image image = new Image(game.getSpriteSkin(), "max_level_sign");
             add(image)
@@ -80,7 +83,7 @@ public class UpgradeResourceView extends Table {
                 i++;
             }
 
-            Button upgrade = new Button(game.getSpriteSkin(), "upgrade", null);
+            final Button upgrade = new Button(game.getSpriteSkin(), "upgrade", null);
             upgrade.getButton().addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -94,13 +97,17 @@ public class UpgradeResourceView extends Table {
                         game.getHandler().updatePlayerResourceTable(r.getID());
                     }
 
-                    ship.upgrade();
-                    Gdx.app.log("SHIP", ship.getUpgradeLevel()+"");
+                    upgradable.upgrade(type);
 
-                    game.getHandler().updatePlayerShip(game.getPlayer().getID(), ship, game);
+                    try{
+                        Ship ship = (Ship) upgradable;
+                        game.getHandler().updatePlayerShip(game.getPlayer().getID(), ship, game);
+                    }catch (Exception e){
+                        Observatory observatory = (Observatory) upgradable;
+                        game.getHandler().updatePlayerObservatory(game.getPlayer().getID(), observatory, game);
+                    }
+
                     game.getHandler().updatePlayer();
-
-
                     resetView(getRecipe());
 
                 }
@@ -114,11 +121,10 @@ public class UpgradeResourceView extends Table {
     }
 
     public UpgradeRecipe getRecipe(){
-        for (UpgradeRecipe recipe : recipes) {
-            if(ship.getUpgradeLevel() == recipe.getLevel()-1)
-                return recipe;
-        }
-        return null;
+        if(upgradable.getLevel(type) < upgradable.getMaxLevel(type))
+            return recipes[upgradable.getLevel(type)];
+        else
+            return null;
     }
 
 }

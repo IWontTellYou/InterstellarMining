@@ -255,6 +255,13 @@ public class DatabaseConnection {
                 sql += " WHERE " + PlayerTable.ID + " = " + data.get(PlayerTable.ID);
                 //Gdx.app.log("SQL", sql);
                 break;
+            case PlayerObservatoryTable.TABLE_NAME:
+                sql += PlayerObservatoryTable.ACCURACY_LVL + " = " + data.get(PlayerObservatoryTable.ACCURACY_LVL) + ", ";
+                sql += PlayerObservatoryTable.SPEED_LVL + " = " + data.get(PlayerObservatoryTable.SPEED_LVL) + ", ";
+                sql += PlayerObservatoryTable.PLANET_ID + " = " + data.get(PlayerObservatoryTable.PLANET_ID) + " ";
+                sql += " WHERE " + PLAYER_ID + " = " + playerId;
+                //Gdx.app.log("SQL", sql);
+                break;
         }
 
         return sql;

@@ -6,10 +6,12 @@ import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureAtlas;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Plane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Date;
 import java.util.Map;
 
@@ -17,7 +19,6 @@ import sk.grest.game.database.DatabaseHandler;
 import sk.grest.game.database.DatabaseInitialization;
 import sk.grest.game.entities.Achievement;
 import sk.grest.game.entities.planet.Planet;
-import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.Research;
 import sk.grest.game.entities.resource.FactoryItem;
@@ -66,7 +67,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 	private ArrayList<Ship> shipsShop;
 	private ArrayList<Resource> resources;
-	private ArrayList<PlanetSystem> planetSystems;
 	private ArrayList<Planet> planets;
 	private ArrayList<Research> researches;
 	private ArrayList<Achievement> achievements;
@@ -83,7 +83,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 		resources = new ArrayList<>();
 		shipsShop = new ArrayList<>();
-		planetSystems = new ArrayList<>();
 		researches = new ArrayList<>();
 		planets = new ArrayList<>();
 		achievements = new ArrayList<>();
@@ -96,7 +95,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		renderer.setAutoShapeType(true);
 		batch = new SpriteBatch();
 
-		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprites.atlas"));
+		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprite.atlas"));
 		spriteSkin = new Skin(area);
 
 		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiSkin.atlas"));
@@ -156,9 +155,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	public ArrayList<Ship> getShipsShop() {
 		return shipsShop;
 	}
-	public ArrayList<PlanetSystem> getPlanetSystems() {
-		return planetSystems;
-	}
 	public ArrayList<Research> getResearches() {
 		return researches;
 	}
@@ -167,6 +163,22 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	}
 	public ArrayList<Planet> getPlanets() {
 		return planets;
+	}
+	public ArrayList<Planet> getPlanetsNotFound(){
+		ArrayList<Planet> planetsNotFound = new ArrayList<>();
+		for (Planet p : planets) {
+			if (p.isFound())
+				planetsNotFound.add(p);
+		}
+		return planetsNotFound;
+	}
+	public ArrayList<Planet> getSolarSystem(){
+		ArrayList<Planet> solarSystem = new ArrayList<>();
+		for (Planet p : planets) {
+			if(p.getID() >= 1 && p.getID() <= 8)
+				solarSystem.add(p);
+		}
+		return solarSystem;
 	}
 	public ArrayList<Achievement> getAchievements() {
 		return achievements;
@@ -201,13 +213,22 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	public ArrayList<UpgradeRecipe> getUpgradeRecipes() {
 		return upgradeRecipes;
 	}
-	public ArrayList<UpgradeRecipe> getUpgradeRecipesByType(int type) {
+	public UpgradeRecipe[] getUpgradeRecipesByType(int type) {
 		ArrayList<UpgradeRecipe> recipesByType = new ArrayList<>();
 		for (UpgradeRecipe recipe : upgradeRecipes) {
 			if(recipe.getType() == type)
 				recipesByType.add(recipe);
 		}
-		return recipesByType;
+
+		Collections.sort(recipesByType);
+		UpgradeRecipe[] recipes = new UpgradeRecipe[recipesByType.size()];
+		int i = 0;
+		for (UpgradeRecipe recipe : recipesByType) {
+			recipes[i] = recipe;
+			i++;
+		}
+
+		return recipes;
 	}
 
 	// Get by ID methods
@@ -223,13 +244,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		for (Planet p : planets){
 			if (p.getID() == id)
 				return p;
-		}
-		return null;
-	}
-	public PlanetSystem getPlanetSystemByID(int id){
-		for (PlanetSystem pS : planetSystems){
-			if (pS.getId() == id)
-				return pS;
 		}
 		return null;
 	}
@@ -279,65 +293,60 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		return null;
 	}
 
-	// DatabaseConnection methods
+	// DATABASE CONNECTION METHODS
 	@Override
 	public void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData) {
 		switch (tableName){
-			// 1ST
-			case PlanetSystemTable.TABLE_NAME:
-				dataInit.initializePlanetSystemTable(tableData);
-				handler.getTable(PlanetTable.TABLE_NAME, this);
-				break;
 
-			// 2ND
+			// 1ST
 			case PlanetTable.TABLE_NAME:
 				dataInit.initializePlanetTable(tableData);
 				handler.getTable(ResourceTable.TABLE_NAME,this);
 				break;
 
-			// 3RD
+			// 2ND
 			case ResourceTable.TABLE_NAME:
 				dataInit.initializeResourceTable(tableData);
 				handler.getTable(PlanetResourceTable.TABLE_NAME, this);
 				break;
 
-			// 4TH
+			// 3RD
 			case PlanetResourceTable.TABLE_NAME:
 				dataInit.initializePlanetResourceTable(tableData);
 				handler.getTable(ResearchTable.TABLE_NAME, this);
 				break;
 
-			// 5TH
+			// 4TH
 			case ResearchTable.TABLE_NAME:
 				dataInit.initializeResearchTable(tableData);
 				handler.getTable(ResearchRequirementTable.TABLE_NAME,this);
 				break;
 
-			// 6TH
+			// 5TH
 			case ResearchRequirementTable.TABLE_NAME:
 				dataInit.initializeResearchRequirementTable(tableData);
 				handler.getTable(ShipTable.TABLE_NAME, this);
 				break;
 
-			// 7TH
+			// 6TH
 			case ShipTable.TABLE_NAME:
 				dataInit.initializeShipTable(tableData);
 				handler.getTable(AchievementTable.TABLE_NAME, this);
 				break;
 
-			// 8TH
+			// 7TH
 			case AchievementTable.TABLE_NAME:
 				dataInit.initializeAchievementTable(tableData);
 				handler.getTable(UpgradeRecipeTable.TABLE_NAME, this);
 				break;
 
-			// 9TH
+			// 8TH
 			case UpgradeRecipeTable.TABLE_NAME:
 				dataInit.initializeUpgradeRecipe(tableData);
 				handler.getTable(FactoryRecipeTable.TABLE_NAME, this);
 				break;
 
-			// 10TH
+			// 9TH
 			case FactoryRecipeTable.TABLE_NAME:
 				dataInit.initializeFactoryRecipe(tableData);
 				break;
@@ -366,12 +375,12 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 4TH
 			case PlayerResourceTable.TABLE_NAME:
 				dataInit.initializePlayerResourceTable(tableData);
-				handler.getTableWherePlayer(PlayerPlanetSystemTable.TABLE_NAME, player.getID(), this);
+				handler.getTableWherePlayer(PlayerPlanetTable.TABLE_NAME, player.getID(), this);
 				break;
 
 			// 5TH
-			case PlayerPlanetSystemTable.TABLE_NAME:
-				dataInit.initializePlayerPlanetSystemTable(tableData);
+			case PlayerPlanetTable.TABLE_NAME:
+				dataInit.initializePlayerPlanetTable(tableData);
 				handler.getTable(PlayerAchievementTable.TABLE_NAME, this);
 				break;
 
@@ -384,21 +393,24 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 7TH
 			case PlayerFactoryTable.TABLE_NAME:
 				dataInit.initializePlayerFactory(tableData);
+				handler.getTableWherePlayer(PlayerObservatoryTable.TABLE_NAME, player.getID(), this);
+				break;
+
+			case PlayerObservatoryTable.TABLE_NAME:
+				dataInit.initializePlayerObservatory(tableData);
 				break;
 		}
 	}
 	@Override
 	public void onUpdateSuccess(int requestCode, String tableName) {
 	}
-
 	@Override
 	public void onDeleteSuccess(int requestCode, String tableName) {
 	}
-
 	@Override
 	public void onConnect() {
 		Gdx.app.log("DATABASE", "Database successfully connected!");
-		handler.getTable(PlanetSystemTable.TABLE_NAME, this);
+		handler.getTable(PlanetTable.TABLE_NAME, this);
 	}
 	@Override
 	public void onConnectionFailed() {
@@ -416,7 +428,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	}
 
 	// DATABASE CHANGE LISTENER METHODS
-
 	@Override
 	public void onShipDataChanged(Ship ship) {
 		handler.updatePlayerShip(player.getID(), ship, this);

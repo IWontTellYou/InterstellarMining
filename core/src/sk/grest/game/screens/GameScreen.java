@@ -15,6 +15,7 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.dialogs.ObservatoryDialog;
 import sk.grest.game.dialogs.factory.FactoryDialog;
 import sk.grest.game.dialogs.research.ResearchDialog;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
@@ -22,7 +23,6 @@ import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.ShipsShopDialog;
 import sk.grest.game.dialogs.TravelSettingDialog;
 import sk.grest.game.dialogs.upgrade.UpgradeShipDialog;
-import sk.grest.game.entities.planet.PlanetSystem;
 import sk.grest.game.listeners.OnStatsChangedListener;
 import sk.grest.game.controls.Button;
 import sk.grest.game.constants.ScreenConstants;
@@ -57,6 +57,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private ShipsShopDialog shipsShopDialog;
     private ResearchDialog researchDialog;
     private FactoryDialog factoryDialog;
+    private ObservatoryDialog observatoryDialog;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -76,7 +77,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         table.setFillParent(true);
         table.setSize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 
-        planetStats = new PlanetStats(game, this, game.getPlanetSystemByID(1));
+        planetStats = new PlanetStats(game, this, game.getSolarSystem());
         // planetStats.getTable().setVisible(false);
 
         base = game.getPlanetByName(BASE_PLANET_NAME);
@@ -186,7 +187,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             public void clicked(InputEvent event, float x, float y) {
                 shipsShopDialog = new ShipsShopDialog("", game.getUISkin(), game);
                 shipsShopDialog.show(stage);
-                Gdx.app.log("STATE", 4 + " " + shipsShopDialog.isVisible());
             }
         });
 
@@ -194,6 +194,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         achievementsButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+                    observatoryDialog = new ObservatoryDialog("", game.getUISkin(), game);
+                    observatoryDialog.show(stage);
             }
         });
 
@@ -477,10 +479,5 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     @Override
     public void onPlanetChanged(Planet planet) {
         planetBtn.setImageUp(planet.getAssetId());
-    }
-
-    @Override
-    public void onPlanetSystemChanged(PlanetSystem system) {
-        // planetName.setText(system.getName());
     }
 }

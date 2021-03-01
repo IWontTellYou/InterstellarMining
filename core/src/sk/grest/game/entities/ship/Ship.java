@@ -5,12 +5,15 @@ import com.badlogic.gdx.Gdx;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Attributes.AttributeType;
+import sk.grest.game.entities.upgrade.Upgradable;
 import sk.grest.game.listeners.DatabaseChangeListener;
 
 import static sk.grest.game.entities.ship.ShipState.AT_THE_BASE;
 import static sk.grest.game.entities.ship.ShipState.TRAVELLING_BACK;
 
-public class Ship {
+public class Ship implements Upgradable {
+
+    private static final int MAX_LEVEL = 4;
 
     private int id;
     private String name;
@@ -152,10 +155,6 @@ public class Ship {
         return travelPlan;
     }
 
-    public int getUpgradeLevel() {
-        return upgradeLevel;
-    }
-
     public void update(float delta){
         if(travelPlan != null) {
             travelPlan.update(delta);
@@ -171,13 +170,24 @@ public class Ship {
         }
     }
 
-    public void upgrade(){
+    @Override
+    public String toString() {
+        return name + " " + "(Level " + (int) upgradeLevel + ")";
+    }
+
+    @Override
+    public void upgrade(int type) {
         if(upgradeLevel < 4)
             upgradeLevel++;
     }
 
     @Override
-    public String toString() {
-        return name + " " + "(Level " + (int) upgradeLevel + ")";
+    public int getLevel(int type) {
+        return upgradeLevel;
+    }
+
+    @Override
+    public int getMaxLevel(int type) {
+        return MAX_LEVEL;
     }
 }

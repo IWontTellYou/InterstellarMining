@@ -1,14 +1,11 @@
 package sk.grest.game.entities;
 
-import com.badlogic.gdx.Gdx;
-
 import java.util.ArrayList;
-import java.util.Collections;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.dialogs.factory.FactoryQueue;
-import sk.grest.game.entities.planet.PlanetSystem;
+import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Ship;
@@ -29,11 +26,11 @@ public class Player {
     private int experience;
 
     private ArrayList<Ship> ships;
-    private ArrayList<PlanetSystem> systemsDiscovered;
     private ArrayList<Resource> resourcesAtBase;
     private ArrayList<Achievement> achievements;
     private ArrayList<Research> researches;
 
+    private Observatory observatory;
     private ArrayList<FactoryItem> queue;
 
     private InterstellarMining game;
@@ -49,7 +46,6 @@ public class Player {
         this.money = money;
 
         ships = new ArrayList<>();
-        systemsDiscovered = new ArrayList<>();
         resourcesAtBase = new ArrayList<>();
         researches = new ArrayList<>();
         achievements = new ArrayList<>();
@@ -77,9 +73,6 @@ public class Player {
         return null;
     }
 
-    public ArrayList<PlanetSystem> getSystemsDiscovered() {
-        return systemsDiscovered;
-    }
     public ArrayList<Research> getResearches(){
         return researches;
     }
@@ -108,20 +101,25 @@ public class Player {
         return null;
     }
 
+    // OBSERVATORY
+    public void setObservatory(Observatory observatory){
+        this.observatory = observatory;
+    }
+    public Observatory getObservatory(){
+        return observatory;
+    }
+
     // QUEUE
     public ArrayList<FactoryItem> getQueue(){
-        Gdx.app.log("SIZE", queue.size()+" items");
         return queue;
     }
     public void addToQueue(FactoryItem item){
         if(queue.size() < FactoryQueue.MAX_ITEMS)
             queue.add(item);
-        Gdx.app.log("SIZE", item.getResource().getName() + " added at " + item.getStartTime());
     }
     public void clearQueue(){
         queue.clear();
     }
-    public void reverseQueue() {Collections.reverse(queue);}
 
     // MONEY
     public long getMoney() { return money;}
@@ -153,7 +151,6 @@ public class Player {
     public int getExperience() {
         return experience;
     }
-
 
     @Override
     public String toString() {
