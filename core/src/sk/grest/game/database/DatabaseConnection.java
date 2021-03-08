@@ -258,6 +258,7 @@ public class DatabaseConnection {
             case PlayerObservatoryTable.TABLE_NAME:
                 sql += PlayerObservatoryTable.ACCURACY_LVL + " = " + data.get(PlayerObservatoryTable.ACCURACY_LVL) + ", ";
                 sql += PlayerObservatoryTable.SPEED_LVL + " = " + data.get(PlayerObservatoryTable.SPEED_LVL) + ", ";
+                sql += PlayerObservatoryTable.END_TIME + " = " + data.get(PlayerObservatoryTable.END_TIME) + ", ";
                 sql += PlayerObservatoryTable.PLANET_ID + " = " + data.get(PlayerObservatoryTable.PLANET_ID) + " ";
                 sql += " WHERE " + PLAYER_ID + " = " + playerId;
                 //Gdx.app.log("SQL", sql);

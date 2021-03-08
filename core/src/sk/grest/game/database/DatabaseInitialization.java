@@ -382,9 +382,9 @@ public class DatabaseInitialization {
                 observatory.setPlanet(null);
                 String time = (String) data.get(PlayerObservatoryTable.END_TIME);
                 observatory.setSearch((time == null) ? 0 : Long.parseLong(time));
-
-                game.getPlayer().setObservatory(observatory);
             }
+
+            game.getPlayer().setObservatory(observatory);
 
             Gdx.app.log(PlayerObservatoryTable.TABLE_NAME, "INITIALIZATION DONE!");
             tables[PLAYER_OBSERVATORY] = true;

@@ -35,6 +35,8 @@ public class UpgradeResourceView extends Table {
     private UpgradeRecipe[] recipes;
     private int type;
 
+    private Button upgrade;
+
     public UpgradeResourceView(final InterstellarMining game, final UpgradeRecipe[] recipes,
                                final Upgradable upgradable, final Player player, int type){
         super(game.getUISkin());
@@ -83,7 +85,7 @@ public class UpgradeResourceView extends Table {
                 i++;
             }
 
-            final Button upgrade = new Button(game.getSpriteSkin(), "upgrade", null);
+            upgrade = new Button(game.getSpriteSkin(), "upgrade", null);
             upgrade.getButton().addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
@@ -118,6 +120,10 @@ public class UpgradeResourceView extends Table {
 
         }
 
+    }
+
+    public Button getUpgradeButton() {
+        return upgrade;
     }
 
     public UpgradeRecipe getRecipe(){

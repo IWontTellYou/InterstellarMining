@@ -24,7 +24,7 @@ public class Button {
         this.style = new ImageButtonStyle();
         style.imageUp = skin.getDrawable(imageUp);
         if(imageOver != null)
-        style.imageOver = skin.getDrawable(imageOver);
+            style.imageOver = skin.getDrawable(imageOver);
 
         this.btn = new ImageButton(style);
         btn.setSize(Gdx.graphics.getWidth() / 5f, Gdx.graphics.getHeight() / 8f);

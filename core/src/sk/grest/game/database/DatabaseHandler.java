@@ -90,15 +90,31 @@ public class DatabaseHandler {
             connection.addRow(requestCode++, PlayerResourceTable.TABLE_NAME, resourceData, listener);
         }
 
-        /*
-        for (int i = 0; i < game.getPlanetSystems().size(); i++) {
-            Map<String, Object> planetSystemData = new HashMap<>();
-            planetSystemData.put(PlayerPlanetTable.PLAYER_ID, playerId);
-            planetSystemData.put(PlayerPlanetTable.PLANET_SYSTEM_ID, i+1);
-            planetSystemData.put(PlayerPlanetTable.FOUND, i+1 == 1);
-            connection.addRow(requestCode++, PlayerPlanetTable.TABLE_NAME, planetSystemData, listener);
+        // PLANETS FOUND
+        for (int i = 0; i < 8 ; i++) {
+            Map<String, Object> resourceData = new HashMap<>();
+            resourceData.put(PLAYER_ID, playerId);
+            resourceData.put(PlayerPlanetTable.ID, i+1);
+            resourceData.put(PlayerPlanetTable.FOUND, true);
+            connection.addRow(requestCode++, PlayerPlanetTable.TABLE_NAME, resourceData, listener);
         }
-        */
+
+        // Solar System
+        for (int i = 0; i < game.getSolarSystem().size() ; i++) {
+            Map<String, Object> resourceData = new HashMap<>();
+            resourceData.put(PLAYER_ID, playerId);
+            resourceData.put(PlayerPlanetTable.ID, i+1);
+            resourceData.put(PlayerPlanetTable.FOUND, true);
+            connection.addRow(requestCode++, PlayerPlanetTable.TABLE_NAME, resourceData, listener);
+        }
+
+        Map<String, Object> observatory = new HashMap<>();
+        observatory.put(PLAYER_ID, playerId);
+        observatory.put(PlayerObservatoryTable.PLANET_ID, null);
+        observatory.put(PlayerObservatoryTable.END_TIME, null);
+        observatory.put(PlayerObservatoryTable.SPEED_LVL, 0);
+        observatory.put(PlayerObservatoryTable.ACCURACY_LVL, 0);
+        connection.addRow(requestCode++, PlayerObservatoryTable.TABLE_NAME, observatory, listener);
 
         Map<String, Object> basicShip = new HashMap<>();
         basicShip.put(PLAYER_ID, playerId);
@@ -148,6 +164,7 @@ public class DatabaseHandler {
         data.put(PlayerObservatoryTable.ACCURACY_LVL, observatory.getLevel(Observatory.OBSERVATORY_ACCURACY));
         data.put(PlayerObservatoryTable.SPEED_LVL, observatory.getLevel(Observatory.OBSERVATORY_SPEED));
         data.put(PlayerObservatoryTable.PLANET_ID, (observatory.getPlanet() == null) ? null : observatory.getPlanet().getID());
+        data.put(PlayerObservatoryTable.END_TIME, observatory.getEndTime());
         connection.updateRow(requestCode++, playerId, 0, PlayerObservatoryTable.TABLE_NAME, data, listener);
     }
 

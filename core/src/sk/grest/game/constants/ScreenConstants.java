@@ -35,8 +35,11 @@ public class ScreenConstants {
     public static final Vector2 MIDDLE = new Vector2(Gdx.graphics.getWidth() / 2f, Gdx.graphics.getHeight() / 2f);
 
     public static final float DEFAULT_PADDING = 5f;
+
     public static final float DEFAULT_ACTOR_HEIGHT = 80f;
     public static final float DEFAULT_ACTOR_WIDTH = 200f;
+
+    public static final float DEFAULT_BUTTON_SIZE = 100f;
 
     public static final float DEFAULT_DIALOG_WIDTH = Gdx.graphics.getWidth()/1.75f;
     public static final float DEFAULT_DIALOG_HEIGHT = Gdx.graphics.getHeight()/1.5f;
