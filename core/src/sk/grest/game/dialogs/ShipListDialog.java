@@ -5,6 +5,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
@@ -16,8 +17,10 @@ import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.entities.upgrade.UpgradeRecipe;
 import sk.grest.game.listeners.ItemOpenedListener;
+import sk.grest.game.other.ItemTooltip;
 import sk.grest.game.other.SelectionRow;
 import sk.grest.game.other.SelectionTable;
+import sk.grest.game.other.TooltipBuilder;
 
 public class ShipListDialog extends CustomDialog implements ItemOpenedListener<Ship> {
 
@@ -27,8 +30,15 @@ public class ShipListDialog extends CustomDialog implements ItemOpenedListener<S
 
     private InterstellarMining game;
 
+    private TooltipManager manager;
+    private TooltipBuilder builder;
+
     public ShipListDialog(String title, Skin skin, InterstellarMining game) {
         super(title, skin);
+
+        manager = TooltipManager.getInstance();
+        manager.instant();
+        builder = TooltipBuilder.getInstance();
 
         this.game = game;
 
@@ -87,6 +97,7 @@ public class ShipListDialog extends CustomDialog implements ItemOpenedListener<S
         for (Ship s : ships) {
 
             SelectionRow<Ship> tableRow = new SelectionRow<>();
+            tableRow.addListener(new ItemTooltip(builder.buildTooltipContent(s)));
             tableRow.setItem(s);
             tableRow.addListener(shipList);
             tableRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.LIGHT_GRAY);

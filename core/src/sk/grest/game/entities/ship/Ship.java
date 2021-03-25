@@ -156,13 +156,10 @@ public class Ship implements Upgradable {
     }
 
     public void update(float delta){
-        if(travelPlan != null) {
+        if(travelPlan != null && travelPlan.isSet()) {
             travelPlan.update(delta);
-            if(travelPlan.getCurrentState() == TRAVELLING_BACK && stateCounter == 0){
-                Gdx.app.log("PHASE 1", travelPlan.getCurrentState().toString());
-                stateCounter++;
-            }else if(travelPlan.getCurrentState() == AT_THE_BASE && stateCounter == 1){
-                Gdx.app.log("PHASE 2", travelPlan.getCurrentState().toString());
+            if(travelPlan.getCurrentState() == AT_THE_BASE && travelPlan.getResource().getAmount() > 0){
+                Gdx.app.log("SHIP_UPDATE", "SHIP UPDATED AFTER ARRIVAL AT BASE");
                 listener.onShipArrivedAtBase(this, travelPlan.getResource());
                 travelPlan.reset();
                 stateCounter = 0;
@@ -172,7 +169,7 @@ public class Ship implements Upgradable {
 
     @Override
     public String toString() {
-        return name + " " + "(Level " + (int) upgradeLevel + ")";
+        return name + " " + "(Level " + upgradeLevel + ")";
     }
 
     @Override

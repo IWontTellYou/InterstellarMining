@@ -30,26 +30,28 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.TRAVEL_SPEED;
 
 public class DatabaseInitialization {
 
-    public static final int TABLE_COUNT = 17;
+    public static final int TABLE_COUNT = 11;
 
-    public static final int ACHIEVEMENT_TABLE = 0;
-    public static final int PLANET_TABLE = 1;
-    public static final int PLANET_RESOURCE_TABLE = 2;
-    public static final int SHIP_TABLE = 3;
-    public static final int RESEARCH_TABLE = 4;
-    public static final int RESEARCH_REQUIREMENT_TABLE = 5;
-    public static final int RESOURCE_TABLE = 6;
-    public static final int FACTORY_RECIPE = 7;
-    public static final int UPGRADE_RECIPE = 8;
+    public static final int PLANET_TABLE = 0;
+    public static final int PLANET_RESOURCE_TABLE = 1;
+    public static final int SHIP_TABLE = 2;
+    public static final int RESOURCE_TABLE = 3;
+    public static final int FACTORY_RECIPE = 4;
+    public static final int UPGRADE_RECIPE = 5;
 
-    public static final int PLAYER_TABLE = 9;
-    public static final int PLAYER_ACHIEVEMENT_TABLE = 10;
-    public static final int PLAYER_RESEARCH_TABLE = 11;
-    public static final int PLAYER_RESOURCE_TABLE = 12;
-    public static final int PLAYER_PLANET_SYSTEM_TABLE = 13;
-    public static final int PLAYER_SHIP_TABLE = 14;
-    public static final int PLAYER_FACTORY = 15;
-    public static final int PLAYER_OBSERVATORY = 16;
+    public static final int PLAYER_TABLE = 6;
+    public static final int PLAYER_SHIP_TABLE = 7;
+    public static final int PLAYER_FACTORY = 8;
+    public static final int PLAYER_OBSERVATORY = 9;
+    public static final int PLAYER_RESOURCE_TABLE = 10;
+
+    //public static final int PLAYER_PLANET_SYSTEM_TABLE = 11;
+    //public static final int ACHIEVEMENT_TABLE = 12;
+    //public static final int RESEARCH_TABLE = 13;
+    //public static final int RESEARCH_REQUIREMENT_TABLE = 14;
+    //public static final int PLAYER_RESEARCH_TABLE = 15;
+    // public static final int PLAYER_ACHIEVEMENT_TABLE = 16;
+
 
     private InterstellarMining game;
     private boolean[] tables;
@@ -67,7 +69,7 @@ public class DatabaseInitialization {
     }
 
     public boolean isRegularDatabaseInitialized(){
-        for (int i = 0; i < 9; i++) {
+        for (int i = 0; i < 6; i++) {
             if(!tables[i]) return false;
         }
         return true;
@@ -110,31 +112,7 @@ public class DatabaseInitialization {
         Gdx.app.log(PlanetResourceTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLANET_RESOURCE_TABLE] = true;
     }
-    public void initializeResearchTable(ArrayList<Map<String, Object>> tableData){
-        for (Map<String, Object> data : tableData) {
-            Research research = new Research(
-                    (Integer) data.get(ResearchTable.ID),
-                    (String) data.get(ResearchTable.NAME),
-                    (String) data.get(ResearchTable.INFO),
-                    (String) data.get(ResearchTable.EFFECT),
-                    (Integer) data.get(ResearchTable.PRICE),
-                    0,
-                    0,
-                    (Integer) data.get(ResearchTable.COLUMN)
-            );
-            game.getResearches().add(research);
-        }
-        Gdx.app.log(ResearchTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[RESEARCH_TABLE] = true;
-    }
-    public void initializeResearchRequirementTable(ArrayList<Map<String, Object>> tableData){
-        for (Map<String, Object> data : tableData) {
-            Research research = game.getResearchByID((int) data.get(ResearchRequirementTable.RESEARCH_ID));
-            research.addResearchRequired(game.getResearchByID((int) data.get(ResearchRequirementTable.RESEARCH_REQUIRED_ID)));
-        }
-        Gdx.app.log(ResearchRequirementTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[RESEARCH_REQUIREMENT_TABLE] = true;
-    }
+
     public void initializeResourceTable(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
             Resource resource = new Resource(
@@ -171,19 +149,6 @@ public class DatabaseInitialization {
 
         Gdx.app.log(ShipTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[SHIP_TABLE] = true;
-    }
-    public void initializeAchievementTable(ArrayList<Map<String, Object>> tableData){
-        for (Map<String, Object> data : tableData) {
-            Achievement achievement = new Achievement(
-                    (Integer) data.get(AchievementTable.ID),
-                    (String) data.get(AchievementTable.NAME),
-                    (String) data.get(AchievementTable.INFO),
-                    (Integer) data.get(AchievementTable.TYPE)
-            );
-            game.getAchievements().add(achievement);
-        }
-        Gdx.app.log(AchievementTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[ACHIEVEMENT_TABLE] = true;
     }
     public void initializeFactoryRecipe(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
@@ -265,29 +230,9 @@ public class DatabaseInitialization {
         }
 
         Gdx.app.log(PlayerPlanetTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[PLAYER_PLANET_SYSTEM_TABLE] = true;
+        //tables[PLAYER_PLANET_SYSTEM_TABLE] = true;
+    }
 
-    }
-    public void initializePlayerResearchTable(ArrayList<Map<String, Object>> tableData){
-        for (Map<String, Object> data : tableData) {
-            Research r = game.getResearchByID((Integer) data.get(PlayerResearchTable.RESEARCH_ID));
-            if((Boolean) data.get(PlayerResearchTable.UNLOCKED)){
-                r.setUnlocked(true);
-                game.getPlayer().getResearches().add(r);
-            }
-        }
-        Gdx.app.log(PlayerResearchTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[PLAYER_RESEARCH_TABLE] = true;
-    }
-    public void initializePlayerResourceTable(ArrayList<Map<String, Object>> tableData){
-        for (Map<String, Object> data : tableData) {
-            Resource r = game.getResourceByID((Integer) data.get(PlayerResourceTable.RESOURCE_ID));
-            r.setAmount((Integer) data.get(PlayerResourceTable.AMOUNT));
-            game.getPlayer().getResourcesAtBase().add(r);
-        }
-        Gdx.app.log(PlayerResourceTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[PLAYER_RESOURCE_TABLE] = true;
-    }
     public void initializePlayerShipTable(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
             Ship s = game.getShipByID((Integer) data.get(PlayerShipTable.SHIP_ID));
@@ -324,9 +269,6 @@ public class DatabaseInitialization {
                 Resource resource = game.getResourceByID((Integer) data.get(PlayerShipTable.RESOURCE_ID));
                 resource.setAmount((Integer) data.get(PlayerShipTable.AMOUNT));
                 TravelPlan plan = new TravelPlan(game, destination, ship, resource, taskTime);
-
-                if(plan.getCurrentState() == ShipState.AT_THE_BASE){
-                }
                 ship.setTravelPlan(plan);
             }
             game.getPlayer().getShips().add(ship);
@@ -334,14 +276,6 @@ public class DatabaseInitialization {
 
         Gdx.app.log(PlayerShipTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_SHIP_TABLE] = true;
-    }
-    public void initializePlayerAchievementTable(ArrayList<Map<String, Object>> tableData){
-        for (Map<String, Object> data : tableData) {
-            Achievement a = game.getAchievementByID((Integer) data.get(PlayerAchievementTable.ID));
-            game.getPlayer().getAchievements().addAll(Achievement.getAchievement(a, (Integer) data.get(PlayerAchievementTable.CURRENT_AMOUNT)));
-        }
-        Gdx.app.log(AchievementTable.TABLE_NAME, "INITIALIZATION DONE!");
-        tables[PLAYER_ACHIEVEMENT_TABLE] = true;
     }
     public void initializePlayerFactory(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
@@ -389,6 +323,78 @@ public class DatabaseInitialization {
             Gdx.app.log(PlayerObservatoryTable.TABLE_NAME, "INITIALIZATION DONE!");
             tables[PLAYER_OBSERVATORY] = true;
         }
+    }
+    public void initializePlayerResourceTable(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            Resource r = game.getResourceByID((Integer) data.get(PlayerResourceTable.RESOURCE_ID));
+            r.setAmount((Integer) data.get(PlayerResourceTable.AMOUNT));
+            game.getPlayer().getResourcesAtBase().add(r);
+        }
+        Gdx.app.log(PlayerResourceTable.TABLE_NAME, "INITIALIZATION DONE!");
+        tables[PLAYER_RESOURCE_TABLE] = true;
+    }
+
+    @Deprecated
+    public void initializeAchievementTable(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            Achievement achievement = new Achievement(
+                    (Integer) data.get(AchievementTable.ID),
+                    (String) data.get(AchievementTable.NAME),
+                    (String) data.get(AchievementTable.INFO),
+                    (Integer) data.get(AchievementTable.TYPE)
+            );
+            game.getAchievements().add(achievement);
+        }
+        Gdx.app.log(AchievementTable.TABLE_NAME, "INITIALIZATION DONE!");
+        //tables[ACHIEVEMENT_TABLE] = true;
+    }
+    @Deprecated
+    public void initializeResearchTable(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            Research research = new Research(
+                    (Integer) data.get(ResearchTable.ID),
+                    (String) data.get(ResearchTable.NAME),
+                    (String) data.get(ResearchTable.INFO),
+                    (String) data.get(ResearchTable.EFFECT),
+                    (Integer) data.get(ResearchTable.PRICE),
+                    0,
+                    0,
+                    (Integer) data.get(ResearchTable.COLUMN)
+            );
+            game.getResearches().add(research);
+        }
+        Gdx.app.log(ResearchTable.TABLE_NAME, "INITIALIZATION DONE!");
+        //tables[RESEARCH_TABLE] = true;
+    }
+    @Deprecated
+    public void initializeResearchRequirementTable(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            Research research = game.getResearchByID((int) data.get(ResearchRequirementTable.RESEARCH_ID));
+            research.addResearchRequired(game.getResearchByID((int) data.get(ResearchRequirementTable.RESEARCH_REQUIRED_ID)));
+        }
+        Gdx.app.log(ResearchRequirementTable.TABLE_NAME, "INITIALIZATION DONE!");
+        //tables[RESEARCH_REQUIREMENT_TABLE] = true;
+    }
+    @Deprecated
+    public void initializePlayerResearchTable(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            Research r = game.getResearchByID((Integer) data.get(PlayerResearchTable.RESEARCH_ID));
+            if((Boolean) data.get(PlayerResearchTable.UNLOCKED)){
+                r.setUnlocked(true);
+                game.getPlayer().getResearches().add(r);
+            }
+        }
+        Gdx.app.log(PlayerResearchTable.TABLE_NAME, "INITIALIZATION DONE!");
+        //tables[PLAYER_RESEARCH_TABLE] = true;
+    }
+    @Deprecated
+    public void initializePlayerAchievementTable(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            Achievement a = game.getAchievementByID((Integer) data.get(PlayerAchievementTable.ID));
+            game.getPlayer().getAchievements().addAll(Achievement.getAchievement(a, (Integer) data.get(PlayerAchievementTable.CURRENT_AMOUNT)));
+        }
+        Gdx.app.log(AchievementTable.TABLE_NAME, "INITIALIZATION DONE!");
+        //tables[PLAYER_ACHIEVEMENT_TABLE] = true;
     }
 
 }

@@ -10,9 +10,12 @@ import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Container;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import javax.swing.ToolTipManager;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.dialogs.ObservatoryDialog;
@@ -29,6 +32,7 @@ import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.planet.PlanetStats;
+import sk.grest.game.other.TooltipBuilder;
 
 public class GameScreen implements Screen, OnStatsChangedListener {
 
@@ -50,6 +54,9 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
     private Planet base;
 
+    private TooltipManager toolTipManager;
+    private TooltipBuilder tooltipBuilder;
+
     private ShipListDialog shipListDialog;
     private TravelSettingDialog travelSettingDialog;
     private ResourceInventoryDialog resourceInventoryDialog;
@@ -70,6 +77,10 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         stage = new Stage(new ScreenViewport());
 
         Gdx.app.log("SCREEN_CHANGE", "Screen changed to Game");
+
+        tooltipBuilder = TooltipBuilder.getInstance();
+        tooltipBuilder.setSkins(game.getUISkin(), game.getSpriteSkin());
+        toolTipManager = TooltipManager.getInstance();
 
         // LAYOUT DEFINING
 

@@ -34,9 +34,6 @@ import static sk.grest.game.database.DatabaseConstants.*;
 
 public class InterstellarMining extends Game implements ConnectorEvent, DatabaseChangeListener {
 
-	// THURSDAY
-	// TODO PLANET SYSTEM LIST
-
 	// FRIDAY
 	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
 	// TODO REMEMBER NAME AND PASSWORD
@@ -47,8 +44,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
 
 	// TODO STATS
-	// TODO ACHIEVEMENTS
-
 	// TODO CHANGE MOUSE CURSOR GRAPHICS
 
 	private Player player;
@@ -95,7 +90,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		renderer.setAutoShapeType(true);
 		batch = new SpriteBatch();
 
-		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprite.atlas"));
+		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprites.atlas"));
 		spriteSkin = new Skin(area);
 
 		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiSkin.atlas"));
@@ -313,40 +308,22 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 3RD
 			case PlanetResourceTable.TABLE_NAME:
 				dataInit.initializePlanetResourceTable(tableData);
-				handler.getTable(ResearchTable.TABLE_NAME, this);
-				break;
-
-			// 4TH
-			case ResearchTable.TABLE_NAME:
-				dataInit.initializeResearchTable(tableData);
-				handler.getTable(ResearchRequirementTable.TABLE_NAME,this);
-				break;
-
-			// 5TH
-			case ResearchRequirementTable.TABLE_NAME:
-				dataInit.initializeResearchRequirementTable(tableData);
 				handler.getTable(ShipTable.TABLE_NAME, this);
 				break;
 
-			// 6TH
+			// 4TH
 			case ShipTable.TABLE_NAME:
 				dataInit.initializeShipTable(tableData);
-				handler.getTable(AchievementTable.TABLE_NAME, this);
-				break;
-
-			// 7TH
-			case AchievementTable.TABLE_NAME:
-				dataInit.initializeAchievementTable(tableData);
 				handler.getTable(UpgradeRecipeTable.TABLE_NAME, this);
 				break;
 
-			// 8TH
+			// 5TH
 			case UpgradeRecipeTable.TABLE_NAME:
 				dataInit.initializeUpgradeRecipe(tableData);
 				handler.getTable(FactoryRecipeTable.TABLE_NAME, this);
 				break;
 
-			// 9TH
+			// 6TH
 			case FactoryRecipeTable.TABLE_NAME:
 				dataInit.initializeFactoryRecipe(tableData);
 				break;
@@ -357,13 +334,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			case PlayerTable.TABLE_NAME:
 				dataInit.initializePlayerTable(tableData);
 				handler.writeIntoPlayerLoginHistory(true);
-				handler.getTableWherePlayer(PlayerResearchTable.TABLE_NAME, player.getID(),this);
-				break;
-
-			// 2ND
-			case PlayerResearchTable.TABLE_NAME:
-				dataInit.initializePlayerResearchTable(tableData);
-				handler.getTable(PlayerShipTable.TABLE_NAME, this);
+				handler.getTableWherePlayer(PlayerShipTable.TABLE_NAME, player.getID(),this);
 				break;
 
 			// 3RD
@@ -381,21 +352,16 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 5TH
 			case PlayerPlanetTable.TABLE_NAME:
 				dataInit.initializePlayerPlanetTable(tableData);
-				handler.getTable(PlayerAchievementTable.TABLE_NAME, this);
+				handler.getTable(PlayerFactoryTable.TABLE_NAME, this);
 				break;
 
 			// 6TH
-			case PlayerAchievementTable.TABLE_NAME:
-				dataInit.initializePlayerAchievementTable(tableData);
-				handler.getTableWherePlayer(PlayerFactoryTable.TABLE_NAME, player.getID(),this);
-				break;
-
-			// 7TH
 			case PlayerFactoryTable.TABLE_NAME:
 				dataInit.initializePlayerFactory(tableData);
 				handler.getTableWherePlayer(PlayerObservatoryTable.TABLE_NAME, player.getID(), this);
 				break;
 
+			// 7TH
 			case PlayerObservatoryTable.TABLE_NAME:
 				dataInit.initializePlayerObservatory(tableData);
 				break;

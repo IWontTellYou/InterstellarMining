@@ -18,6 +18,10 @@ import static sk.grest.game.constants.ScreenConstants.*;
 
 public class LogInScreen implements Screen {
 
+    private static final float ACTOR_WIDTH = DEFAULT_ACTOR_WIDTH * 2f;
+    private static final float ACTOR_HEIGHT = DEFAULT_ACTOR_HEIGHT * 1.5f;
+    private static final float PADDING = DEFAULT_PADDING * 2f;
+
     private InterstellarMining game;
     private Stage stage;
 
@@ -69,15 +73,15 @@ public class LogInScreen implements Screen {
         table.setFillParent(true);
         table.align(Align.center);
 
-        table.add(nameLabel).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center);
-        table.add(nameInput).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center).padBottom(DEFAULT_PADDING).row();
+        table.add(nameLabel).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center);
+        table.add(nameInput).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center).padBottom(PADDING).row();
 
-        table.add(passwordLabel).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center);
-        table.add(passwordInput).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center).padBottom(DEFAULT_PADDING).row();
+        table.add(passwordLabel).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center);
+        table.add(passwordInput).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center).padBottom(PADDING).row();
 
-        table.add(submit).height(DEFAULT_ACTOR_HEIGHT).fillX().align(Align.center).colspan(2).padBottom(DEFAULT_PADDING).row();
-        table.add(register).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center).padRight(DEFAULT_PADDING).padBottom(DEFAULT_PADDING);
-        table.add(back).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center).padBottom(DEFAULT_PADDING).row();
+        table.add(submit).height(ACTOR_HEIGHT).fillX().align(Align.center).colspan(2).padBottom(PADDING).row();
+        table.add(register).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center).padRight(PADDING).padBottom(PADDING);
+        table.add(back).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center).padBottom(PADDING).row();
 
         table.setBackground(game.getBackground());
 

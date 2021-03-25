@@ -15,15 +15,15 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class TravelPlan {
 
-    DatabaseChangeListener listener;
-
     private final static int FROM_HOME = 0;
     private final static int TO_DEST = 1;
     private final static int FROM_DEST = 2;
     private final static int TO_HOME = 3;
 
+    private DatabaseChangeListener listener;
+
     private Planet destination;
-    private sk.grest.game.entities.ship.Ship ship;
+    private Ship ship;
 
     private long[] schedule;
 
@@ -40,6 +40,8 @@ public class TravelPlan {
         this.resource = Resource.clone(resource);
         this.resourceAmount = 0;
         this.resourceMined = false;
+        this.resource.setAmount(0);
+        Gdx.app.log("RESOURCE", resource.getAmount()+"");
         setTravel(startTime);
     }
     public TravelPlan(DatabaseChangeListener listener, Planet destination, Ship ship, Resource resource){
@@ -72,13 +74,6 @@ public class TravelPlan {
 
     }
 
-    public boolean isTravelBegun() {
-        return travelBegun;
-    }
-    public void setTravelBegun(boolean travelBegun) {
-        this.travelBegun = travelBegun;
-    }
-
     public ShipState getCurrentState(){
         long currentTime = System.currentTimeMillis();
 
@@ -105,14 +100,15 @@ public class TravelPlan {
 
     public void reset(Planet destination, Resource resource){
         this.destination = destination;
-        this.resource = resource;
-        resource.setAmount(0);
+        this.resource = Resource.clone(resource);
+        this.resource.setAmount(0);
         setTravel(System.currentTimeMillis());
     }
 
     public void reset(){
         Arrays.fill(schedule, 0);
         destination = null;
+        resource = null;
     }
 
     public Planet getDestination() {
@@ -124,13 +120,26 @@ public class TravelPlan {
     public int getAmount() {
         return resourceAmount;
     }
+
+    public void update(float delta){
+        if(destination != null && resource != null && schedule[FROM_DEST] < System.currentTimeMillis() && resource.getAmount() == 0) {
+            resourceMined = true;
+            resource.setAmount(ship.getAttribute(RESOURCE_CAPACITY));
+            Gdx.app.log("SHIP_UPDATE", "SHIP UPDATED AFTER MINING ENDED");
+            listener.onShipDataChanged(ship);
+        }
+    }
+
+    public boolean isSet(){
+        return destination != null && resource != null;
+    }
+
     public long getStartTime(){
         if(getTimeLeft() != 0)
             return schedule[FROM_HOME];
         else
             return 0;
     }
-
     public long getTimeLeft(){
         long currentTime = System.currentTimeMillis();
 
@@ -146,22 +155,13 @@ public class TravelPlan {
             return 0;
     }
 
-    public void update(float delta){
-        if(getCurrentState() == ShipState.TRAVELLING_BACK && !resourceMined){
-            resourceMined = true;
-            resource.setAmount(ship.getAttribute(RESOURCE_CAPACITY));
-            Gdx.app.log("SHIP_UPDATE", "SHIP UPDATED AFTER MINING ENDED");
-            listener.onShipDataChanged(ship);
-        }
-    }
-
     public static int getDistance(Planet p){
         return (int) (p.getDistance() * BASE_DISTANCE);
     }
     public static int getTime(Ship s, Planet p) {
         int travelTime = (int) (p.getDistance() * BASE_DISTANCE / s.getAttribute(TRAVEL_SPEED));
         int miningTime = (int) (s.getAttribute(RESOURCE_CAPACITY) * BASE_MINING_TIME / s.getAttribute(MINING_SPEED));
-        return (int) 2 * travelTime + miningTime;
+        return 2 * travelTime + miningTime;
     }
 
 }

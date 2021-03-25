@@ -9,6 +9,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 
@@ -21,6 +22,7 @@ import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.TravelPlan;
+import sk.grest.game.other.TooltipBuilder;
 
 import static sk.grest.game.entities.ship.Attributes.*;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.*;

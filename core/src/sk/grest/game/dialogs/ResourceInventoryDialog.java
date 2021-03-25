@@ -6,6 +6,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.utils.Align;
 
 import sk.grest.game.InterstellarMining;
@@ -13,9 +14,11 @@ import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.ItemOpenedListener;
 import sk.grest.game.listeners.ItemSoldListener;
+import sk.grest.game.other.ItemTooltip;
 import sk.grest.game.other.SelectionRow;
 import sk.grest.game.other.SelectionTable;
 import sk.grest.game.other.SellBar;
+import sk.grest.game.other.TooltipBuilder;
 
 
 public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedListener<Resource>, ItemSoldListener {
@@ -31,8 +34,15 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
 
     private InterstellarMining game;
 
+    private TooltipManager manager;
+    private TooltipBuilder builder;
+
     public ResourceInventoryDialog(String title, Skin skin, InterstellarMining game) {
         super(title, skin);
+
+        manager = TooltipManager.getInstance();
+        manager.instant();
+        builder = TooltipBuilder.getInstance();
 
         this.game = game;
         sellBar = new SellBar(game.getPlayer().getResourcesAtBase().get(0), skin, game, this);
@@ -86,6 +96,7 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
         for (Resource r : game.getPlayer().getResourcesAtBase()) {
 
             SelectionRow<Resource> resourceRow = new SelectionRow<>();
+            resourceRow.addListener(new ItemTooltip(builder.buildTooltipContent(r)));
             resourceRow.setItem(r);
             resourceRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.DARK_GRAY);
 
@@ -158,7 +169,6 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
     @Override
     public void onItemSold() {
         long num = Long.parseLong(sellBar.getAmount().getText());
-        Gdx.app.log(contentTable.getItemSelected().getName(), contentTable.getItemSelected().getAmount() - num+"");
         if(contentTable.getItemSelected().getAmount() - num >= 0) {
             game.getPlayer().increaseMoney(num * (long) contentTable.getItemSelected().getPrice());
             contentTable.getItemSelected().subtractAmount(Integer.parseInt(sellBar.getAmount().getText()));
