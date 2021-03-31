@@ -48,6 +48,8 @@ public class TravelSettingDialog extends CustomDialog {
 
         ArrayList<Ship> shipsAtBase = game.getPlayer().getShipsAtBase();
 
+        setBackground(InterstellarMining.back);
+
         this.planet = planet;
         this.shipToTravel = shipsAtBase.get(0);
         this.resourceToMine = planet.getResources().get(0);

@@ -72,7 +72,7 @@ public class DatabaseConstants {
     public static final class PlayerPlanetTable {
         public static final String TABLE_NAME = "player_planet";
         public static final String ID = "id";
-        public static final String PLANET_SYSTEM_ID = "planet_system_id";
+        public static final String PLANET_ID = "planet_id";
         public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
         public static final String FOUND = "found";
     }

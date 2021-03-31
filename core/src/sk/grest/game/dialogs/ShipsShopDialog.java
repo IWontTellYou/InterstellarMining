@@ -64,6 +64,8 @@ public class ShipsShopDialog extends CustomDialog {
 
         final ArrayList<Ship> shipsForSale = game.getShipsNotOwned();
 
+        setBackground(InterstellarMining.back);
+
         counter = 3;
         layoutChild.add(new Label("", skin)).height(50).colspan(3).row();
         for (final Ship s : shipsForSale) {

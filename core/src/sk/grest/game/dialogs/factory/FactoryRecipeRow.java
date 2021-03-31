@@ -5,6 +5,7 @@ import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Select;
 
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.resource.Resource;
@@ -38,6 +39,9 @@ public class FactoryRecipeRow extends Table {
             icon = new Image(spriteSkin, needed.getAssetName());
         name = new Label(needed.getName(), skin);
         amountInfo = new Label(count*needed.getAmount() + " / " + owned.getAmount(), skin);
+
+        name.setFontScale(0.8f);
+        amountInfo.setFontScale(0.8f);
 
         add(icon)
                 .size(FactoryDialog.ICON_SIZE)

@@ -38,6 +38,8 @@ public class UpgradeShipDialog extends CustomDialog {
     public UpgradeShipDialog(String title, InterstellarMining game, final Player player, final Ship ship, UpgradeRecipe[] recipes) {
         super(title, game.getUISkin());
 
+        setBackground(InterstellarMining.back);
+
         this.ship = ship;
         this.recipes = recipes;
 

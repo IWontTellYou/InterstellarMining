@@ -2,6 +2,7 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -46,14 +47,14 @@ public class RegisterScreen implements Screen, ConnectorEvent {
     private boolean tableInitialized;
 
     private int shipsInitialized;
-    private int systemsInitialized;
+    private int planetsInitialized;
     private int resourcesInitialized;
 
     public RegisterScreen(final InterstellarMining game){
         Gdx.app.log("SCREEN_CHANGE", "Screen changed to Register");
 
         shipsInitialized = 0;
-        systemsInitialized = 0;
+        planetsInitialized = 0;
         resourcesInitialized = 0;
 
         emails = new ArrayList<>();
@@ -85,6 +86,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
 
         errorMessage = new Label("", game.getUISkin());
         errorMessage.setAlignment(Align.center);
+        errorMessage.setColor(Color.RED);
 
         final RegisterScreen screen = this;
         TextButton submit = new TextButton("REGISTER", game.getUISkin());
@@ -162,7 +164,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
             if (isNameInDatabase(nameInput.getText())) {
                 errorMessage.setText("Name is already in use!");
             } else if(nameInput.getText().length() < 6) {
-                errorMessage.setText("User name is too short");
+                errorMessage.setText("Username is too short");
             } else if (isEmailInDatabase(emailInput.getText())) {
                 errorMessage.setText("Email is already in use!");
             } else if(!emailInput.getText().contains("@")){
@@ -222,11 +224,9 @@ public class RegisterScreen implements Screen, ConnectorEvent {
 
         // TODO FIX REGISTRATION
 
-        //Gdx.app.log("TABLE_UPDATE", "SHIPS: " + shipsInitialized + " / " + DEFAULT_SHIP_COUNT +
-        //                                        " SYSTEMS: " + systemsInitialized + " / " + game.getPlanetSystems().size()+
-        //                                        " RESOURCES: " + resourcesInitialized + "/" + game.getResources().size());
-
-        /*
+        Gdx.app.log("TABLE_UPDATE", "SHIPS: " + shipsInitialized + " / " + DEFAULT_SHIP_COUNT +
+                                                " PLANETS: " + planetsInitialized + " / " + game.getPlanets().size()+
+                                                " RESOURCES: " + resourcesInitialized + "/" + game.getResources().size());
 
         switch (tableName){
             case TABLE_NAME:
@@ -235,15 +235,15 @@ public class RegisterScreen implements Screen, ConnectorEvent {
             case PlayerShipTable.TABLE_NAME:
                 shipsInitialized++;
                 if(shipsInitialized == DEFAULT_SHIP_COUNT &&
-                    //systemsInitialized == game.getPlanetSystems().size() &&
+                    planetsInitialized == game.getPlanets().size() &&
                     resourcesInitialized == game.getResources().size()){
 
                     game.onFetchSuccess(0, TABLE_NAME, newPlayerData);
                 }
                 break;
             case PlayerPlanetTable.TABLE_NAME:
-                systemsInitialized++;
-                if(systemsInitialized == game.getPlanetSystems().size() &&
+                planetsInitialized++;
+                if(planetsInitialized == game.getPlanets().size() &&
                     resourcesInitialized == game.getResources().size() &&
                     shipsInitialized == DEFAULT_SHIP_COUNT){
 
@@ -252,7 +252,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
                 break;
             case PlayerResourceTable.TABLE_NAME:
                 resourcesInitialized++;
-                if(systemsInitialized == game.getPlanetSystems().size() &&
+                if(planetsInitialized == game.getPlanets().size() &&
                     resourcesInitialized == game.getResources().size() &&
                     shipsInitialized == DEFAULT_SHIP_COUNT){
 
@@ -260,9 +260,6 @@ public class RegisterScreen implements Screen, ConnectorEvent {
                 }
                 break;
         }
-
-
-         */
 
     }
     @Override
@@ -281,7 +278,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
     public void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData) {
         newPlayerData.add(tableData);
         shipsInitialized = 0;
-        systemsInitialized = 0;
+        planetsInitialized = 0;
         resourcesInitialized = 0;
         handler.addPlayerData(tableData, this);
 

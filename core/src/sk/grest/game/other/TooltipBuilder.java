@@ -9,12 +9,20 @@ import com.badlogic.gdx.utils.Align;
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
+
+import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class TooltipBuilder {
 
-    private static final int TOOLTIP_WIDTH = 80;
-    private static final int TOOLTIP_HEIGHT = 150;
+    private static final int PADDING = 20;
+
+    private static final int RESOURCE_TOOLTIP_WIDTH = 80;
+    private static final int RESOURCE_TOOLTIP_HEIGHT = 150;
+
+    private static final int SHIP_TOOLTIP_WIDTH = 200;
+    private static final int SHIP_TOOLTIP_HEIGHT = 300;
 
     private static TooltipBuilder tooltipBuilder;
 
@@ -61,11 +69,41 @@ public class TooltipBuilder {
         item.setBackground(ScreenConstants.getBackground(ScreenConstants.DARK_GRAY));
         Label name = new Label(ship.getName(), uiSkin);
         Image img = new Image(spriteSkin, "ships");
-        Label amount = new Label(ship.getLevel(0)+"", uiSkin);
+        Label level = new Label("Upgrade level - "+ship.getLevel(0), uiSkin);
 
-        item.add(name).align(Align.center).uniformX().row();
-        item.add(img).align(Align.center).uniformX().row();
-        item.add(amount).align(Align.right).uniformX();
+        Label travelSpeedLabel = new Label("Travel Speed", uiSkin);
+        Label miningSpeedLabel = new Label("Mining Speed", uiSkin);
+        Label resourceCapacityLabel = new Label("Resource Capacity", uiSkin);
+        Label fuelCapacityLabel = new Label("Fuel Capacity", uiSkin);
+        Label fuelEfficiencyLabel = new Label("Fuel Efficiency", uiSkin);
+
+        Label travelSpeed = new Label(""+ship.getAttribute(TRAVEL_SPEED), uiSkin);
+        Label miningSpeed = new Label(ship.getAttribute(MINING_SPEED)+"", uiSkin);
+        Label resourceCapacity = new Label(ship.getAttribute(RESOURCE_CAPACITY)+"", uiSkin);
+        Label fuelCapacity = new Label(ship.getAttribute(FUEL_CAPACITY)+"", uiSkin);
+        Label fuelEfficiency = new Label(ship.getAttribute(FUEL_EFFICIENCY)+"", uiSkin);
+
+        item.add(name).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING).colspan(2).row();
+        item.add(img).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING).colspan(2).row();
+
+        item.add(travelSpeedLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
+        item.add(travelSpeed).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
+
+        item.add(miningSpeedLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
+        item.add(miningSpeed).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
+
+        item.add(resourceCapacityLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
+        item.add(resourceCapacity).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
+
+        item.add(fuelCapacityLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
+        item.add(fuelCapacity).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
+
+        item.add(fuelEfficiencyLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
+        item.add(fuelEfficiency).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
+
+        item.add(level).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING);
+
+        //item.debug(Table.Debug.cell);
 
         item.pad(20);
 

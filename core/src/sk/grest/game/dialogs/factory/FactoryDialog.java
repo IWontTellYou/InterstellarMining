@@ -30,8 +30,9 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
 
     public static final int ICON_SIZE = 40;
 
-    public static final int ITEM_LIST_WIDTH = 500;
-    public static final int ITEM_LIST_HEIGHT = 100;
+    public static final int LIST_WIDTH = 450;
+    public static final int ITEM_LIST_WIDTH = 450;
+    public static final int ITEM_LIST_HEIGHT = 60;
 
     private ArrayList<FactoryItem> factoryItems;
     private FactoryQueue queue;
@@ -57,6 +58,8 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
     public FactoryDialog(String title, Skin skin, final InterstellarMining game) {
         super(title, skin);
         this.game = game;
+
+        setBackground(InterstellarMining.back);
 
         rows = new ArrayList<>();
         itemsNeeded = new ArrayList<>();
@@ -96,7 +99,7 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
                 row.add(new Image(game.getSpriteSkin(), "iron_ingot"))
                         .uniformX()
                         .expandX()
-                        .align(Align.left)
+                        .align(Align.center)
                         .size(ICON_SIZE,ICON_SIZE);
             else
                 row.add(new Image(game.getSpriteSkin(), item.getResource().getAssetName()))
@@ -106,10 +109,16 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
                         .size(ICON_SIZE,ICON_SIZE);
 
             row.add(new Label(item.getResource().getName(), skin))
-                    .uniformX()
-                    .expandX();
-            itemList.addRow(row).size(ITEM_LIST_WIDTH, ITEM_LIST_HEIGHT).pad(DEFAULT_PADDING).row();
+                .uniformX()
+                .expandX()
+                .align(Align.center);
+
+            //row.debug(Debug.all);
+
+            itemList.addRow(row).size(ITEM_LIST_WIDTH, ITEM_LIST_HEIGHT).pad(DEFAULT_PADDING).expandX().uniformY().row();
         }
+
+        //itemList.debug(Debug.all);
 
         itemsNeeded = itemList.getItemSelected().getItemsNecessary();
         for (Resource r : itemsNeeded) {
@@ -123,13 +132,6 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
         updateView(1);
 
         Table helpTable = new Table(skin);
-
-        TextButton plateFactory = new TextButton("PLATE", skin);
-        TextButton fuelFactory = new TextButton("FUEL", skin);
-
-        Table choiceBox = new Table(skin);
-        choiceBox.add(plateFactory).size(ICON_SIZE).pad(DEFAULT_PADDING);
-        choiceBox.add(fuelFactory).size(ICON_SIZE).pad(DEFAULT_PADDING);
 
         Table amountControls = new Table(skin);
         amountControls.add(decrease).size(ICON_SIZE).pad(DEFAULT_PADDING);
@@ -157,24 +159,26 @@ public class FactoryDialog extends CustomDialog implements ItemOpenedListener<Fa
             }
         });
 
-        helpTable.add(choiceBox).right().row();
         helpTable.add(amountControls).row();
         helpTable.add(itemView).center().pad(DEFAULT_PADDING).row();
-        helpTable.add(confirm).center().size(ITEM_LIST_WIDTH/6f, ITEM_LIST_WIDTH/12f).row();
+        helpTable.add(confirm).center().size(ITEM_LIST_WIDTH/4f, ITEM_LIST_WIDTH/12f).row();
 
-        ScrollPane listScroll = new ScrollPane(itemList);
-        listScroll.setForceScroll(false, true);
+        //itemList.debug(Debug.all);
 
         Table layoutTable = new Table(skin);
-        layoutTable.add(listScroll).width(ITEM_LIST_WIDTH);
-        layoutTable.add(helpTable).width(ITEM_LIST_WIDTH);
+        layoutTable.add(itemList).width(LIST_WIDTH).align(Align.center);
+        layoutTable.add(helpTable).width(LIST_WIDTH);
 
-        getContentTable().add(layoutTable).width(ITEM_LIST_WIDTH).pad(ITEM_LIST_HEIGHT).top().row();
+        //layoutTable.debug(Debug.all);
 
         queue = new FactoryQueue(skin, game.getSpriteSkin(), game.getPlayer().getQueue(), game);
+
+        getContentTable().add(layoutTable).pad(DEFAULT_PADDING).padBottom(ITEM_LIST_HEIGHT*2).padTop(ITEM_LIST_HEIGHT).top().row();
         getContentTable().add(queue).width(ITEM_LIST_WIDTH).padBottom(DEFAULT_PADDING).bottom();
 
         addCloseButton(this);
+
+        //getContentTable().debug(Debug.all);
 
     }
 

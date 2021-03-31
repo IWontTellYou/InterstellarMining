@@ -30,7 +30,7 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.TRAVEL_SPEED;
 
 public class DatabaseInitialization {
 
-    public static final int TABLE_COUNT = 11;
+    public static final int TABLE_COUNT = 12;
 
     public static final int PLANET_TABLE = 0;
     public static final int PLANET_RESOURCE_TABLE = 1;
@@ -44,12 +44,9 @@ public class DatabaseInitialization {
     public static final int PLAYER_FACTORY = 8;
     public static final int PLAYER_OBSERVATORY = 9;
     public static final int PLAYER_RESOURCE_TABLE = 10;
+    public static final int PLAYER_PLANET_TABLE = 11;
 
-    //public static final int PLAYER_PLANET_SYSTEM_TABLE = 11;
     //public static final int ACHIEVEMENT_TABLE = 12;
-    //public static final int RESEARCH_TABLE = 13;
-    //public static final int RESEARCH_REQUIREMENT_TABLE = 14;
-    //public static final int PLAYER_RESEARCH_TABLE = 15;
     // public static final int PLAYER_ACHIEVEMENT_TABLE = 16;
 
 
@@ -225,12 +222,12 @@ public class DatabaseInitialization {
     }
     public void initializePlayerPlanetTable(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
-            Planet p = game.getPlanetByID((Integer) data.get(PlayerPlanetTable.ID));
+            Planet p = game.getPlanetByID((Integer) data.get(PlayerPlanetTable.PLANET_ID));
             p.setFound((boolean) data.get(PlayerPlanetTable.FOUND));
         }
 
         Gdx.app.log(PlayerPlanetTable.TABLE_NAME, "INITIALIZATION DONE!");
-        //tables[PLAYER_PLANET_SYSTEM_TABLE] = true;
+        tables[PLAYER_PLANET_TABLE] = true;
     }
 
     public void initializePlayerShipTable(ArrayList<Map<String, Object>> tableData){

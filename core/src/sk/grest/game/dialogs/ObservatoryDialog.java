@@ -31,6 +31,8 @@ public class ObservatoryDialog extends CustomDialog {
         super(title, skin);
         this.game = game;
 
+        setBackground(InterstellarMining.back);
+
         planetImage = new Image(game.getSpriteSkin(), "earth");
 
         UpgradeRecipe[][] recipes = new UpgradeRecipe[2][];

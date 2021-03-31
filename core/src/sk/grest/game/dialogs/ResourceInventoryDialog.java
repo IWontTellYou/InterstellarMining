@@ -40,6 +40,8 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
     public ResourceInventoryDialog(String title, Skin skin, InterstellarMining game) {
         super(title, skin);
 
+        setBackground(InterstellarMining.back);
+
         manager = TooltipManager.getInstance();
         manager.instant();
         builder = TooltipBuilder.getInstance();

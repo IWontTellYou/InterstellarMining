@@ -46,8 +46,8 @@ public class CustomDialog extends Dialog {
                 dialog.hide();
             }
         });
-        getButtonTable().row();
-        getButtonTable().add(closeBtn)
+        getContentTable().row();
+        getContentTable().add(closeBtn)
                 .width(ScreenConstants.DEFAULT_DIALOG_WIDTH/3f)
                 .height(ScreenConstants.DEFAULT_DIALOG_HEIGHT/15f)
                 .align(Align.center);

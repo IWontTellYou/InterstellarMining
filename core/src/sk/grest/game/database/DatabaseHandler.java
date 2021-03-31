@@ -1,5 +1,6 @@
 package sk.grest.game.database;
 
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -7,6 +8,7 @@ import java.util.Map;
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.Observatory;
 import sk.grest.game.entities.Player;
+import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.ship.Ship;
 
 import static sk.grest.game.database.DatabaseConnection.*;
@@ -90,21 +92,19 @@ public class DatabaseHandler {
             connection.addRow(requestCode++, PlayerResourceTable.TABLE_NAME, resourceData, listener);
         }
 
-        // PLANETS FOUND
-        for (int i = 0; i < 8 ; i++) {
-            Map<String, Object> resourceData = new HashMap<>();
-            resourceData.put(PLAYER_ID, playerId);
-            resourceData.put(PlayerPlanetTable.ID, i+1);
-            resourceData.put(PlayerPlanetTable.FOUND, true);
-            connection.addRow(requestCode++, PlayerPlanetTable.TABLE_NAME, resourceData, listener);
+        ArrayList<Planet> solarSystem = game.getSolarSystem();
+
+        ArrayList<Integer> IDs = new ArrayList<>();
+        for (Planet p : solarSystem) {
+            IDs.add(p.getID());
         }
 
         // Solar System
-        for (int i = 0; i < game.getSolarSystem().size() ; i++) {
+        for (int i = 0; i < game.getPlanets().size() ; i++) {
             Map<String, Object> resourceData = new HashMap<>();
             resourceData.put(PLAYER_ID, playerId);
-            resourceData.put(PlayerPlanetTable.ID, i+1);
-            resourceData.put(PlayerPlanetTable.FOUND, true);
+            resourceData.put(PlayerPlanetTable.PLANET_ID, i+1);
+            resourceData.put(PlayerPlanetTable.FOUND, IDs.contains(i+1));
             connection.addRow(requestCode++, PlayerPlanetTable.TABLE_NAME, resourceData, listener);
         }
 
