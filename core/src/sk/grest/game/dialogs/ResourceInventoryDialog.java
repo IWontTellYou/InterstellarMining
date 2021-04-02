@@ -38,7 +38,7 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
     private TooltipBuilder builder;
 
     public ResourceInventoryDialog(String title, Skin skin, InterstellarMining game) {
-        super(title, skin);
+        super("", skin);
 
         setBackground(InterstellarMining.back);
 
@@ -50,9 +50,8 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
         sellBar = new SellBar(game.getPlayer().getResourcesAtBase().get(0), skin, game, this);
 
         float imageCellWidth = Gdx.graphics.getWidth()/20f;
-        float nameCellWidth = Gdx.graphics.getWidth()/10f;
-        float destinationCellWidth = Gdx.graphics.getWidth()/8f;
-        float timeToArriveCellWidth = Gdx.graphics.getWidth()/8f;
+        float nameCellWidth = Gdx.graphics.getWidth()/7.5f;
+        float amountCellWidth = Gdx.graphics.getWidth()/6f;
 
         float cellHeight = Gdx.graphics.getHeight()/25f;
 
@@ -82,15 +81,15 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
         infoPanel.add(amountLabel).
                 uniformX().
                 align(Align.center).
-                width(timeToArriveCellWidth).height(cellHeight);
+                width(amountCellWidth).height(cellHeight);
 
-        Label stateLabel = new Label("STATE", skin);
+        /*Label stateLabel = new Label("STATE", skin);
         infoPanel.add(stateLabel).
                 uniformX().
                 align(Align.center).
                 width(timeToArriveCellWidth).height(cellHeight).
                 row();
-
+        */
         getContentTable().add(infoPanel).row();
 
         contentTable = new SelectionTable<>(this, skin, true);
@@ -134,15 +133,15 @@ public class ResourceInventoryDialog extends CustomDialog implements ItemOpenedL
             resourceRow.add(resourceAmount).
                     uniformX().
                     align(Align.center).
-                    width(timeToArriveCellWidth).height(cellHeight);
+                    width(amountCellWidth).height(cellHeight);
 
-            Label resourceState = new Label(r.getState().toString(), skin);
+            /*Label resourceState = new Label(r.getState().toString(), skin);
             resourceRow.add(resourceState).
                     uniformX().
                     align(Align.center).
                     width(timeToArriveCellWidth).height(cellHeight).
                     row();
-
+            */
             contentTable.addRow(resourceRow).fillX().row();
 
         }
