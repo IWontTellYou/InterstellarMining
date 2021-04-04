@@ -18,9 +18,9 @@ import com.badlogic.gdx.utils.viewport.ScreenViewport;
 import javax.swing.ToolTipManager;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.dialogs.GoalDialog;
 import sk.grest.game.dialogs.ObservatoryDialog;
 import sk.grest.game.dialogs.factory.FactoryDialog;
-import sk.grest.game.dialogs.research.ResearchDialog;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
 import sk.grest.game.dialogs.ShipListDialog;
 import sk.grest.game.dialogs.ShipsShopDialog;
@@ -62,7 +62,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private ResourceInventoryDialog resourceInventoryDialog;
     private UpgradeShipDialog upgradeShipDialog;
     private ShipsShopDialog shipsShopDialog;
-    private ResearchDialog researchDialog;
+    private GoalDialog goalDialog;
     private FactoryDialog factoryDialog;
     private ObservatoryDialog observatoryDialog;
 
@@ -224,8 +224,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         otherButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                researchDialog = new ResearchDialog("", game.getUISkin(), game);
-                researchDialog.show(stage);
+                goalDialog = new GoalDialog("", game.getUISkin(), game.getSpriteSkin(), game);
+                goalDialog.show(stage);
             }
         });
 
@@ -463,9 +463,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             game.getRenderer().begin();
 
-            if(researchDialog != null){
-                researchDialog.render(game.getRenderer());
-            }
+
 
             game.getRenderer().end();
 

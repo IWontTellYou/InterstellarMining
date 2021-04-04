@@ -1,11 +1,8 @@
 package sk.grest.game.dialogs.factory;
 
-import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
-import com.badlogic.gdx.scenes.scene2d.ui.ScrollPane;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
@@ -21,8 +18,8 @@ import sk.grest.game.dialogs.CustomDialog;
 import sk.grest.game.entities.resource.FactoryItem;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.listeners.ItemOpenedListener;
-import sk.grest.game.other.SelectionRow;
-import sk.grest.game.other.SelectionTable;
+import sk.grest.game.other.selection_table.SelectionRow;
+import sk.grest.game.other.selection_table.SelectionTable;
 
 import static sk.grest.game.constants.ScreenConstants.DEFAULT_PADDING;
 

@@ -62,6 +62,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 	private ArrayList<Ship> shipsShop;
 	private ArrayList<Resource> resources;
+	private ArrayList<Resource> goalResources;
 	private ArrayList<Planet> planets;
 	private ArrayList<Research> researches;
 	private ArrayList<Achievement> achievements;
@@ -83,6 +84,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		achievements = new ArrayList<>();
 		factoryItems = new ArrayList<>();
 		upgradeRecipes = new ArrayList<>();
+		goalResources = new ArrayList<>();
 
 		defaultFont = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
 
@@ -225,6 +227,9 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 		return recipes;
 	}
+	public ArrayList<Resource> getGoalResources(){
+		return goalResources;
+	}
 
 	// Get by ID methods
 	public Ship getShipByID(int id){
@@ -275,6 +280,14 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		for (UpgradeRecipe recipe : upgradeRecipes) {
 			if(recipe.getLevel() == level && recipe.getType() == type)
 				return recipe;
+		}
+		return null;
+	}
+
+	public Resource getGoalResourceByID(int id){
+		for (Resource r : goalResources) {
+			if(r.getID() == id)
+				return r;
 		}
 		return null;
 	}
@@ -364,6 +377,11 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 			// 7TH
 			case PlayerObservatoryTable.TABLE_NAME:
 				dataInit.initializePlayerObservatory(tableData);
+				handler.getTableWherePlayer(PlayerGoalTable.TABLE_NAME, player.getID(), this);
+				break;
+
+			case PlayerGoalTable.TABLE_NAME:
+				dataInit.initializePlayerGoalTable(tableData);
 				break;
 		}
 	}

@@ -9,6 +9,7 @@ import sk.grest.game.InterstellarMining;
 import sk.grest.game.entities.Observatory;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.planet.Planet;
+import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Ship;
 
 import static sk.grest.game.database.DatabaseConnection.*;
@@ -121,6 +122,14 @@ public class DatabaseHandler {
         basicShip.put(SHIP_ID, 1);
         connection.addRow(requestCode++, PlayerShipTable.TABLE_NAME, basicShip, listener);
 
+        // TODO FINISH GOAL INITIALIZATION
+        /*
+        for (:) {
+
+        }
+
+         */
+
     }
 
     public void setConnection(DatabaseConnection connection) {
@@ -166,6 +175,11 @@ public class DatabaseHandler {
         data.put(PlayerObservatoryTable.PLANET_ID, (observatory.getPlanet() == null) ? null : observatory.getPlanet().getID());
         data.put(PlayerObservatoryTable.END_TIME, observatory.getEndTime());
         connection.updateRow(requestCode++, playerId, 0, PlayerObservatoryTable.TABLE_NAME, data, listener);
+    }
+    public void updatePlayerGoal(int playerId, Resource r, ConnectorEvent listener){
+        Map<String, Object> data = new HashMap<>();
+        data.put(PlayerGoalTable.AMOUNT_COMPLETED, r.getAmount());
+        connection.updateRow(requestCode++, playerId, r.getID(), PlayerGoalTable.TABLE_NAME, data, listener);
     }
 
     // GET TABLE

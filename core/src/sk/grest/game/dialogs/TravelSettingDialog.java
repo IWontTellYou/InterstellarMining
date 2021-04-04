@@ -11,7 +11,6 @@ import com.badlogic.gdx.scenes.scene2d.ui.SelectBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
-import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
@@ -22,16 +21,13 @@ import sk.grest.game.InterstellarMining;
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.Resource;
-import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
 import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.entities.ship.TravelPlan;
 import sk.grest.game.listeners.ItemOpenedListener;
-import sk.grest.game.other.SelectionRow;
-import sk.grest.game.other.SelectionTable;
-import sk.grest.game.other.TooltipBuilder;
+import sk.grest.game.other.selection_table.SelectionRow;
+import sk.grest.game.other.selection_table.SelectionTable;
 
-import static sk.grest.game.entities.ship.Attributes.*;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.*;
 
 public class TravelSettingDialog extends CustomDialog implements ItemOpenedListener<Ship> {
@@ -70,8 +66,13 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
         float defaultSelectBoxWidth = getWidth()/3.5f;
         float defaultSelectBoxHeight = getHeight()/17.5f;
 
-        Table travelView = new Table(skin);
+        // -- PLANET IMAGE -- //
 
+        Image planetImage = new Image(game.getSpriteSkin(), planet.getAssetId());
+
+        // -- TRAVEL VIEW -- //
+
+        Table travelView = new Table(skin);
         travelView.add(new Label("Distance:", skin))
                 .expandX()
                 .width(defaultActorWidth)
@@ -122,27 +123,37 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
                 .pad(TABLE_PADDING)
                 .row();
 
-        travelView.setBackground(ScreenConstants.getBackground(ScreenConstants.LIGHT_GRAY));
-
-        // PLANET IMAGE
-
-        Image planetImage = new Image(game.getSpriteSkin(), planet.getAssetId());
+        //travelView.setBackground(ScreenConstants.getBackground(ScreenConstants.LIGHT_GRAY));
 
 
-        // TODO SHIP TABLE PICKER
+        // -- SHIP PICKER -- //
 
         Table upperLine = new Table();
 
         Label nameLabel = new Label("Name", skin);
-        upperLine.add(nameLabel).align(Align.center);
+        upperLine.add(nameLabel)
+                .align(Align.center)
+                .pad(ScreenConstants.DEFAULT_PADDING)
+                .width(defaultActorWidth);
         Label shipSpeedLabel = new Label("Travel speed", skin);
-        upperLine.add(shipSpeedLabel).align(Align.center);
+        upperLine.add(shipSpeedLabel)
+                .align(Align.center)
+                .pad(ScreenConstants.DEFAULT_PADDING)
+                .width(defaultActorWidth);
         Label miningSpeedLabel = new Label("Mining speed", skin);
-        upperLine.add(miningSpeedLabel).align(Align.center);
-        Label resourceCapacityLabel = new Label("Resource capacity", skin);
-        upperLine.add(resourceCapacityLabel).align(Align.center);
+        upperLine.add(miningSpeedLabel)
+                .align(Align.center)
+                .pad(ScreenConstants.DEFAULT_PADDING)
+                .width(defaultActorWidth);
+        Label resourceCapacityLabel = new Label("Capacity", skin);
+        upperLine.add(resourceCapacityLabel)
+                .align(Align.center)
+                .pad(ScreenConstants.DEFAULT_PADDING)
+                .width(defaultActorWidth);
 
-        SelectionTable<Ship> shipSelectionTable = new SelectionTable<Ship>(this, true);
+        //upperLine.debug(Debug.all);
+
+        SelectionTable<Ship> shipSelectionTable = new SelectionTable<>(this, true);
 
         for (Ship s : game.getShipsShop()) {
 
@@ -151,18 +162,38 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
                 row.setItem(s);
                 row.setColors(Color.CLEAR, ScreenConstants.LIGHT_GRAY);
                 row.addListener(shipSelectionTable);
-                row.debug(Debug.cell);
+
+                //row.debug(Debug.cell);
 
                 Label name = new Label(s.getName(), skin);
-                row.add(name).align(Align.center).uniformX().expandX();
-                Label shipSpeed = new Label(String.valueOf(s.getAttribute(TRAVEL_SPEED)), skin);
-                row.add(shipSpeed).align(Align.center).uniformX().expandX();
-                Label miningSpeed = new Label(String.valueOf(s.getAttribute(MINING_SPEED)), skin);
-                row.add(miningSpeed).align(Align.center).uniformX().expandX();
-                Label resourceCapacity = new Label(String.valueOf(s.getAttribute(RESOURCE_CAPACITY)), skin);
-                row.add(resourceCapacity).align(Align.center).uniformX().expandX();
+                row.add(name)
+                        .align(Align.center)
+                        .uniformX().expandX()
+                        .pad(ScreenConstants.DEFAULT_PADDING)
+                        .width(defaultActorWidth);
 
-                shipSelectionTable.addRow(row).width(ScreenConstants.DEFAULT_DIALOG_WIDTH/2).row();
+                Label shipSpeed = new Label(String.valueOf(s.getAttribute(TRAVEL_SPEED)), skin);
+                row.add(shipSpeed)
+                        .align(Align.center)
+                        .uniformX().expandX()
+                        .pad(ScreenConstants.DEFAULT_PADDING)
+                        .width(defaultActorWidth);
+
+                Label miningSpeed = new Label(String.valueOf(s.getAttribute(MINING_SPEED)), skin);
+                row.add(miningSpeed)
+                        .align(Align.center)
+                        .uniformX().expandX()
+                        .pad(ScreenConstants.DEFAULT_PADDING)
+                        .width(defaultActorWidth);
+
+                Label resourceCapacity = new Label(String.valueOf(s.getAttribute(RESOURCE_CAPACITY)), skin);
+                row.add(resourceCapacity)
+                        .align(Align.center)
+                        .uniformX().expandX()
+                        .pad(ScreenConstants.DEFAULT_PADDING)
+                        .width(defaultActorWidth);
+
+                shipSelectionTable.addRow(row).expandX().row();
 
             }
 
@@ -170,38 +201,7 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
 
         ScrollPane shipSelect = new ScrollPane(shipSelectionTable);
 
-        // SHIP SELECT LIST
-
-        /*final SelectBox<Ship> shipListSelect = new SelectBox<>(skin);
-        shipListSelect.setItems(shipsAtBase.toArray(new Ship[0]));
-        shipListSelect.setSelected(shipToTravel);
-
-        shipListSelect.addListener(new ChangeListener(){
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                shipToTravel = shipListSelect.getItems().get(shipListSelect.getSelectedIndex());
-                resetView();
-            }
-        });
-
-         */
-
-        getContentTable().add(planetImage)
-                .expandX()
-                .width(defaultTableWidth)
-                .height(defaultTableHeight);
-
-        getContentTable().add(shipSelect)
-                .expandX()
-                .height(ScreenConstants.DEFAULT_DIALOG_HEIGHT/3f)
-                .row();
-
-        getContentTable().add(travelView)
-                .expandX()
-                .width(defaultSelectBoxWidth)
-                .height(defaultSelectBoxHeight);
-
-        // RESOURCE SELECT LIST
+        // -- RESOURCE PICKER -- //
 
         final SelectBox<Resource> resourceListSelect = new SelectBox<>(skin);
         resourceListSelect.setItems(planet.getResources().toArray(new Resource[0]));
@@ -214,10 +214,35 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
             }
         });
 
+        // CONTENT TABLE
+
+        getContentTable().add(planetImage)
+                .pad(TABLE_PADDING)
+                .size(400);
+
+        Table contentShipSelect = new Table();
+        contentShipSelect.add(upperLine).expandX().row();
+        contentShipSelect.add(shipSelect).expandX();
+
+        getContentTable().add(travelView)
+                .expandX()
+                .uniformX()
+                .row();
+
+        getContentTable().add(contentShipSelect)
+                .expandX()
+                .height(ScreenConstants.DEFAULT_DIALOG_HEIGHT/3f)
+                .colspan(2)
+                .pad(TABLE_PADDING);
+
+        /*
         getContentTable().add(resourceListSelect)
                 .expandX()
-                .width(defaultSelectBoxWidth)
-                .height(defaultSelectBoxHeight);
+                .uniformX();
+        */
+
+
+        //getContentTable().debug(Debug.all);
 
         // BUTTON TABLE
 
@@ -240,8 +265,6 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
             }
         });
         getButtonTable().add(closeBtn);
-
-        getContentTable().debug(Debug.all);
 
     }
 

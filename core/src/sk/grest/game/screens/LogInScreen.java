@@ -4,12 +4,14 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
+import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.ui.TextButton;
 import com.badlogic.gdx.scenes.scene2d.ui.TextField;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
+import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
 import sk.grest.game.InterstellarMining;
@@ -44,6 +46,10 @@ public class LogInScreen implements Screen {
         //passwordInput.setPasswordCharacter('*');
         //passwordInput.setPasswordMode(true);
 
+        CheckBox rememberMe = new CheckBox("  Remember me?", game.getUISkin());
+        rememberMe.getImage().setScaling(Scaling.fill);
+        rememberMe.getImageCell().size(30);
+        rememberMe.setChecked(false);
 
         TextButton submit = new TextButton("LOG IN", game.getUISkin());
         submit.addListener(new ClickListener(){
@@ -78,6 +84,8 @@ public class LogInScreen implements Screen {
 
         table.add(passwordLabel).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center);
         table.add(passwordInput).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center).padBottom(PADDING).row();
+
+        table.add(rememberMe).align(Align.left).height(ACTOR_HEIGHT).row();
 
         table.add(submit).height(ACTOR_HEIGHT).fillX().align(Align.center).colspan(2).padBottom(PADDING).row();
         table.add(register).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center).padRight(PADDING).padBottom(PADDING);

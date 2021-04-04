@@ -155,6 +155,15 @@ public class DatabaseConstants {
         public static final String TYPE = "type";
     }
 
+    public static final class PlayerGoalTable{
+        public static final String TABLE_NAME = "player_goal";
+        public static final String ID = "id";
+        public static final String PLAYER_ID = DatabaseConstants.PLAYER_ID;
+        public static final String RESOURCE_ID = "resource_id";
+        public static final String AMOUNT_COMPLETED = "amount_completed";
+        public static final String AMOUNT_NEEDED = "amount_needed";
+    }
+
     /*
     public static final class ResourceInShipTable{
         public static final String TABLE_NAME = "resource_in_ship";

@@ -1,4 +1,4 @@
-package sk.grest.game.other;
+package sk.grest.game.other.selection_table;
 
 import com.badlogic.gdx.scenes.scene2d.ui.Cell;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;

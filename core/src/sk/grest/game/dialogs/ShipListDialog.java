@@ -18,8 +18,8 @@ import sk.grest.game.entities.ship.ShipState;
 import sk.grest.game.entities.upgrade.UpgradeRecipe;
 import sk.grest.game.listeners.ItemOpenedListener;
 import sk.grest.game.other.ItemTooltip;
-import sk.grest.game.other.SelectionRow;
-import sk.grest.game.other.SelectionTable;
+import sk.grest.game.other.selection_table.SelectionRow;
+import sk.grest.game.other.selection_table.SelectionTable;
 import sk.grest.game.other.TooltipBuilder;
 
 public class ShipListDialog extends CustomDialog implements ItemOpenedListener<Ship> {

@@ -263,6 +263,9 @@ public class DatabaseConnection {
                 sql += " WHERE " + PLAYER_ID + " = " + playerId;
                 //Gdx.app.log("SQL", sql);
                 break;
+            case PlayerGoalTable.TABLE_NAME:
+                sql += PlayerGoalTable.AMOUNT_COMPLETED + " = " + data.get(PlayerGoalTable.AMOUNT_COMPLETED);
+                sql += " WHERE " + PLAYER_ID + " = " + playerId + " AND " + PlayerGoalTable.RESOURCE_ID + " = " + objectId;
         }
 
         return sql;

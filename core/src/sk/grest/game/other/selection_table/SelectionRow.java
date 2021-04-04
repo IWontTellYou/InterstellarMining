@@ -1,4 +1,4 @@
-package sk.grest.game.other;
+package sk.grest.game.other.selection_table;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Pixmap;

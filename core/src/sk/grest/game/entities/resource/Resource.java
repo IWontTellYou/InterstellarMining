@@ -11,6 +11,7 @@ public class Resource{
     private String assetName;
     private int price;
     private int amount;
+    private int limit;
 
     public Resource(int ID, String name, String assetName, ResourceState state, ResourceRarity rarity, int price, int amount) {
         this.ID = ID;
@@ -20,6 +21,14 @@ public class Resource{
         this.assetName = assetName;
         this.price = price;
         this.amount = amount;
+    }
+
+    public void setLimit(int limit){
+        this.limit = limit;
+    }
+
+    public int getLimit(){
+        return limit;
     }
 
     public int getID() {

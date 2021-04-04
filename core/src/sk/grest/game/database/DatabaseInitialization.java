@@ -30,7 +30,7 @@ import static sk.grest.game.entities.ship.Attributes.AttributeType.TRAVEL_SPEED;
 
 public class DatabaseInitialization {
 
-    public static final int TABLE_COUNT = 12;
+    public static final int TABLE_COUNT = 13;
 
     public static final int PLANET_TABLE = 0;
     public static final int PLANET_RESOURCE_TABLE = 1;
@@ -45,6 +45,7 @@ public class DatabaseInitialization {
     public static final int PLAYER_OBSERVATORY = 9;
     public static final int PLAYER_RESOURCE_TABLE = 10;
     public static final int PLAYER_PLANET_TABLE = 11;
+    public static final int PLAYER_GOAL_TABLE = 12;
 
     //public static final int ACHIEVEMENT_TABLE = 12;
     // public static final int PLAYER_ACHIEVEMENT_TABLE = 16;
@@ -329,6 +330,16 @@ public class DatabaseInitialization {
         }
         Gdx.app.log(PlayerResourceTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_RESOURCE_TABLE] = true;
+    }
+    public void initializePlayerGoalTable(ArrayList<Map<String, Object>> tableData){
+        for (Map<String, Object> data : tableData) {
+            Resource r = Resource.clone(game.getResourceByID((Integer) data.get(PlayerGoalTable.RESOURCE_ID)));
+            r.setAmount((Integer) data.get(PlayerGoalTable.AMOUNT_COMPLETED));
+            r.setLimit((Integer) data.get(PlayerGoalTable.AMOUNT_NEEDED));
+            game.getGoalResources().add(r);
+        }
+        Gdx.app.log(PlayerGoalTable.TABLE_NAME, "INITIALIZATION DONE!");
+        tables[PLAYER_GOAL_TABLE] = true;
     }
 
     @Deprecated

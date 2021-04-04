@@ -86,6 +86,24 @@ public class ScreenConstants {
             return amount + "";
     }
 
+    public static String getMoneyFormatShorter(long amount){
+
+        if(amount >= 1000 * GameConstants.QUADRILION){
+            return "TOO MUCH MONEY";
+        }else if(amount >= GameConstants.QUADRILION){
+            return String.format("%.0f", amount / GameConstants.QUADRILION) + GameConstants.QUADRILLION_SIGN;
+        }else if(amount >= GameConstants.TRILLION) {
+            return String.format("%.0f", amount / GameConstants.TRILLION) + GameConstants.TRILLION_SIGN;
+        }else if(amount >= GameConstants.BILLION) {
+            return String.format("%.0f", amount / GameConstants.BILLION) + GameConstants.BILLION_SIGN;
+        }else if(amount >= GameConstants.MILLION){
+            return String.format("%.0f", amount / GameConstants.MILLION) + GameConstants.MILLION_SIGN;
+        }else if(amount >= GameConstants.THOUSAND){
+            return String.format("%.0f", amount / GameConstants.THOUSAND) + GameConstants.THOUSAND_SIGN;
+        }else
+            return amount + "";
+    }
+
     public static TextureRegionDrawable getBackground(Color color){
         Pixmap bgPixmap = new Pixmap(1,1,Pixmap.Format.RGBA8888);
         bgPixmap.setColor(color);
