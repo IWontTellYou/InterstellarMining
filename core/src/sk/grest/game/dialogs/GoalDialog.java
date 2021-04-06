@@ -97,21 +97,7 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
         getContentTable().add(col0).expandY();
         getContentTable().add(col1).expandY();
 
-        final Dialog dialog = this;
-        TextButton closeBtn = new TextButton("CLOSE", skin);
-        closeBtn.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                dialog.hide();
-            }
-        });
-
-        getContentTable().row();
-        getContentTable().add(closeBtn)
-                .width(ScreenConstants.DEFAULT_DIALOG_WIDTH/3f)
-                .height(ScreenConstants.DEFAULT_DIALOG_HEIGHT/15f)
-                .colspan(2)
-                .align(Align.bottom);
+        addCloseButton(this, 2);
 
     }
 

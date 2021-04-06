@@ -5,9 +5,11 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.Pixmap;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Gdx2DPixmap;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Vector2;
 import com.badlogic.gdx.scenes.scene2d.Actor;
+import com.badlogic.gdx.scenes.scene2d.ui.Table;
 import com.badlogic.gdx.scenes.scene2d.utils.Drawable;
 import com.badlogic.gdx.scenes.scene2d.utils.TextureRegionDrawable;
 
@@ -18,11 +20,13 @@ public class ScreenConstants {
 
     // COLORS
     public static final Color DARK_GRAY = new Color(96/255f,96/255f,96/255f, 1);
-    public static final Color LIGHT_GRAY = new Color(144/255f,144/255f,144/255f, 1);
+    public static final Color LIGHT_GRAY = new Color(144/255f,144/255f,144/255f, 0.25f);
     public static final Color DARK_BLUE = new Color(0/255f, 3/255f, 199/255f, 1);
     public static final Color CYAN_BLUE = new Color(45/255f, 221/255f, 252/255f, 1);
     public static final Color RED = new Color(112/255f, 0/255f, 0/255f, 0.9f);
     public static final Color TRANSPARENT = new Color(1f, 1f, 1f, 0f);
+
+    public static final Color SMOOTH_GRAY = new Color(87/255f, 89/255f, 93/255f, 0.5f);
 
     public static Texture blank = new Texture(Gdx.files.internal("image/white_background.png"));
 
@@ -110,4 +114,5 @@ public class ScreenConstants {
         bgPixmap.fill();
         return new TextureRegionDrawable(new TextureRegion(new Texture(bgPixmap)));
     }
+
 }

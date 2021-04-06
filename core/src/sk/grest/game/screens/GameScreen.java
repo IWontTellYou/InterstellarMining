@@ -256,9 +256,10 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                         public void clicked(InputEvent event, float x, float y) {
                             travelSettingDialog.getShipToTravel().setDestination(
                                             game,
-                                            planetStats.getCurrentPlanet(),
+                                            travelSettingDialog.getPlanet(),
                                             travelSettingDialog.getResourceToMine()
                                     );
+                            travelSettingDialog.hide();
                         }
                     });
                 }

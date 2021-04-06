@@ -5,6 +5,8 @@ import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.ui.Tooltip;
+import com.badlogic.gdx.scenes.scene2d.ui.TooltipManager;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
@@ -15,7 +17,10 @@ import sk.grest.game.dialogs.upgrade.UpgradeResourceView;
 import sk.grest.game.entities.Observatory;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.upgrade.UpgradeRecipe;
+import sk.grest.game.other.ItemTooltip;
+import sk.grest.game.other.TooltipBuilder;
 
+import static sk.grest.game.constants.ScreenConstants.*;
 import static sk.grest.game.entities.Observatory.OBSERVATORY_ACCURACY;
 import static sk.grest.game.entities.Observatory.OBSERVATORY_SPEED;
 
@@ -27,9 +32,15 @@ public class ObservatoryDialog extends CustomDialog {
     private Label timeLeft;
     private Image planetImage;
 
+    Label speedInfo;
+    Label accuracyInfo;
+
     public ObservatoryDialog(String title, Skin skin, final InterstellarMining game) {
         super(title, skin);
         this.game = game;
+
+        TooltipManager manager = TooltipManager.getInstance();
+        manager.instant();
 
         setBackground(InterstellarMining.back);
 
@@ -47,10 +58,11 @@ public class ObservatoryDialog extends CustomDialog {
         }
         timeLeft.setAlignment(Align.center);
 
-        final Label speedLabel = new Label("Search speed - Searching time is reduced by " + (int)((1-observatory.getSpeed())*100) + " %", skin);
+        final Label speedLabel = new Label("Search speed", skin);
         speedLabel.setAlignment(Align.center);
         UpgradeResourceView speedView = new UpgradeResourceView(game, recipes[OBSERVATORY_SPEED], observatory, game.getPlayer(), OBSERVATORY_SPEED);
-        final Label accuracyLabel = new Label("Accuracy - Chance of not finding planet is reduced by " + (int)((1-observatory.getAccuracy())*100) + " %", skin);
+
+        final Label accuracyLabel = new Label("Accuracy", skin);
         accuracyLabel.setAlignment(Align.center);
         UpgradeResourceView accuracyView = new UpgradeResourceView(game, recipes[OBSERVATORY_ACCURACY], observatory, game.getPlayer(), OBSERVATORY_ACCURACY);
 
@@ -58,7 +70,8 @@ public class ObservatoryDialog extends CustomDialog {
             speedView.getUpgradeButton().getButton().addListener(new ClickListener(){
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    speedLabel.setText("Search speed - Searching time is reduced by " + (int)((1-observatory.getSpeed())*100) + " %");
+                    speedLabel.setText("Search speed");
+                    speedInfo.setText("Searching time is reduced by " + (int)((1-observatory.getSpeed())*100) + " %");
                 }
             });
         }
@@ -67,7 +80,8 @@ public class ObservatoryDialog extends CustomDialog {
             accuracyView.getUpgradeButton().getButton().addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {
-                    accuracyLabel.setText("Accuracy - Chance of not finding planet is reduced by " + (int) ((1 - observatory.getAccuracy()) * 100) + " %");
+                    accuracyLabel.setText("Accuracy");
+                    accuracyInfo.setText("Chance of not finding planet is reduced by " + (int)((1-observatory.getAccuracy())*100) + " %");
                 }
             });
         }
@@ -84,30 +98,47 @@ public class ObservatoryDialog extends CustomDialog {
         });
 
         Table upgradeBars = new Table(skin);
-        upgradeBars.add(speedLabel).expandX().row();
-        upgradeBars.add(speedView).expandX().row();
-        upgradeBars.add(accuracyLabel).expandX().row();
-        upgradeBars.add(accuracyView).expandX().row();
+
+        Table speedTable = new Table();
+        speedTable.add(speedLabel).expandX().row();
+        speedTable.add(speedView).expandX().row();
+
+        speedInfo = new Label("Searching time is reduced by " + (int)((1-observatory.getSpeed())*100) + " %", skin);
+        speedTable.addListener(new Tooltip<>(speedInfo));
+
+        Table accuracyTable = new Table();
+        accuracyTable.add(accuracyLabel).expandX().row();
+        accuracyTable.add(accuracyView).expandX().row();
+
+        accuracyInfo = new Label("Chance of not finding planet is reduced by " + (int)((1-observatory.getAccuracy())*100) + " %", skin);
+        accuracyTable.addListener(new Tooltip<>(accuracyInfo));
+
+        upgradeBars.add(speedTable).width(300).padBottom(DEFAULT_PADDING*5).row();
+        upgradeBars.add(accuracyTable).width(300).row();
 
         Table searchBar = new Table(skin);
         searchBar.add(searchButton.getButton())
-                .size(ScreenConstants.DEFAULT_BUTTON_SIZE);
+                .size(DEFAULT_BUTTON_SIZE);
 
         searchBar.add(timeLeft)
-                .width(ScreenConstants.DEFAULT_ACTOR_WIDTH);
+                .width(DEFAULT_ACTOR_WIDTH);
 
 
         getContentTable().add(planetImage)
-                .size(ScreenConstants.DEFAULT_DIALOG_HEIGHT/2f);
+                .uniformY()
+                .size(DEFAULT_DIALOG_HEIGHT/2f);
 
         getContentTable().add(upgradeBars)
-                .expandX()
+                .uniformY()
+                .width(DEFAULT_DIALOG_WIDTH/2f)
                 .row();
 
         getContentTable().add(searchBar)
-                .width(ScreenConstants.DEFAULT_DIALOG_HEIGHT/2f);
+                .width(DEFAULT_DIALOG_HEIGHT/2f);
 
-        addCloseButton(this);
+        getContentTable().debugCell();
+
+        addCloseButton(this, 2);
 
     }
 

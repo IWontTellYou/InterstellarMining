@@ -53,6 +53,22 @@ public class CustomDialog extends Dialog {
                 .align(Align.center);
     }
 
+    public void addCloseButton(final Dialog dialog, int colspan){
+        TextButton closeBtn = new TextButton("CLOSE", skin);
+        closeBtn.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                dialog.hide();
+            }
+        });
+        getContentTable().row();
+        getContentTable().add(closeBtn)
+                .width(ScreenConstants.DEFAULT_DIALOG_WIDTH/3f)
+                .height(ScreenConstants.DEFAULT_DIALOG_HEIGHT/15f)
+                .colspan(colspan)
+                .align(Align.center);
+    }
+
     @Override
     public float getPrefWidth() {
         return ScreenConstants.DEFAULT_DIALOG_WIDTH;

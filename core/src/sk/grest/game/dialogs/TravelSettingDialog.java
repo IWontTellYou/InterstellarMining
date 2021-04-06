@@ -42,9 +42,8 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
     private Resource resourceToMine;
 
     private Label distance;
-    private Label capacity;
-    private Label fuel;
     private Label estimateTime;
+
 
     public TravelSettingDialog(InterstellarMining game, Planet planet, String title, Skin skin) {
         super(title, skin);
@@ -85,31 +84,7 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
                 .pad(TABLE_PADDING)
                 .row();
 
-        travelView.add(new Label("Capacity:", skin))
-                .expandX()
-                .width(defaultActorWidth)
-                .pad(TABLE_PADDING);
-
-        capacity = new Label(shipToTravel.getAttribute(RESOURCE_CAPACITY)+"", skin);
-        travelView.add(capacity)
-                .expandX()
-                .width(defaultActorWidth)
-                .pad(TABLE_PADDING)
-                .row();
-
         // TODO FORMULA FOR CAPACITY/EFFICIENCY AND TRUE/FALSE VALUE IF POSSIBLE TO GO...
-
-        travelView.add(new Label("Fuel:", skin))
-                .expandX()
-                .width(defaultActorWidth)
-                .pad(TABLE_PADDING);
-
-        fuel = new Label(shipToTravel.getAttribute(FUEL_CAPACITY)+"", skin);
-        travelView.add(fuel)
-                .expandX()
-                .width(defaultActorWidth)
-                .pad(TABLE_PADDING)
-                .row();
 
         travelView.add(new Label("Estimated time:", skin))
                 .expandX()
@@ -121,6 +96,26 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
                 .expandX()
                 .width(defaultActorWidth)
                 .pad(TABLE_PADDING)
+                .row();
+
+        // -- RESOURCE PICKER -- //
+
+        final SelectBox<Resource> resourceListSelect = new SelectBox<>(skin);
+        resourceListSelect.setItems(planet.getResources().toArray(new Resource[0]));
+        resourceListSelect.setSelected(resourceToMine);
+
+        resourceListSelect.addListener(new ChangeListener(){
+            @Override
+            public void changed(ChangeEvent event, Actor actor) {
+                resourceToMine = resourceListSelect.getItems().get(resourceListSelect.getSelectedIndex());
+            }
+        });
+
+        travelView.add(resourceListSelect)
+                .expandX()
+                .pad(TABLE_PADDING)
+                .colspan(2)
+                .align(Align.left)
                 .row();
 
         //travelView.setBackground(ScreenConstants.getBackground(ScreenConstants.LIGHT_GRAY));
@@ -151,11 +146,12 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
                 .pad(ScreenConstants.DEFAULT_PADDING)
                 .width(defaultActorWidth);
 
+
         //upperLine.debug(Debug.all);
 
         SelectionTable<Ship> shipSelectionTable = new SelectionTable<>(this, true);
 
-        for (Ship s : game.getShipsShop()) {
+        for (Ship s : shipsAtBase) {
 
             if(s.getState() == ShipState.AT_THE_BASE){
                 SelectionRow<Ship> row = new SelectionRow<>(skin);
@@ -201,19 +197,6 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
 
         ScrollPane shipSelect = new ScrollPane(shipSelectionTable);
 
-        // -- RESOURCE PICKER -- //
-
-        final SelectBox<Resource> resourceListSelect = new SelectBox<>(skin);
-        resourceListSelect.setItems(planet.getResources().toArray(new Resource[0]));
-        resourceListSelect.setSelected(resourceToMine);
-
-        resourceListSelect.addListener(new ChangeListener(){
-            @Override
-            public void changed(ChangeEvent event, Actor actor) {
-                resourceToMine = resourceListSelect.getItems().get(resourceListSelect.getSelectedIndex());
-            }
-        });
-
         // CONTENT TABLE
 
         getContentTable().add(planetImage)
@@ -235,13 +218,6 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
                 .colspan(2)
                 .pad(TABLE_PADDING);
 
-        /*
-        getContentTable().add(resourceListSelect)
-                .expandX()
-                .uniformX();
-        */
-
-
         //getContentTable().debug(Debug.all);
 
         // BUTTON TABLE
@@ -249,12 +225,6 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
         final TravelSettingDialog travelSettingDialog = this;
 
         this.startBtn = new TextButton("START", skin);
-        startBtn.addListener(new ClickListener(){
-            @Override
-            public void clicked(InputEvent event, float x, float y) {
-                travelSettingDialog.hide();
-            }
-        });
         getButtonTable().add(startBtn);
 
         this.closeBtn = new TextButton("CLOSE", skin);
@@ -270,8 +240,6 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
 
     private void resetView(){
         distance.setText(TravelPlan.getDistance(planet) + " km");
-        capacity.setText(shipToTravel.getAttribute(RESOURCE_CAPACITY));
-        fuel.setText(shipToTravel.getAttribute(FUEL_CAPACITY));
         estimateTime.setText(ScreenConstants.getTimeFormat(TravelPlan.getTime(shipToTravel, planet)));
     }
 
@@ -280,6 +248,10 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
     }
     public TextButton getStartBtn() {
         return startBtn;
+    }
+
+    public Planet getPlanet(){
+        return planet;
     }
     public Ship getShipToTravel() {
         return shipToTravel;
@@ -290,6 +262,7 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
 
     @Override
     public void onItemOpenedListener(Ship item) {
-
+        shipToTravel = item;
+        resetView();
     }
 }
