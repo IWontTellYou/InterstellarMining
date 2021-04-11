@@ -22,8 +22,6 @@ import sk.grest.game.entities.upgrade.UpgradeRecipe;
 import sk.grest.game.screens.GameScreen;
 
 import static sk.grest.game.database.DatabaseConstants.*;
-import static sk.grest.game.entities.ship.Attributes.AttributeType.FUEL_CAPACITY;
-import static sk.grest.game.entities.ship.Attributes.AttributeType.FUEL_EFFICIENCY;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.MINING_SPEED;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.RESOURCE_CAPACITY;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.TRAVEL_SPEED;
@@ -86,8 +84,6 @@ public class DatabaseInitialization {
                     (String) data.get(PlanetTable.NAME),
                     (String) data.get(PlanetTable.ASSET_ID),
                     (int) data.get(PlanetTable.DISTANCE),
-                    (boolean) data.get(PlanetTable.HABITABLE),
-                    (String) data.get(PlanetTable.INFO),
                     new ArrayList<Resource>()
             );
             game.getPlanets().add(planet);
@@ -137,8 +133,6 @@ public class DatabaseInitialization {
                     (Integer) data.get(ShipTable.MINING_SPEED),
                     (Integer) data.get(ShipTable.TRAVEL_SPEED),
                     (Integer) data.get(ShipTable.RESOURCE_CAPACITY),
-                    (Integer) data.get(ShipTable.FUEL_CAPACITY),
-                    (Integer) data.get(ShipTable.FUEL_EFFICIENCY),
                     (Integer) data.get(ShipTable.PRICE),
                     0
             );
@@ -211,9 +205,6 @@ public class DatabaseInitialization {
                 (Integer) playerData.get(PlayerTable.ID),
                 (String) playerData.get(PlayerTable.NAME),
                 (String) playerData.get(PlayerTable.PASSWORD),
-                (String) playerData.get(PlayerTable.EMAIL),
-                (Integer) playerData.get(PlayerTable.LEVEL),
-                (Integer) playerData.get(PlayerTable.EXPERIENCE),
                 Long.parseLong((String) playerData.get(PlayerTable.MONEY))
         );
         game.setPlayer(p);
@@ -230,7 +221,6 @@ public class DatabaseInitialization {
         Gdx.app.log(PlayerPlanetTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_PLANET_TABLE] = true;
     }
-
     public void initializePlayerShipTable(ArrayList<Map<String, Object>> tableData){
         for (Map<String, Object> data : tableData) {
             Ship s = game.getShipByID((Integer) data.get(PlayerShipTable.SHIP_ID));
@@ -248,8 +238,6 @@ public class DatabaseInitialization {
                     s.getAttribute(MINING_SPEED),
                     s.getAttribute(TRAVEL_SPEED),
                     s.getAttribute(RESOURCE_CAPACITY),
-                    s.getAttribute(FUEL_CAPACITY),
-                    s.getAttribute(FUEL_EFFICIENCY),
                     s.getPrice(),
                     (Integer) data.get(PlayerShipTable.UPGRADE_LEVEL)
             );
@@ -257,9 +245,7 @@ public class DatabaseInitialization {
             ship.setAttributes(
                     (Integer) data.get(PlayerShipTable.MINING_SPEED_LVL),
                     (Integer) data.get(PlayerShipTable.TRAVEL_SPEED_LVL),
-                    (Integer) data.get(PlayerShipTable.RESOURCE_CAPACITY_LVL),
-                    (Integer) data.get(PlayerShipTable.FUEL_CAPACITY_LVL),
-                    (Integer) data.get(PlayerShipTable.FUEL_EFFICIENCY_LVL)
+                    (Integer) data.get(PlayerShipTable.RESOURCE_CAPACITY_LVL)
             );
 
             if (data.get(PlayerShipTable.TASK_TIME) != null && Long.parseLong((String) data.get(PlayerShipTable.TASK_TIME)) != 0 && destination != null) {
@@ -307,14 +293,11 @@ public class DatabaseInitialization {
                     (Integer) data.get(PlayerObservatoryTable.ACCURACY_LVL)
             );
 
-            if (data.get(PlayerObservatoryTable.PLANET_ID) != null) {
-                int planet_id = (Integer) data.get(PlayerObservatoryTable.PLANET_ID);
-                observatory.setPlanet(game.getPlanetByID(planet_id));
-            } else {
-                observatory.setPlanet(null);
-                String time = (String) data.get(PlayerObservatoryTable.END_TIME);
-                observatory.setSearch((time == null) ? 0 : Long.parseLong(time));
-            }
+            String time = (String) data.get(PlayerObservatoryTable.END_TIME);
+            observatory.setSearch((time == null) ? 0 : Long.parseLong(time));
+
+            Object planetId = data.get(PlayerObservatoryTable.PLANET_ID);
+            observatory.setPlanet((planetId == null) ? null : game.getPlanetByID((Integer) planetId));
 
             game.getPlayer().setObservatory(observatory);
 
@@ -336,7 +319,7 @@ public class DatabaseInitialization {
             Resource r = Resource.clone(game.getResourceByID((Integer) data.get(PlayerGoalTable.RESOURCE_ID)));
             r.setAmount((Integer) data.get(PlayerGoalTable.AMOUNT_COMPLETED));
             r.setLimit((Integer) data.get(PlayerGoalTable.AMOUNT_NEEDED));
-            game.getGoalResources().add(r);
+            game.getPlayer().getGoalResources().add(r);
         }
         Gdx.app.log(PlayerGoalTable.TABLE_NAME, "INITIALIZATION DONE!");
         tables[PLAYER_GOAL_TABLE] = true;

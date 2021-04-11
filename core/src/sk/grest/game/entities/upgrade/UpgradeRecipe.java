@@ -10,6 +10,7 @@ public class UpgradeRecipe implements Comparable<UpgradeRecipe> {
 
     public static final int OBSERVATORY_SPEED = 2;
     public static final int OBSERVATORY_ACCURACY = 3;
+    public static final int GOAL = 4;
 
     private int level;
     private ArrayList<Resource> resourcesNeeded;

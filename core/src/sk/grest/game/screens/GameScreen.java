@@ -19,6 +19,7 @@ import javax.swing.ToolTipManager;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.dialogs.GoalDialog;
+import sk.grest.game.dialogs.LeadershipDialog;
 import sk.grest.game.dialogs.ObservatoryDialog;
 import sk.grest.game.dialogs.factory.FactoryDialog;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
@@ -122,7 +123,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-
+                LeadershipDialog leadershipDialog = new LeadershipDialog("", game.getUISkin());
+                leadershipDialog.show(stage);
             }
 
             @Override
@@ -220,8 +222,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-        Button otherButton = new Button(game.getSpriteSkin(), "settings", "settings_pressed");
-        otherButton.getButton().addListener(new ClickListener(){
+        Button goalButton = new Button(game.getSpriteSkin(), "achievement", "achievement_pressed");
+        goalButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 goalDialog = new GoalDialog("", game.getUISkin(), game.getSpriteSkin(), game);
@@ -238,8 +240,6 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-
-
         planetBtn = new Button(game.getSpriteSkin(), planetStats.getCurrentPlanet().getAssetId(), null);
         planetBtn.getButton().addListener(new ClickListener(){
             @Override
@@ -251,17 +251,21 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                     travelSettingDialog = new TravelSettingDialog(game, destination, "TRAVEL", game.getUISkin());
                     travelSettingDialog.show(stage);
 
-                    travelSettingDialog.getStartBtn().addListener(new ClickListener(){
-                        @Override
-                        public void clicked(InputEvent event, float x, float y) {
-                            travelSettingDialog.getShipToTravel().setDestination(
-                                            game,
-                                            travelSettingDialog.getPlanet(),
-                                            travelSettingDialog.getResourceToMine()
-                                    );
-                            travelSettingDialog.hide();
-                        }
-                    });
+                    if(game.getPlayer().getShipsAtBase().size() > 0) {
+
+                        travelSettingDialog.getStartBtn().addListener(new ClickListener() {
+                            @Override
+                            public void clicked(InputEvent event, float x, float y) {
+                                travelSettingDialog.getShipToTravel().setDestination(
+                                        game,
+                                        travelSettingDialog.getPlanet(),
+                                        travelSettingDialog.getResourceToMine()
+                                );
+                                travelSettingDialog.hide();
+                            }
+                        });
+
+                    }
                 }
             }
 
@@ -353,9 +357,9 @@ public class GameScreen implements Screen, OnStatsChangedListener {
         rightPanel.setFillParent(false);
         rightPanel.right();
         rightPanel.setOrigin(leftPanel.getPrefWidth() / 2 - 40, leftPanel.getPrefHeight() / 2);
-        rightPanel.add(inventoryButton.getButton()).fill().padTop(15).padBottom(40).padLeft(35).row();
-        rightPanel.add(otherButton.getButton()).fill().padBottom(40).padLeft(35).row();
-        rightPanel.add(settingsButton.getButton()).fill().padLeft(35).row();
+        rightPanel.add(inventoryButton.getButton()).fill().padTop(15).padBottom(40).padLeft(35).padRight(5).row();
+        rightPanel.add(settingsButton.getButton()).fill().padBottom(40).padLeft(35).padRight(5).row();
+        rightPanel.add(goalButton.getButton()).fill().padLeft(35).padRight(5).row();
 
         //rightPanel.debug(Table.Debug.all);
 
@@ -440,7 +444,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
                 s.update(delta);
             }
 
-            moneyLabel.setText(ScreenConstants.getMoneyFormat(game.getPlayer().getMoney()));
+            moneyLabel.setText(ScreenConstants.getMoneyFormat(game.getPlayer().getMoney()) + " @");
 
             // START OF RENDERING SPRITES
             game.getBatch().begin();

@@ -124,19 +124,7 @@ public class ShipsShopDialog extends CustomDialog {
         stats[MINING_SPEED][1].setAlignment(Align.right);
         table.add(stats[MINING_SPEED][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
 
-        stats[FUEL_EFFICIENCY][0] = new Label("FUEL EFFICIENCY", skin);
-        table.add(stats[FUEL_EFFICIENCY][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
-        stats[FUEL_EFFICIENCY][1] = new Label(s.getAttribute(AttributeType.FUEL_EFFICIENCY) + "", skin);
-        stats[FUEL_EFFICIENCY][1].setAlignment(Align.right);
-        table.add(stats[FUEL_EFFICIENCY][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
-
-        stats[FUEL_CAPACITY][0] = new Label("FUEL CAPACITY", skin);
-        table.add(stats[FUEL_CAPACITY][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
-        stats[FUEL_CAPACITY][1] = new Label(s.getAttribute(AttributeType.FUEL_CAPACITY) + "", skin);
-        stats[FUEL_CAPACITY][1].setAlignment(Align.right);
-        table.add(stats[FUEL_CAPACITY][1]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth).row();
-
-        stats[RESOURCE_CAPACITY][0] = new Label("RESOURCE CAPACITY", skin);
+        stats[RESOURCE_CAPACITY][0] = new Label("CAPACITY", skin);
         table.add(stats[RESOURCE_CAPACITY][0]).pad(ScreenConstants.DEFAULT_PADDING).width(defaultActorWidth);
         stats[RESOURCE_CAPACITY][1] = new Label(s.getAttribute(AttributeType.RESOURCE_CAPACITY) + "", skin);
         stats[RESOURCE_CAPACITY][1].setAlignment(Align.right);

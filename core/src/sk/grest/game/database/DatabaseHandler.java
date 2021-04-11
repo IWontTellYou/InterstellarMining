@@ -1,5 +1,6 @@
 package sk.grest.game.database;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -11,12 +12,11 @@ import sk.grest.game.entities.Player;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.resource.Resource;
 import sk.grest.game.entities.ship.Ship;
+import sk.grest.game.entities.upgrade.UpgradeRecipe;
 
 import static sk.grest.game.database.DatabaseConnection.*;
 import static sk.grest.game.database.DatabaseConstants.*;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.*;
-import static sk.grest.game.database.DatabaseConstants.PlayerTable.EMAIL;
-import static sk.grest.game.database.DatabaseConstants.PlayerTable.EXPERIENCE;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.LEVEL;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.NAME;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.PASSWORD;
@@ -60,21 +60,20 @@ public class DatabaseHandler {
         connection.addRow(requestCode++, PlayerLoginHistoryTable.TABLE_NAME, data, game);
     }
 
-    public void addPlayer(String name, String password, String email, ConnectorEvent listener){
+    public void getLeaderBoard(ConnectorEvent listener){
+        connection.getLeaderBoard(requestCode++, listener);
+    }
+
+    public void addPlayer(String name, String password, ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
         data.put(NAME, name);
         data.put(PASSWORD, password);
-        data.put(EMAIL, email);
-        data.put(LEVEL, 1);
-        data.put(EXPERIENCE, 0);
         data.put(MONEY, 10000);
         connection.addRow(requestCode++, TABLE_NAME, data, listener);
     }
     public void updatePlayer(){
         Player p = game.getPlayer();
         Map<String, Object> data = new HashMap<>();
-        data.put(LEVEL, p.getLevel());
-        data.put(EXPERIENCE, p.getExperience());
         data.put(MONEY, p.getMoney());
         connection.updateRow(requestCode++, game.getPlayer().getID(), 0, PlayerTable.TABLE_NAME, data, game);
     }
@@ -123,12 +122,17 @@ public class DatabaseHandler {
         connection.addRow(requestCode++, PlayerShipTable.TABLE_NAME, basicShip, listener);
 
         // TODO FINISH GOAL INITIALIZATION
-        /*
-        for (:) {
 
+        UpgradeRecipe goal = game.getUpgradeRecipe(1, UpgradeRecipe.GOAL);
+
+        for (Resource r : goal.getResourcesNeeded()) {
+            Map<String, Object> goalData = new HashMap<>();
+            goalData.put(PlayerGoalTable.AMOUNT_COMPLETED, 0);
+            goalData.put(PlayerGoalTable.AMOUNT_NEEDED, r.getAmount());
+            goalData.put(PlayerGoalTable.RESOURCE_ID, r.getID());
+            goalData.put(PlayerGoalTable.PLAYER_ID, playerId);
+            connection.addRow(requestCode++, PlayerGoalTable.TABLE_NAME, goalData, listener);
         }
-
-         */
 
     }
 
@@ -160,8 +164,6 @@ public class DatabaseHandler {
         data.put(RESOURCE_ID, (ship.getTravelPlan() != null && ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getResource().getID() : null);
         data.put(AMOUNT, (ship.getTravelPlan() != null && ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getResource().getAmount() : 0);
         data.put(TASK_TIME, (ship.getTravelPlan() != null && ship.getTravelPlan().getResource() != null) ? ship.getTravelPlan().getStartTime() : null);
-        data.put(FUEL_CAPACITY_LVL, ship.getAttributes().getAttribute(FUEL_CAPACITY));
-        data.put(FUEL_EFFICIENCY_LVL, ship.getAttributes().getAttribute(FUEL_EFFICIENCY));
         data.put(TRAVEL_SPEED_LVL, ship.getAttributes().getAttribute(TRAVEL_SPEED));
         data.put(MINING_SPEED_LVL, ship.getAttributes().getAttribute(MINING_SPEED));
         data.put(RESOURCE_CAPACITY_LVL, ship.getAttributes().getAttribute(RESOURCE_CAPACITY));

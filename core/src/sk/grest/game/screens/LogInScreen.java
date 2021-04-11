@@ -2,6 +2,7 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.files.FileHandle;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -14,11 +15,20 @@ import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
+import java.io.BufferedReader;
+import java.io.BufferedWriter;
+import java.io.FileNotFoundException;
+import java.io.FileReader;
+import java.io.FileWriter;
+import java.io.IOException;
+
 import sk.grest.game.InterstellarMining;
 
 import static sk.grest.game.constants.ScreenConstants.*;
 
 public class LogInScreen implements Screen {
+
+    private static final FileHandle file_path = Gdx.files.internal("remember_user.txt");
 
     private static final float ACTOR_WIDTH = DEFAULT_ACTOR_WIDTH * 2f;
     private static final float ACTOR_HEIGHT = DEFAULT_ACTOR_HEIGHT * 1.5f;
@@ -31,31 +41,80 @@ public class LogInScreen implements Screen {
     final private TextField passwordInput;
     final private Label errorMessage = null;
 
+    private boolean remember;
+
     public LogInScreen(final InterstellarMining game) {
         Gdx.app.log("SCREEN_CHANGE", "Screen changed to LogIn");
+
+        remember = false;
 
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
 
         final Label nameLabel = new Label("Enter name:", game.getUISkin());
-        nameInput = new TextField("admin", game.getUISkin());
+        nameInput = new TextField("", game.getUISkin());
 
         final Label passwordLabel = new Label("Enter password:", game.getUISkin());
-        passwordInput = new TextField("cisco123", game.getUISkin());
-        //passwordInput.setPasswordCharacter('*');
-        //passwordInput.setPasswordMode(true);
+        passwordInput = new TextField("", game.getUISkin());
+        passwordInput.setPasswordCharacter('*');
+        passwordInput.setPasswordMode(true);
 
-        CheckBox rememberMe = new CheckBox("  Remember me?", game.getUISkin());
+        final CheckBox rememberMe = new CheckBox("  Remember me?", game.getUISkin());
         rememberMe.getImage().setScaling(Scaling.fill);
         rememberMe.getImageCell().size(30);
         rememberMe.setChecked(false);
+
+        rememberMe.addListener(new ClickListener(){
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                remember = rememberMe.isChecked();
+            }
+        });
+
+        BufferedReader br;
+        try {
+            br = new BufferedReader(new FileReader(String.valueOf(file_path)));
+
+            String name = br.readLine();
+            String password = br.readLine();
+
+            if(name != null && password != null){
+                nameInput.setText(name);
+                passwordInput.setText(password);
+                rememberMe.setChecked(true);
+                remember = true;
+            }
+
+            br.close();
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
         TextButton submit = new TextButton("LOG IN", game.getUISkin());
         submit.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 game.getHandler().verifyPlayer(nameInput.getText(), passwordInput.getText(), game);
+
+
+                BufferedWriter bw;
+                try {
+                    bw = new BufferedWriter(new FileWriter(String.valueOf(file_path), false));
+                    if (remember) {
+                        bw.write(nameInput.getText());
+                        bw.newLine();
+                        bw.write(passwordInput.getText());
+                    }
+                    bw.close();
+
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+
+
             }
         });
 

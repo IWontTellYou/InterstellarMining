@@ -80,8 +80,6 @@ public class TooltipBuilder {
         Label travelSpeed = new Label(""+ship.getAttribute(TRAVEL_SPEED), uiSkin);
         Label miningSpeed = new Label(ship.getAttribute(MINING_SPEED)+"", uiSkin);
         Label resourceCapacity = new Label(ship.getAttribute(RESOURCE_CAPACITY)+"", uiSkin);
-        Label fuelCapacity = new Label(ship.getAttribute(FUEL_CAPACITY)+"", uiSkin);
-        Label fuelEfficiency = new Label(ship.getAttribute(FUEL_EFFICIENCY)+"", uiSkin);
 
         item.add(name).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING).colspan(2).row();
         item.add(img).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING).colspan(2).row();
@@ -94,12 +92,6 @@ public class TooltipBuilder {
 
         item.add(resourceCapacityLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
         item.add(resourceCapacity).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
-
-        item.add(fuelCapacityLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
-        item.add(fuelCapacity).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
-
-        item.add(fuelEfficiencyLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
-        item.add(fuelEfficiency).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();
 
         item.add(level).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING);
 

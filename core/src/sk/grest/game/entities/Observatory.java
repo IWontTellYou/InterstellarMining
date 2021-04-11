@@ -10,11 +10,21 @@ import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.planet.Planet;
 import sk.grest.game.entities.upgrade.Upgradable;
 
+import static sk.grest.game.constants.GameConstants.*;
+
 public class Observatory implements Upgradable {
+
+    // TODO MAKE FURTHER TEST WHEN MORE PLANETS READY
+
+    public static final int DEFAULT_WAITING_TIME = (int) GameConstants.DAY;
+
+    public static final int NONE = 0;
+    public static final int SEARCHING = 1;
+    public static final int WAITING = 2;
 
     public static final int MAX_LEVEL = 5;
 
-    public static final int DEFAULT_SEARCH_TIME = (int) (4*GameConstants.HOUR);
+    public static final int DEFAULT_SEARCH_TIME = (int) (4* HOUR);
     public static final int OBSERVATORY_SPEED = 0;
     public static final int OBSERVATORY_ACCURACY = 1;
 
@@ -24,54 +34,54 @@ public class Observatory implements Upgradable {
     private long endTime;
 
     private Random rn;
-    private boolean searching;
 
     public Observatory(int speed_level, int accuracy_level){
         this.rn = new Random();
         this.speed_level = speed_level;
         this.accuracy_level = accuracy_level;
-        this.searching = false;
     }
 
     public void setPlanet(Planet planet) {
         this.planet = planet;
-        this.endTime = (long) (System.currentTimeMillis() + GameConstants.DAY);
+        this.endTime = (long) (endTime + MINUTE);
     }
-    public void setSearch(long endTime){
+    public void setAction(long endTime){
         this.endTime = endTime;
-        searching = endTime > System.currentTimeMillis();
     }
     public void setSearch(){
-        this.endTime = System.currentTimeMillis() +
-                //(int) ((DEFAULT_SEARCH_TIME * getSpeed()) + (rn.nextInt(60)-30) * GameConstants.MINUTE);
-                (int) (10 * GameConstants.SECOND);
-        searching = true;
-        Gdx.app.log("NEW SEARCH", ScreenConstants.getTimeFormat(endTime - System.currentTimeMillis()));
+        this.endTime = System.currentTimeMillis() + DEFAULT_WAITING_TIME + (int) ((DEFAULT_SEARCH_TIME * getSpeed()) + (rn.nextInt(60)-30) * GameConstants.MINUTE);
+        Gdx.app.log("NEW SEARCH", ScreenConstants.getTimeFormat(endTime - DEFAULT_WAITING_TIME - System.currentTimeMillis()));
     }
-    public void reset(){
-        searching = false;
+
+    public void setSearch(long endTime){
+        this.endTime = endTime;
     }
 
     public Planet getPlanet(){
         return planet;
     }
     public int getTimeLeftMillis(){
-        return (int) (endTime - System.currentTimeMillis());
+        if(endTime - (int) DEFAULT_WAITING_TIME > System.currentTimeMillis())
+            return (int) (endTime - DEFAULT_WAITING_TIME - System.currentTimeMillis());
+        else {
+            return  (int) (endTime - System.currentTimeMillis());
+        }
     }
     public String getTimeLeft(){
-        long timeLeft = endTime - System.currentTimeMillis();
+        long timeLeft;
+        if(endTime - DEFAULT_WAITING_TIME > System.currentTimeMillis())
+            timeLeft =  endTime - DEFAULT_WAITING_TIME - System.currentTimeMillis();
+        else {
+            timeLeft = endTime - System.currentTimeMillis();
+        }
         return ((timeLeft > 0) ? ScreenConstants.getTimeFormat(timeLeft) : null);
     }
 
     public boolean isSearching() {
-        return searching;
+        return (endTime - DEFAULT_WAITING_TIME - System.currentTimeMillis() > 0);
     }
-
-    private void upgradeSpeed(){
-        speed_level++;
-    }
-    private void upgradeAccuracy(){
-        accuracy_level++;
+    public boolean isWaiting() {
+        return endTime - System.currentTimeMillis() > 0 && endTime - System.currentTimeMillis() < DEFAULT_WAITING_TIME;
     }
 
     public float getSpeed(){
@@ -93,7 +103,6 @@ public class Observatory implements Upgradable {
             speed_level++;
         }
     }
-
     @Override
     public int getLevel(int type) {
         if(type == OBSERVATORY_ACCURACY){
@@ -103,7 +112,6 @@ public class Observatory implements Upgradable {
         }
         return -1;
     }
-
     @Override
     public int getMaxLevel(int type) {
         return MAX_LEVEL;

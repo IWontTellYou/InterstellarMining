@@ -134,6 +134,7 @@ public class DatabaseConstants {
         public static final String PLANET_ID = "planet_id";
         public static final String SPEED_LVL = "speed_lvl";
         public static final String ACCURACY_LVL = "accuracy_lvl";
+        public static final String ACTION_TYPE = "action_type";
     }
 
     public static final class PlayerFactoryTable{

@@ -1,14 +1,6 @@
 package sk.grest.game.entities.ship;
 
-import com.badlogic.gdx.Gdx;
-
-import javax.xml.stream.events.Attribute;
-
-import sk.grest.game.database.DatabaseHandler;
 import sk.grest.game.listeners.DatabaseChangeListener;
-
-import static sk.grest.game.entities.ship.Attributes.AttributeType.FUEL_EFFICIENCY;
-import static sk.grest.game.entities.ship.Attributes.AttributeType.RESOURCE_CAPACITY;
 
 public class Attributes {
 
@@ -20,18 +12,14 @@ public class Attributes {
     private int miningSpeedLvl;
     private int travelSpeedLvl;
     private int resourceCapacityLvl;
-    private int fuelCapacityLvl;
-    private int fuelEfficiencyLvl;
 
     public Attributes(DatabaseChangeListener listener) {
-        this(listener, 1, 1, 1, 1, 1);
+        this(listener, 1, 1, 1);
     }
-    public Attributes(DatabaseChangeListener listener, int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl, int fuelCapacityLvl, int fuelEfficiencyLvl) {
+    public Attributes(DatabaseChangeListener listener, int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl) {
         this.miningSpeedLvl = miningSpeedLvl;
         this.travelSpeedLvl = travelSpeedLvl;
         this.resourceCapacityLvl = resourceCapacityLvl;
-        this.fuelCapacityLvl = fuelCapacityLvl;
-        this.fuelEfficiencyLvl = fuelEfficiencyLvl;
         this.listener = listener;
     }
 
@@ -41,10 +29,6 @@ public class Attributes {
                 return miningSpeedLvl;
             case TRAVEL_SPEED:
                 return travelSpeedLvl;
-            case FUEL_CAPACITY:
-                return fuelCapacityLvl;
-            case FUEL_EFFICIENCY:
-                return fuelEfficiencyLvl;
             case RESOURCE_CAPACITY:
                 return resourceCapacityLvl;
             default:
@@ -59,12 +43,6 @@ public class Attributes {
             case TRAVEL_SPEED:
                 travelSpeedLvl++;
                 break;
-            case FUEL_CAPACITY:
-                fuelCapacityLvl++;
-                break;
-            case FUEL_EFFICIENCY:
-                fuelEfficiencyLvl++;
-                break;
             case RESOURCE_CAPACITY:
                 resourceCapacityLvl++;
                 break;
@@ -78,10 +56,6 @@ public class Attributes {
                 return (int) (BASE_PRICE * Math.pow(MULTIPLIER, miningSpeedLvl));
             case TRAVEL_SPEED:
                 return (int) (BASE_PRICE * Math.pow(MULTIPLIER, travelSpeedLvl));
-            case FUEL_CAPACITY:
-                return (int) (BASE_PRICE * Math.pow(MULTIPLIER, fuelCapacityLvl));
-            case FUEL_EFFICIENCY:
-                return (int) (BASE_PRICE * Math.pow(MULTIPLIER, fuelEfficiencyLvl));
             case RESOURCE_CAPACITY:
                 return (int) (BASE_PRICE * Math.pow(MULTIPLIER, resourceCapacityLvl));
             default:
@@ -102,9 +76,7 @@ public class Attributes {
     public enum AttributeType {
         MINING_SPEED,
         TRAVEL_SPEED,
-        RESOURCE_CAPACITY,
-        FUEL_CAPACITY,
-        FUEL_EFFICIENCY;
+        RESOURCE_CAPACITY;
 
         public static AttributeType getAttributeType(int id){
 
@@ -114,10 +86,6 @@ public class Attributes {
                 case 1:
                     return MINING_SPEED;
                 case 2:
-                    return FUEL_CAPACITY;
-                case 3:
-                    return FUEL_EFFICIENCY;
-                case 4:
                     return RESOURCE_CAPACITY;
             }
 
@@ -130,10 +98,6 @@ public class Attributes {
                 case 1:
                     return TRAVEL_SPEED;
                 case 2:
-                    return FUEL_EFFICIENCY;
-                case 3:
-                    return FUEL_CAPACITY;
-                case 4:
                     return RESOURCE_CAPACITY;
                 default:
                     return null;

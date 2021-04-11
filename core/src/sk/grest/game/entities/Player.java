@@ -19,29 +19,24 @@ public class Player {
     private int ID;
     private String name;
     private String password;
-    private String email;
 
     private long money;
-    private int level;
-    private int experience;
 
     private ArrayList<Ship> ships;
     private ArrayList<Resource> resourcesAtBase;
     private ArrayList<Achievement> achievements;
     private ArrayList<Research> researches;
+    private ArrayList<Resource> goalResources;
 
     private Observatory observatory;
     private ArrayList<FactoryItem> queue;
 
     private InterstellarMining game;
 
-    public Player(InterstellarMining game, int ID, String name, String password, String email, int level, int experience, long money) {
+    public Player(InterstellarMining game, int ID, String name, String password, long money) {
         this.ID = ID;
         this.name = name;
         this.password = password;
-        this.email = email;
-        this.level = level;
-        this.experience = experience;
         this.game = game;
         this.money = money;
 
@@ -50,6 +45,7 @@ public class Player {
         researches = new ArrayList<>();
         achievements = new ArrayList<>();
         queue = new ArrayList<>();
+        goalResources = new ArrayList<>();
     }
 
     public ArrayList<Ship> getShips() {
@@ -78,6 +74,9 @@ public class Player {
     }
     public ArrayList<Achievement> getAchievements() {
         return achievements;
+    }
+    public ArrayList<Resource> getGoalResources(){
+        return goalResources;
     }
 
     // RESOURCE
@@ -142,14 +141,13 @@ public class Player {
     public String getPassword() {
         return password;
     }
-    public String getEmail() {
-        return email;
-    }
-    public int getLevel() {
-        return level;
-    }
-    public int getExperience() {
-        return experience;
+
+    public Resource getGoalResourceByID(int id){
+        for (Resource r : goalResources) {
+            if(r.getID() == id)
+                return r;
+        }
+        return null;
     }
 
     @Override
@@ -158,9 +156,6 @@ public class Player {
                 "ID=" + ID +
                 ", name='" + name + '\'' +
                 ", password='" + password + '\'' +
-                ", email='" + email + '\'' +
-                ", level=" + level +
-                ", experience=" + experience +
                 '}';
     }
     public String getFactoryToString(){

@@ -81,7 +81,8 @@ public class UpgradeResourceView extends Table {
                 resources[i].add(amount).bottom().right().row();
 
                 add(resources[i])
-                        .size(DEFAULT_ITEM_SIZE);
+                        .size(DEFAULT_ITEM_SIZE)
+                        .pad(15);
                 i++;
             }
 

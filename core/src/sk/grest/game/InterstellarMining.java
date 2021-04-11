@@ -36,15 +36,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 	// FRIDAY
 	// TODO TOASTS (WRONG PASSWORD, CANT UPGRADE WHILE SHIP IS NOT AT_THE_BASE)
-	// TODO REMEMBER NAME AND PASSWORD
-
-	// PROBLEMS THAT WILL WAIT
-	// TODO REMEMBER PASSWORD
-	// TODO CLEAN UP CODE
-	// TODO FIX SHIP UPDATE (PROBLEM IS WITH PAUSING WHEN MINIMIZED)
-
-	// TODO STATS
-	// TODO CHANGE MOUSE CURSOR GRAPHICS
 
 	private Player player;
 
@@ -62,7 +53,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 	private ArrayList<Ship> shipsShop;
 	private ArrayList<Resource> resources;
-	private ArrayList<Resource> goalResources;
 	private ArrayList<Planet> planets;
 	private ArrayList<Research> researches;
 	private ArrayList<Achievement> achievements;
@@ -84,7 +74,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		achievements = new ArrayList<>();
 		factoryItems = new ArrayList<>();
 		upgradeRecipes = new ArrayList<>();
-		goalResources = new ArrayList<>();
 
 		defaultFont = new BitmapFont(Gdx.files.internal("default.fnt"), Gdx.files.internal("default.png"), false);
 
@@ -227,9 +216,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 
 		return recipes;
 	}
-	public ArrayList<Resource> getGoalResources(){
-		return goalResources;
-	}
 
 	// Get by ID methods
 	public Ship getShipByID(int id){
@@ -280,14 +266,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		for (UpgradeRecipe recipe : upgradeRecipes) {
 			if(recipe.getLevel() == level && recipe.getType() == type)
 				return recipe;
-		}
-		return null;
-	}
-
-	public Resource getGoalResourceByID(int id){
-		for (Resource r : goalResources) {
-			if(r.getID() == id)
-				return r;
 		}
 		return null;
 	}
@@ -391,6 +369,12 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	@Override
 	public void onDeleteSuccess(int requestCode, String tableName) {
 	}
+
+	@Override
+	public void onLeaderBoardLoaded(int requestCode, Map<String, Float> leaderBoard) {
+
+	}
+
 	@Override
 	public void onConnect() {
 		Gdx.app.log("DATABASE", "Database successfully connected!");

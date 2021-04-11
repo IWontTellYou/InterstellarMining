@@ -2,6 +2,8 @@ package sk.grest.game.database;
 
 import com.badlogic.gdx.Gdx;
 
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -16,6 +18,8 @@ import sk.grest.game.entities.Player;
 import static sk.grest.game.database.DatabaseConstants.*;
 
 public class DatabaseConnection {
+
+    public static final int SHA512 = 512;
 
     private Thread connectionThread;
     private Thread taskThread;
@@ -74,7 +78,7 @@ public class DatabaseConnection {
                     Statement statement = connection.createStatement();
                     String sql = "SELECT * FROM " + PlayerTable.TABLE_NAME + " WHERE "
                             + PlayerTable.NAME + " = '" + username + "' AND " + PlayerTable.PASSWORD +
-                            " = '" + password + "'";
+                            " = SHA2('" + password + "',"+ SHA512 +")";
                     ResultSet result = statement.executeQuery(sql);
                     ArrayList<Map<String, Object>> requestData = new ArrayList<>();
 
@@ -234,8 +238,6 @@ public class DatabaseConnection {
                 sql += PlayerShipTable.RESOURCE_ID + " = " + data.get(PlayerShipTable.RESOURCE_ID) + ", ";
                 sql += PlayerShipTable.AMOUNT + " = " + data.get(PlayerShipTable.AMOUNT) + ", ";
                 sql += PlayerShipTable.TASK_TIME + " = " + data.get(PlayerShipTable.TASK_TIME) + ", ";
-                sql += PlayerShipTable.FUEL_CAPACITY_LVL + " = " + data.get(PlayerShipTable.FUEL_CAPACITY_LVL) + ", ";
-                sql += PlayerShipTable.FUEL_EFFICIENCY_LVL + " = " + data.get(PlayerShipTable.FUEL_EFFICIENCY_LVL) + ", ";
                 sql += PlayerShipTable.RESOURCE_CAPACITY_LVL + " = " + data.get(PlayerShipTable.RESOURCE_CAPACITY_LVL) + ", ";
                 sql += PlayerShipTable.TRAVEL_SPEED_LVL + " = " + data.get(PlayerShipTable.TRAVEL_SPEED_LVL) + ", ";
                 sql += PlayerShipTable.MINING_SPEED_LVL + " = " + data.get(PlayerShipTable.MINING_SPEED_LVL) + ", ";
@@ -249,8 +251,6 @@ public class DatabaseConnection {
                 //Gdx.app.log("SQL", sql);
                 break;
             case PlayerTable.TABLE_NAME:
-                sql += PlayerTable.LEVEL + " = " + data.get(PlayerTable.LEVEL) + ", ";
-                sql += PlayerTable.EXPERIENCE + " = " + data.get(PlayerTable.EXPERIENCE) + ", ";
                 sql += PlayerTable.MONEY + " = " + data.get(PlayerTable.MONEY);
                 sql += " WHERE " + PlayerTable.ID + " = " + data.get(PlayerTable.ID);
                 //Gdx.app.log("SQL", sql);
@@ -278,8 +278,11 @@ public class DatabaseConnection {
             for (String key : data.keySet()) {
                 keyNames.append(key).append(",");
 
-                if(key.equals(PlayerTable.NAME) || key.equals(PlayerTable.EMAIL) || key.equals(PlayerTable.PASSWORD))
+                if(key.equals(PlayerTable.NAME) || key.equals(PlayerTable.EMAIL))
                     keyValues.append("'").append(data.get(key)).append("'").append(",");
+                else if(key.equals(PlayerTable.PASSWORD)){
+                    keyValues.append("SHA2(").append("'").append(data.get(key)).append("',").append(SHA512).append("),");
+                }
                 else
                     keyValues.append(data.get(key)).append(",");
             }
@@ -312,6 +315,55 @@ public class DatabaseConnection {
         return sql.toString();
     }
 
+    public void getLeaderBoard(final int requestCode, final ConnectorEvent eventListener){
+        taskThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Map<String, Float> leaderBoard = new HashMap<>();
+
+                    Statement statement = connection.createStatement();
+                    String sql = "SELECT " + PlayerTable.ID + ", " + PlayerTable.NAME + " FROM " + PlayerTable.TABLE_NAME;
+
+                    Map<Integer, String> players = new HashMap<>();
+
+                    ResultSet result = statement.executeQuery(sql);
+                    while (result.next()) {
+                        players.put((Integer) result.getObject(1), (String) result.getObject(2));
+                    }
+
+                    ResultSet set;
+                    for (Integer playerId : players.keySet()) {
+
+                        String sqlScrip = "SELECT SUM(amount_completed) FROM " + PlayerGoalTable.TABLE_NAME + " WHERE " + PlayerGoalTable.PLAYER_ID + " = " + playerId;
+                        set = statement.executeQuery(sqlScrip);
+                        int amountCompleted = -1;
+                        if(set.next())
+                            amountCompleted = ((BigDecimal) set.getObject(1)).intValueExact();
+
+                        sqlScrip = "SELECT SUM(amount_needed) FROM " + PlayerGoalTable.TABLE_NAME + " WHERE " + PlayerGoalTable.PLAYER_ID + " = " + playerId;
+                        set = statement.executeQuery(sqlScrip);
+
+                        int amountNeeded = -1;
+                        if(set.next())
+                            amountNeeded = ((BigDecimal) set.getObject(1)).intValueExact();
+
+                        leaderBoard.put(players.get(playerId), (float) amountCompleted/amountNeeded*100);
+
+                    }
+
+                    eventListener.onLeaderBoardLoaded(requestCode, leaderBoard);
+                } catch (SQLException e) {
+                    // eventListener.onResultFailed(requestCode, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+        taskThread.setDaemon(true);
+        taskThread.start();
+    }
+
     public interface ConnectorEvent {
         void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData);
         void onUpdateSuccess(int requestCode, String tableName);
@@ -320,6 +372,7 @@ public class DatabaseConnection {
         void onResultFailed(int requestCode, String message);
         void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData);
         void onDeleteSuccess(int requestCode, String message);
+        void onLeaderBoardLoaded(int requestCode, Map<String, Float> leaderBoard);
     }
 
 }

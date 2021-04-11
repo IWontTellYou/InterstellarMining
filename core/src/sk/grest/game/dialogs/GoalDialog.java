@@ -58,7 +58,7 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
         progressLabels = new HashMap<>();
 
         // TODO REPLACE WITH GOAL RESOURCES
-        resources = game.getGoalResources();
+        resources = game.getPlayer().getGoalResources();
 
         this.configResource = player.getResource(resources.get(0).getID());
         configBar = getConfigBar();
@@ -190,7 +190,7 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 int resourceAmount = Integer.parseInt(amount.getText());
-                Resource r = game.getGoalResourceByID(configResource.getID());
+                Resource r = game.getPlayer().getGoalResourceByID(configResource.getID());
                 r.addAmount(resourceAmount);
                 configResource.subtractAmount(resourceAmount);
                 game.getHandler().updatePlayerGoal(player.getID(), r, game);

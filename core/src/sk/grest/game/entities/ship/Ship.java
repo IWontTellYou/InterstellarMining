@@ -22,8 +22,6 @@ public class Ship implements Upgradable {
     private int miningSpeed;
     private int travelSpeed;
     private int resourceCapacity;
-    private int fuelCapacity;
-    private int fuelEfficiency;
 
     private Attributes attributes;
 
@@ -38,29 +36,25 @@ public class Ship implements Upgradable {
     DatabaseChangeListener listener;
 
     public Ship(DatabaseChangeListener listener, int id, String name, int miningSpeed, int travelSpeed, int resourceCapacity,
-                int fuelCapacity, int fuelEfficiency, int price, int upgradeLevel) {
+                int price, int upgradeLevel) {
         this.listener = listener;
         this.id = id;
         this.name = name;
         this.miningSpeed = miningSpeed;
         this.travelSpeed = travelSpeed;
         this.resourceCapacity = resourceCapacity;
-        this.fuelCapacity = fuelCapacity;
-        this.fuelEfficiency = fuelEfficiency;
         this.price = price;
         this.upgradeLevel = upgradeLevel;
         this.travelPlan = null;
         this.stateCounter = 0;
     }
 
-    public void setAttributes(int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl, int fuelCapacityLvl, int fuelEfficiencyLvl){
+    public void setAttributes(int miningSpeedLvl, int travelSpeedLvl, int resourceCapacityLvl){
         this.attributes = new Attributes(
                 listener,
                 miningSpeedLvl,
                 travelSpeedLvl,
-                resourceCapacityLvl,
-                fuelCapacityLvl,
-                fuelEfficiencyLvl
+                resourceCapacityLvl
         );
     }
     public Attributes getAttributes() {
@@ -72,10 +66,6 @@ public class Ship implements Upgradable {
                 return (int) miningSpeed + ((attributes != null) ? attributes.getAttribute(type) : 0);
             case TRAVEL_SPEED:
                 return (int) travelSpeed + ((attributes != null) ? attributes.getAttribute(type) : 0);
-            case FUEL_CAPACITY:
-                return (int) fuelCapacity + ((attributes != null) ? attributes.getAttribute(type) : 0);
-            case FUEL_EFFICIENCY:
-                return (int) fuelEfficiency + ((attributes != null) ? attributes.getAttribute(type) : 0);
             case RESOURCE_CAPACITY:
                 return (int) resourceCapacity + ((attributes != null) ? attributes.getAttribute(type) : 0);
             default:
@@ -84,18 +74,14 @@ public class Ship implements Upgradable {
     }
 
     public void saveAttributes(){
-        // TODO FIX - POSSIBLY WRONG
         if(travelPlan == null || travelPlan.getCurrentState() == AT_THE_BASE){
             listener.onAttributesChanged(this, attributes);
-        }else{
-            // TOAST FOR UNABILITY TO UPGRADE WHILE AWAY FROM BASE
         }
-
     }
 
     public void setTravelPlan(TravelPlan travelPlan){
         this.travelPlan = travelPlan;
-        Gdx.app.log("SHIP_UPDATE", "SHIP UPDATE AFTER SETTING TRAVELPLAN");
+        Gdx.app.log("SHIP_UPDATE", "SHIP UPDATE AFTER SETTING TRAVEL PLAN");
         listener.onShipDataChanged(this);
     }
     public void setDestination(DatabaseChangeListener listener, Planet destination, Resource resource){

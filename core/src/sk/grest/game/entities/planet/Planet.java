@@ -10,16 +10,14 @@ public class Planet {
     private String name;
     private int distance;
     private boolean found;
-    private String info;
     private ArrayList<Resource> resources;
     private String assetId;
 
-    public Planet(int ID, String name, String assetId, int distance, boolean habitable, String info, ArrayList<Resource> resources) {
+    public Planet(int ID, String name, String assetId, int distance, ArrayList<Resource> resources) {
         this.ID = ID;
         this.name = name;
         this.assetId = assetId;
         this.distance = distance;
-        this.info = info;
         this.resources = resources;
     }
 
@@ -40,9 +38,6 @@ public class Planet {
     }
     public void setFound(boolean found){
         this.found = found;
-    }
-    public String getInfo() {
-        return info;
     }
 
     public ArrayList<Resource> getResources() {

@@ -24,7 +24,7 @@ android {
     }
     defaultConfig {
         applicationId "sk.grest.game"
-        minSdkVersion 14
+        minSdkVersion 24
         targetSdkVersion 29
         versionCode 1
         versionName "1.0"

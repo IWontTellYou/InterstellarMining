@@ -1,6 +1,5 @@
 package sk.grest.game.dialogs.upgrade;
 
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
@@ -14,8 +13,6 @@ import sk.grest.game.entities.Player;
 import sk.grest.game.entities.ship.Attributes;
 import sk.grest.game.entities.ship.Ship;
 
-import static sk.grest.game.entities.ship.Attributes.AttributeType.FUEL_CAPACITY;
-import static sk.grest.game.entities.ship.Attributes.AttributeType.FUEL_EFFICIENCY;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.MINING_SPEED;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.RESOURCE_CAPACITY;
 import static sk.grest.game.entities.ship.Attributes.AttributeType.TRAVEL_SPEED;
@@ -25,7 +22,6 @@ public class UpgradeTable extends Table {
 
     public static final String BTN_DEFAULT_DOWN = "default-round-down";
     public static final String BTN_PLUS_DEFAULT_UP = "tree-plus";
-    public static final String BTN_MINUS_DEFAULT_UP = "tree-minus";
 
     private Player player;
     private Ship ship;
@@ -40,12 +36,12 @@ public class UpgradeTable extends Table {
         float defaultLabelWidth = ScreenConstants.DEFAULT_DIALOG_WIDTH/8f;
         float defaultLabelHeight = ScreenConstants.DEFAULT_DIALOG_HEIGHT/17.5f;
 
-        float defaultBtnSize = ScreenConstants.DEFAULT_DIALOG_HEIGHT/40f;
+        float defaultBtnSize = ScreenConstants.DEFAULT_DIALOG_HEIGHT/20f;
 
-        attributeLabels = new Label[5];
-        priceLabels = new Label[5];
+        attributeLabels = new Label[3];
+        priceLabels = new Label[3];
 
-        for (int i = 0; i < 5; i++) {
+        for (int i = 0; i < 3; i++) {
 
             final int j = i;
 
@@ -73,7 +69,8 @@ public class UpgradeTable extends Table {
 
             add(name)
                     .width(defaultLabelWidth)
-                    .height(defaultLabelHeight);
+                    .height(defaultLabelHeight)
+                    .padRight(20);
             add(attributeLabels[i])
                     .width(defaultLabelWidth)
                     .height(defaultLabelHeight);
@@ -107,21 +104,9 @@ public class UpgradeTable extends Table {
                 else if (id == 1)
                     return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(TRAVEL_SPEED));
                 return ship.getAttribute(TRAVEL_SPEED)+"";
-            case FUEL_CAPACITY:
-                if(id == 0)
-                    return "FUEL CAPACITY";
-                else if (id == 1)
-                    return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(FUEL_CAPACITY));
-                return ship.getAttribute(FUEL_CAPACITY)+"";
-            case FUEL_EFFICIENCY:
-                if(id == 0)
-                    return "FUEL EFFICIENCY";
-                else if (id == 1)
-                    return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(FUEL_EFFICIENCY));
-                return ship.getAttribute(FUEL_EFFICIENCY)+"";
             case RESOURCE_CAPACITY:
                 if(id == 0)
-                    return "RESOURCE CAPACITY";
+                    return "CAPACITY";
                 else if (id == 1)
                     return ScreenConstants.getMoneyFormat(attributes.getAttributePrice(RESOURCE_CAPACITY));
                 return ship.getAttribute(RESOURCE_CAPACITY)+"";

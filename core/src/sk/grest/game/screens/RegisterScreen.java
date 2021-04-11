@@ -17,17 +17,22 @@ import java.util.ArrayList;
 import java.util.Map;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.database.DatabaseHandler;
 
+import static sk.grest.game.constants.ScreenConstants.clear;
 import static sk.grest.game.database.DatabaseConnection.*;
 import static sk.grest.game.database.DatabaseConstants.*;
-import static sk.grest.game.database.DatabaseConstants.PlayerTable.EMAIL;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.NAME;
 import static sk.grest.game.database.DatabaseConstants.PlayerTable.TABLE_NAME;
 import static sk.grest.game.constants.GameConstants.*;
-import static sk.grest.game.constants.ScreenConstants.*;
+import static sk.grest.game.constants.ScreenConstants.DEFAULT_ACTOR_HEIGHT;
+import static sk.grest.game.constants.ScreenConstants.DEFAULT_PADDING;
 
 public class RegisterScreen implements Screen, ConnectorEvent {
+
+    private static final float DEFAULT_ACTOR_WIDTH = ScreenConstants.DEFAULT_ACTOR_WIDTH*2;
+    private static final float DEFAULT_PADDING = ScreenConstants.DEFAULT_PADDING*2;
 
     private InterstellarMining game;
     private Stage stage;
@@ -35,14 +40,12 @@ public class RegisterScreen implements Screen, ConnectorEvent {
     final DatabaseHandler handler;
 
     final private TextField nameInput;
-    final private TextField emailInput;
     final private TextField passwordInput;
     final private TextField confirmPasswordInput;
     final private Label errorMessage;
 
     private ArrayList<Map<String, Object>> newPlayerData;
     private ArrayList<String> names;
-    private ArrayList<String> emails;
 
     private boolean tableInitialized;
 
@@ -57,7 +60,6 @@ public class RegisterScreen implements Screen, ConnectorEvent {
         planetsInitialized = 0;
         resourcesInitialized = 0;
 
-        emails = new ArrayList<>();
         names = new ArrayList<>();
         newPlayerData = new ArrayList<>();
         tableInitialized = false;
@@ -70,9 +72,6 @@ public class RegisterScreen implements Screen, ConnectorEvent {
 
         final Label nameLabel = new Label("Enter name:", game.getUISkin());
         nameInput = new TextField("", game.getUISkin());
-
-        final Label emailLabel = new Label("Enter e-mail:", game.getUISkin());
-        emailInput = new TextField("", game.getUISkin());
 
         final Label passwordLabel = new Label("Enter password:", game.getUISkin());
         passwordInput = new TextField("", game.getUISkin());
@@ -94,7 +93,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(errorMessage.getText().toString().equals("")){
-                    handler.addPlayer(nameInput.getText(), passwordInput.getText(), emailInput.getText(), screen);
+                    handler.addPlayer(nameInput.getText(), passwordInput.getText(), screen);
                 }
             }
         });
@@ -114,9 +113,6 @@ public class RegisterScreen implements Screen, ConnectorEvent {
         table.add(nameLabel).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center);
         table.add(nameInput).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center).padBottom(DEFAULT_PADDING).row();
 
-        table.add(emailLabel).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center);
-        table.add(emailInput).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center).padBottom(DEFAULT_PADDING).row();
-
         table.add(passwordLabel).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center);
         table.add(passwordInput).height(DEFAULT_ACTOR_HEIGHT).width(DEFAULT_ACTOR_WIDTH).align(Align.center).padBottom(DEFAULT_PADDING).row();
 
@@ -125,8 +121,8 @@ public class RegisterScreen implements Screen, ConnectorEvent {
 
         table.add(errorMessage).height(DEFAULT_ACTOR_HEIGHT).fillX().align(Align.center).colspan(2).padBottom(DEFAULT_PADDING).row();
 
-        table.add(submit).height(DEFAULT_ACTOR_HEIGHT).fillX().align(Align.center).colspan(2).padBottom(DEFAULT_PADDING).row();
-        table.add(back).height(DEFAULT_ACTOR_HEIGHT).fillX().align(Align.center).colspan(2).padBottom(DEFAULT_PADDING).row();
+        table.add(submit).height(DEFAULT_ACTOR_HEIGHT).fillX().align(Align.center).pad(DEFAULT_PADDING);
+        table.add(back).height(DEFAULT_ACTOR_HEIGHT).fillX().align(Align.center).pad(DEFAULT_PADDING).row();
 
         table.setBackground(game.getBackground());
 
@@ -137,12 +133,6 @@ public class RegisterScreen implements Screen, ConnectorEvent {
     private boolean isNameInDatabase(String name){
         for (String s : names) {
             if(name.equals(s)) return true;
-        }
-        return false;
-    }
-    private boolean isEmailInDatabase(String email){
-        for (String s : emails) {
-            if(email.equals(s)) return true;
         }
         return false;
     }
@@ -165,10 +155,6 @@ public class RegisterScreen implements Screen, ConnectorEvent {
                 errorMessage.setText("Name is already in use!");
             } else if(nameInput.getText().length() < 6) {
                 errorMessage.setText("Username is too short");
-            } else if (isEmailInDatabase(emailInput.getText())) {
-                errorMessage.setText("Email is already in use!");
-            } else if(!emailInput.getText().contains("@")){
-                errorMessage.setText("Email has to contain @ sign");
             } else if(passwordInput.getText().equals("")){
                 errorMessage.setText("Password has to 6+ characters long");
             } else if (!passwordInput.getText().equals(confirmPasswordInput.getText())) {
@@ -213,7 +199,6 @@ public class RegisterScreen implements Screen, ConnectorEvent {
         if (TABLE_NAME.equals(tableName)) {
             for (Map<String, Object> data : tableData) {
                 names.add((String) data.get(NAME));
-                emails.add((String) data.get(EMAIL));
             }
             tableInitialized = true;
         }
@@ -288,4 +273,10 @@ public class RegisterScreen implements Screen, ConnectorEvent {
     public void onDeleteSuccess(int requestCode, String message) {
 
     }
+
+    @Override
+    public void onLeaderBoardLoaded(int requestCode, Map<String, Float> leaderBoard) {
+
+    }
+
 }

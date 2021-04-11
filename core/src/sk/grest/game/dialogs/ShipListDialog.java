@@ -182,8 +182,10 @@ public class ShipListDialog extends CustomDialog implements ItemOpenedListener<S
 
     @Override
     public void onItemOpenedListener(Ship item) {
-        UpgradeShipDialog dialog = new UpgradeShipDialog(item.getName(), game, game.getPlayer(), item, game.getUpgradeRecipesByType(UpgradeRecipe.SHIP_UPGRADE));
-        dialog.show(this.getStage());
-        this.hide();
+        if(item.getState() == ShipState.AT_THE_BASE){
+            UpgradeShipDialog dialog = new UpgradeShipDialog(item.getName(), game, game.getPlayer(), item, game.getUpgradeRecipesByType(UpgradeRecipe.SHIP_UPGRADE));
+            dialog.show(this.getStage());
+            this.hide();
+        }
     }
 }
