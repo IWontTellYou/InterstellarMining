@@ -74,6 +74,19 @@ public class TravelSettingDialog extends CustomDialog implements ItemOpenedListe
         // -- TRAVEL VIEW -- //
 
         Table travelView = new Table(skin);
+
+        travelView.add(new Label("Name:", skin))
+                .expandX()
+                .width(defaultActorWidth)
+                .pad(TABLE_PADDING);
+
+        Label planetName = new Label(planet.getName(), skin);
+        travelView.add(planetName)
+                .expandX()
+                .width(defaultActorWidth)
+                .pad(TABLE_PADDING)
+                .row();
+
         travelView.add(new Label("Distance:", skin))
                 .expandX()
                 .width(defaultActorWidth)

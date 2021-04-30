@@ -19,6 +19,7 @@ import java.util.Map;
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.database.DatabaseHandler;
+import sk.grest.game.other.AlphabetDigitFilter;
 
 import static sk.grest.game.constants.ScreenConstants.clear;
 import static sk.grest.game.database.DatabaseConnection.*;
@@ -72,6 +73,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
 
         final Label nameLabel = new Label("Enter name:", game.getUISkin());
         nameInput = new TextField("", game.getUISkin());
+        nameInput.setTextFieldFilter(new AlphabetDigitFilter());
 
         final Label passwordLabel = new Label("Enter password:", game.getUISkin());
         passwordInput = new TextField("", game.getUISkin());
@@ -93,7 +95,7 @@ public class RegisterScreen implements Screen, ConnectorEvent {
             @Override
             public void clicked(InputEvent event, float x, float y) {
                 if(errorMessage.getText().toString().equals("")){
-                    handler.addPlayer(nameInput.getText(), passwordInput.getText(), screen);
+                    handler.addPlayer(nameInput.getText().toLowerCase(), passwordInput.getText(), screen);
                 }
             }
         });
@@ -276,6 +278,11 @@ public class RegisterScreen implements Screen, ConnectorEvent {
 
     @Override
     public void onLeaderBoardLoaded(int requestCode, Map<String, Float> leaderBoard) {
+
+    }
+
+    @Override
+    public void onWinnerDataLoaded(int requestCode, Map<String, Object> data) {
 
     }
 

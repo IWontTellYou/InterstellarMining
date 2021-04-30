@@ -3,6 +3,7 @@ package sk.grest.game.screens;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.files.FileHandle;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.CheckBox;
@@ -21,12 +22,17 @@ import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.FileWriter;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Map;
 
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.database.DatabaseConnection;
+import sk.grest.game.database.DatabaseConstants;
+import sk.grest.game.other.AlphabetDigitFilter;
 
 import static sk.grest.game.constants.ScreenConstants.*;
 
-public class LogInScreen implements Screen {
+public class LogInScreen implements Screen, DatabaseConnection.ConnectorEvent {
 
     private static final FileHandle file_path = Gdx.files.internal("remember_user.txt");
 
@@ -37,9 +43,9 @@ public class LogInScreen implements Screen {
     private InterstellarMining game;
     private Stage stage;
 
+    final private Label errorMessage;
     final private TextField nameInput;
     final private TextField passwordInput;
-    final private Label errorMessage = null;
 
     private boolean remember;
 
@@ -51,9 +57,13 @@ public class LogInScreen implements Screen {
         this.game = game;
         this.stage = new Stage(new ScreenViewport());
 
+        errorMessage = new Label("", game.getUISkin());
+        errorMessage.setColor(Color.RED);
+        errorMessage.setAlignment(Align.center);
 
         final Label nameLabel = new Label("Enter name:", game.getUISkin());
         nameInput = new TextField("", game.getUISkin());
+        nameInput.setTextFieldFilter(new AlphabetDigitFilter());
 
         final Label passwordLabel = new Label("Enter password:", game.getUISkin());
         passwordInput = new TextField("", game.getUISkin());
@@ -92,12 +102,13 @@ public class LogInScreen implements Screen {
             e.printStackTrace();
         }
 
+        final DatabaseConnection.ConnectorEvent listener = this;
+
         TextButton submit = new TextButton("LOG IN", game.getUISkin());
         submit.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                game.getHandler().verifyPlayer(nameInput.getText(), passwordInput.getText(), game);
-
+                game.getHandler().verifyPlayer(nameInput.getText().toLowerCase(), passwordInput.getText(), listener);
 
                 BufferedWriter bw;
                 try {
@@ -137,6 +148,8 @@ public class LogInScreen implements Screen {
         Table table = new Table();
         table.setFillParent(true);
         table.align(Align.center);
+
+        table.add(errorMessage).height(DEFAULT_ACTOR_HEIGHT).fillX().align(Align.center).colspan(2).padBottom(DEFAULT_PADDING).row();
 
         table.add(nameLabel).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center);
         table.add(nameInput).height(ACTOR_HEIGHT).width(ACTOR_WIDTH).align(Align.center).padBottom(PADDING).row();
@@ -182,30 +195,65 @@ public class LogInScreen implements Screen {
     public void show() {
 
     }
-
     @Override
     public void resize(int width, int height) {
 
     }
-
     @Override
     public void pause() {
 
     }
-
     @Override
     public void resume() {
 
     }
-
     @Override
     public void hide() {
 
     }
-
     @Override
     public void dispose() {
 
     }
 
+    @Override
+    public void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData) {
+
+    }
+    @Override
+    public void onUpdateSuccess(int requestCode, String tableName) {
+
+    }
+    @Override
+    public void onConnect() {
+
+    }
+    @Override
+    public void onConnectionFailed() {
+
+    }
+    @Override
+    public void onDeleteSuccess(int requestCode, String message) {
+
+    }
+    @Override
+    public void onLeaderBoardLoaded(int requestCode, Map<String, Float> leaderBoard) {
+
+    }
+    @Override
+    public void onWinnerDataLoaded(int requestCode, Map<String, Object> data) {
+
+    }
+    @Override
+    public void onResultFailed(int requestCode, String message) {
+        if(message.equals(DatabaseConnection.ConnectorEvent.WRONG_CREDENTIALS_MESSAGE)){
+            errorMessage.setText("Your name or password is incorrect");
+        }
+    }
+    @Override
+    public void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData) {
+        ArrayList<Map<String, Object>> data = new ArrayList<>();
+        data.add(tableData);
+        game.onFetchSuccess(requestCode, DatabaseConstants.PlayerTable.TABLE_NAME, data);
+    }
 }

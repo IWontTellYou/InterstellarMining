@@ -153,7 +153,7 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	public ArrayList<Planet> getPlanetsNotFound(){
 		ArrayList<Planet> planetsNotFound = new ArrayList<>();
 		for (Planet p : planets) {
-			if (p.isFound())
+			if (!p.isFound())
 				planetsNotFound.add(p);
 		}
 		return planetsNotFound;
@@ -369,9 +369,12 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	@Override
 	public void onDeleteSuccess(int requestCode, String tableName) {
 	}
-
 	@Override
 	public void onLeaderBoardLoaded(int requestCode, Map<String, Float> leaderBoard) {
+
+	}
+	@Override
+	public void onWinnerDataLoaded(int requestCode, Map<String, Object> data) {
 
 	}
 
@@ -390,9 +393,6 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 	}
 	@Override
 	public void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData) {
-		ArrayList<Map<String, Object>> data = new ArrayList<>();
-		data.add(tableData);
-		onFetchSuccess(requestCode, PlayerTable.TABLE_NAME, data);
 	}
 
 	// DATABASE CHANGE LISTENER METHODS

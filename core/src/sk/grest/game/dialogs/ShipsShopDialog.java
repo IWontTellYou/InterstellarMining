@@ -75,7 +75,7 @@ public class ShipsShopDialog extends CustomDialog {
         scrollingLayout = new ScrollPane(layoutChild);
         scrollingLayout.setScrollbarsVisible(true);
         scrollingLayout.setScrollBarPositions(false, true);
-        getContentTable().add(scrollingLayout);
+        getContentTable().add(scrollingLayout).height(600);
         addCloseButton(this);
 
     }
@@ -107,8 +107,8 @@ public class ShipsShopDialog extends CustomDialog {
         name.setAlignment(Align.center);
         table.add(name).fillX().align(Align.center).colspan(2).row();
 
-        Image image = new Image(game.getSpriteSkin().getDrawable("ships"));
-        table.add(image).align(Align.center).colspan(2).row();
+        Image image = new Image(game.getSpriteSkin().getDrawable(s.getAssetID()));
+        table.add(image).align(Align.center).size(100, 200).colspan(2).row();
 
         Label[][] stats = new Label[5][2];
 

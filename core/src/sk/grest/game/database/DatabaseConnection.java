@@ -6,6 +6,7 @@ import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
@@ -13,9 +14,12 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
+import sk.grest.game.dialogs.GameOverDialog;
 import sk.grest.game.entities.Player;
 
 import static sk.grest.game.database.DatabaseConstants.*;
+import static sk.grest.game.dialogs.GameOverDialog.GAME_START;
+import static sk.grest.game.dialogs.GameOverDialog.WINNERS_COUNT;
 
 public class DatabaseConnection {
 
@@ -25,9 +29,21 @@ public class DatabaseConnection {
     private Thread taskThread;
     private Connection connection;
     private static DatabaseConnection instance;
+
     private static final String DATABASE_NAME = "interstellar_mining";
     private static final String DATABASE_USERNAME = "root";
     private static final String DATABASE_PASSWORD = "";
+    private static final String DATABASE_SERVER = "localhost";
+    private static final String DATABASE_PORT = "3307";
+
+
+    /*
+    private static final String DATABASE_NAME = "sql11404959";
+    private static final String DATABASE_USERNAME = "sql11404959";
+    private static final String DATABASE_PASSWORD = "vdunS5kbch";
+    private static final String DATABASE_SERVER = "sql11.freemysqlhosting.net";
+    private static final String DATABASE_PORT = "3306";
+    */
 
     public DatabaseConnection(){}
 
@@ -44,7 +60,7 @@ public class DatabaseConnection {
                 try {
                     Class.forName("com.mysql.cj.jdbc.Driver");
                     connection = DriverManager.getConnection(
-                            "jdbc:mysql://localhost:3307/" + DATABASE_NAME + "?serverTimezone=CET",
+                            "jdbc:mysql://"+DATABASE_SERVER+":"+DATABASE_PORT+"/" + DATABASE_NAME + "?serverTimezone=CET",
                             DATABASE_USERNAME,
                             DATABASE_PASSWORD
                     );
@@ -75,11 +91,14 @@ public class DatabaseConnection {
             @Override
             public void run() {
                 try {
-                    Statement statement = connection.createStatement();
-                    String sql = "SELECT * FROM " + PlayerTable.TABLE_NAME + " WHERE "
-                            + PlayerTable.NAME + " = '" + username + "' AND " + PlayerTable.PASSWORD +
-                            " = SHA2('" + password + "',"+ SHA512 +")";
-                    ResultSet result = statement.executeQuery(sql);
+                    PreparedStatement statement = connection.prepareStatement(
+                            "SELECT * FROM " + PlayerTable.TABLE_NAME + " WHERE "
+                            + PlayerTable.NAME + " = ? AND " +
+                            PlayerTable.PASSWORD + " = SHA2(?,"+ SHA512 +")");
+                    statement.setString(1, username);
+                    statement.setString(2, password);
+
+                    ResultSet result = statement.executeQuery();
                     ArrayList<Map<String, Object>> requestData = new ArrayList<>();
 
                     while (result.next()) {
@@ -95,7 +114,7 @@ public class DatabaseConnection {
                     if(requestData.size() > 0)
                         eventListener.onUserLoginSuccessful(requestCode, requestData.get(0));
                     else
-                        Gdx.app.log("WRONG_CREDENTIALS", "Could not log in");
+                        eventListener.onResultFailed(requestCode, ConnectorEvent.WRONG_CREDENTIALS_MESSAGE);
 
                 } catch (SQLException e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
@@ -174,12 +193,28 @@ public class DatabaseConnection {
             @Override
             public void run() {
                 try {
-                    Statement stm = connection.createStatement();
-                    String sql = getAddRowSQL(tableName, data);
+
+                    if(tableName.equals(PlayerTable.TABLE_NAME)){
+                        PreparedStatement statement =
+                                connection.prepareStatement(
+                                        "INSERT INTO " + PlayerTable.TABLE_NAME +
+                                                "(" + PlayerTable.NAME + ", " + PlayerTable.PASSWORD + ", " + PlayerTable.MONEY + ") " +
+                                                "VALUES (?,  SHA2(?, " + SHA512 + "), ? )");
+                        statement.setString(1, (String) data.get(PlayerTable.NAME));
+                        statement.setString(2, (String) data.get(PlayerTable.PASSWORD));
+                        statement.setInt(3, (Integer) data.get(PlayerTable.MONEY));
+
+                        statement.executeUpdate();
+
+                    }else {
+                        Statement stm = connection.createStatement();
+                        String sql = getAddRowSQL(tableName, data);
+                        stm.executeUpdate(sql);
+                    }
 
                     // Gdx.app.log("SQL_QUERY", sql);
 
-                    stm.executeUpdate(sql);
+
                     eventListener.onUpdateSuccess(requestCode, tableName);
                 } catch (SQLException e) {
                     eventListener.onResultFailed(requestCode, e.getMessage());
@@ -274,23 +309,9 @@ public class DatabaseConnection {
         StringBuilder keyNames = new StringBuilder();
         StringBuilder keyValues = new StringBuilder();
 
-        if(tableName.equals(PlayerTable.TABLE_NAME)){
-            for (String key : data.keySet()) {
-                keyNames.append(key).append(",");
-
-                if(key.equals(PlayerTable.NAME) || key.equals(PlayerTable.EMAIL))
-                    keyValues.append("'").append(data.get(key)).append("'").append(",");
-                else if(key.equals(PlayerTable.PASSWORD)){
-                    keyValues.append("SHA2(").append("'").append(data.get(key)).append("',").append(SHA512).append("),");
-                }
-                else
-                    keyValues.append(data.get(key)).append(",");
-            }
-        }else {
-            for (String s : data.keySet()) {
-                keyNames.append(s).append(",");
-                keyValues.append(data.get(s)).append(",");
-            }
+        for (String s : data.keySet()) {
+            keyNames.append(s).append(",");
+            keyValues.append(data.get(s)).append(",");
         }
 
         keyNames = new StringBuilder(keyNames.substring(0, keyNames.length() - 1));
@@ -363,8 +384,65 @@ public class DatabaseConnection {
         taskThread.setDaemon(true);
         taskThread.start();
     }
+    public void getFinishedGameData(final int requestCode, final ConnectorEvent eventListener){
+        taskThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+
+                    Map<String, Object> data = new HashMap<>();
+
+                    int counter = 0;
+
+                    Statement statement = connection.createStatement();
+                    String sql = "SELECT " + PlayerTable.ID + " FROM " + PlayerTable.TABLE_NAME;
+
+                    ArrayList<Integer> playerIds = new ArrayList<>();
+
+                    ResultSet result = statement.executeQuery(sql);
+                    while (result.next()) {
+                        playerIds.add((Integer) result.getObject(1));
+                    }
+
+                    ResultSet set;
+                    for (Integer playerId : playerIds) {
+
+                        String sqlScrip = "SELECT SUM(amount_completed) FROM " + PlayerGoalTable.TABLE_NAME + " WHERE " + PlayerGoalTable.PLAYER_ID + " = " + playerId;
+                        set = statement.executeQuery(sqlScrip);
+                        int amountCompleted = -1;
+                        if(set.next())
+                            amountCompleted = ((BigDecimal) set.getObject(1)).intValueExact();
+
+                        sqlScrip = "SELECT SUM(amount_needed) FROM " + PlayerGoalTable.TABLE_NAME + " WHERE " + PlayerGoalTable.PLAYER_ID + " = " + playerId;
+                        set = statement.executeQuery(sqlScrip);
+
+                        int amountNeeded = -1;
+                        if(set.next())
+                            amountNeeded = ((BigDecimal) set.getObject(1)).intValueExact();
+
+                        if(amountCompleted/amountNeeded >= 1)
+                            counter++;
+
+                    }
+
+                    data.put(WINNERS_COUNT, counter);
+                    data.put(GAME_START, 0);
+
+                    eventListener.onWinnerDataLoaded(requestCode, data);
+                } catch (SQLException e) {
+                    // eventListener.onResultFailed(requestCode, e.getMessage());
+                    e.printStackTrace();
+                }
+            }
+        });
+        taskThread.setDaemon(true);
+        taskThread.start();
+    }
 
     public interface ConnectorEvent {
+
+        String WRONG_CREDENTIALS_MESSAGE = "WRONG_CREDENTIALS";
+
         void onFetchSuccess(int requestCode, String tableName, ArrayList<Map<String, Object>> tableData);
         void onUpdateSuccess(int requestCode, String tableName);
         void onConnect();
@@ -373,6 +451,7 @@ public class DatabaseConnection {
         void onUserLoginSuccessful(int requestCode, Map<String, Object> tableData);
         void onDeleteSuccess(int requestCode, String message);
         void onLeaderBoardLoaded(int requestCode, Map<String, Float> leaderBoard);
+        void onWinnerDataLoaded(int requestCode, Map<String, Object> data);
     }
 
 }

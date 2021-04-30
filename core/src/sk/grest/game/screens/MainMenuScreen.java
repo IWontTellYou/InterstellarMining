@@ -2,13 +2,19 @@ package sk.grest.game.screens;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
+import com.badlogic.gdx.scenes.scene2d.Actor;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
+import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
+import com.badlogic.gdx.scenes.scene2d.utils.ChangeListener;
 import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
+
+import java.io.IOException;
 
 import sk.grest.game.InterstellarMining;
 import sk.grest.game.controls.Button;
@@ -37,13 +43,15 @@ public class MainMenuScreen implements Screen {
             }
         });
 
+        /*
         Button btnOptions = new Button(game.getSpriteSkin(), "options_up", "options_over");
         btnOptions.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                // OPENS OPTIONS WINDOW
+                game.setScreen(new OptionsScreen(game));
             }
         });
+         */
 
         Button btnExit = new Button(game.getSpriteSkin(), "exit_up","exit_over");
         btnExit.getButton().addListener(new ClickListener(){
@@ -74,16 +82,42 @@ public class MainMenuScreen implements Screen {
                 .height(Gdx.graphics.getHeight() / 8f)
                 .padBottom(btnPad)
                 .row();
-        table.add(btnOptions.getButton())
+        /*table.add(btnOptions.getButton())
                 .width(Gdx.graphics.getWidth() / 4.5f)
                 .height(Gdx.graphics.getHeight() / 8f)
                 .padBottom(btnPad)
                 .row();
-        table.add(btnExit.getButton())
+        */table.add(btnExit.getButton())
                 .width(Gdx.graphics.getWidth() / 4.5f)
                 .height(Gdx.graphics.getHeight() / 8f)
                 .padBottom(btnPad)
                 .row();
+
+        final Label attribution = new Label("FONT ATTRIBUTION", game.getUISkin());
+        attribution.addListener(new ClickListener() {
+            @Override
+            public void enter(InputEvent event, float x, float y, int pointer, Actor fromActor) {
+                attribution.setColor(Color.RED);
+            }
+
+            @Override
+            public void exit(InputEvent event, float x, float y, int pointer, Actor toActor) {
+                attribution.setColor(Color.WHITE);
+            }
+
+            @Override
+            public void clicked(InputEvent event, float x, float y) {
+                String url_open ="https://creativecommons.org/licenses/by-sa/4.0/deed.en_US";
+                try {
+                    java.awt.Desktop.getDesktop().browse(java.net.URI.create(url_open));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+
+        table.add(attribution).padTop(150).padLeft(200).right().bottom();
+
         stage.addActor(table);
 
         Gdx.input.setInputProcessor(stage);

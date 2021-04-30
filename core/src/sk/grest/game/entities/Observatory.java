@@ -16,7 +16,7 @@ public class Observatory implements Upgradable {
 
     // TODO MAKE FURTHER TEST WHEN MORE PLANETS READY
 
-    public static final int DEFAULT_WAITING_TIME = (int) GameConstants.DAY;
+    public static final int DEFAULT_WAITING_TIME = (int) DAY;
 
     public static final int NONE = 0;
     public static final int SEARCHING = 1;
@@ -43,13 +43,13 @@ public class Observatory implements Upgradable {
 
     public void setPlanet(Planet planet) {
         this.planet = planet;
-        this.endTime = (long) (endTime + MINUTE);
+        //this.endTime = (long) (endTime + MINUTE);
     }
     public void setAction(long endTime){
         this.endTime = endTime;
     }
     public void setSearch(){
-        this.endTime = System.currentTimeMillis() + DEFAULT_WAITING_TIME + (int) ((DEFAULT_SEARCH_TIME * getSpeed()) + (rn.nextInt(60)-30) * GameConstants.MINUTE);
+        this.endTime = System.currentTimeMillis() + DEFAULT_WAITING_TIME + (int) ((DEFAULT_SEARCH_TIME * getSpeed()) + (rn.nextInt(60)-30) * MINUTE);
         Gdx.app.log("NEW SEARCH", ScreenConstants.getTimeFormat(endTime - DEFAULT_WAITING_TIME - System.currentTimeMillis()));
     }
 
@@ -69,9 +69,11 @@ public class Observatory implements Upgradable {
     }
     public String getTimeLeft(){
         long timeLeft;
-        if(endTime - DEFAULT_WAITING_TIME > System.currentTimeMillis())
-            timeLeft =  endTime - DEFAULT_WAITING_TIME - System.currentTimeMillis();
-        else {
+        if(endTime - DEFAULT_WAITING_TIME > System.currentTimeMillis()) {
+            Gdx.app.log("S", String.valueOf(endTime - System.currentTimeMillis()));
+            timeLeft = endTime - DEFAULT_WAITING_TIME - System.currentTimeMillis();
+        }else {
+            Gdx.app.log("S", String.valueOf(endTime-System.currentTimeMillis()));
             timeLeft = endTime - System.currentTimeMillis();
         }
         return ((timeLeft > 0) ? ScreenConstants.getTimeFormat(timeLeft) : null);

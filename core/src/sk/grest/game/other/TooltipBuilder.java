@@ -68,7 +68,7 @@ public class TooltipBuilder {
         Table item = new Table();
         item.setBackground(ScreenConstants.getBackground(ScreenConstants.DARK_GRAY));
         Label name = new Label(ship.getName(), uiSkin);
-        Image img = new Image(spriteSkin, "ships");
+        Image img = new Image(spriteSkin, ship.getAssetID());
         Label level = new Label("Upgrade level - "+ship.getLevel(0), uiSkin);
 
         Label travelSpeedLabel = new Label("Travel Speed", uiSkin);
@@ -82,7 +82,7 @@ public class TooltipBuilder {
         Label resourceCapacity = new Label(ship.getAttribute(RESOURCE_CAPACITY)+"", uiSkin);
 
         item.add(name).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING).colspan(2).row();
-        item.add(img).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING).colspan(2).row();
+        item.add(img).align(Align.center).pad(ScreenConstants.DEFAULT_PADDING).width(100).height(200).colspan(2).row();
 
         item.add(travelSpeedLabel).align(Align.left).pad(ScreenConstants.DEFAULT_PADDING).padRight(PADDING);
         item.add(travelSpeed).align(Align.right).pad(ScreenConstants.DEFAULT_PADDING).row();

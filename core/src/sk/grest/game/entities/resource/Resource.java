@@ -2,7 +2,7 @@ package sk.grest.game.entities.resource;
 
 import com.badlogic.gdx.Gdx;
 
-public class Resource{
+public class Resource implements Comparable<Resource> {
 
     private int ID;
     private ResourceState state;
@@ -86,4 +86,8 @@ public class Resource{
         return new Resource(resource.ID, resource.name, resource.assetName, resource.state, resource.rarity, resource.price, resource.amount);
     }
 
+    @Override
+    public int compareTo(Resource resource) {
+        return -Integer.compare(limit, resource.getLimit());
+    }
 }

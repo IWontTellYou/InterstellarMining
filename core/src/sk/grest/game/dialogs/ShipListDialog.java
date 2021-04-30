@@ -2,6 +2,7 @@ package sk.grest.game.dialogs;
 
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
 import com.badlogic.gdx.scenes.scene2d.ui.Skin;
 import com.badlogic.gdx.scenes.scene2d.ui.Table;
@@ -102,10 +103,10 @@ public class ShipListDialog extends CustomDialog implements ItemOpenedListener<S
             tableRow.addListener(shipList);
             tableRow.setColors(ScreenConstants.TRANSPARENT, ScreenConstants.LIGHT_GRAY);
 
-            Label shipImage = new Label("img", skin);
+            Image shipImage = new Image(game.getSpriteSkin(), s.getAssetID());
             tableRow.add(shipImage).
                     align(Align.center).
-                    width(imageCellWidth).height(cellHeight);
+                    width(imageCellWidth/4).height(imageCellWidth/2).padRight(20);
 
             Label shipName = new Label(s.getName(), skin);
             tableRow.add(shipName).

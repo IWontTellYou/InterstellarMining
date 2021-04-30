@@ -15,11 +15,10 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 import com.badlogic.gdx.utils.viewport.ScreenViewport;
 
-import javax.swing.ToolTipManager;
-
 import sk.grest.game.InterstellarMining;
+import sk.grest.game.dialogs.GameOverDialog;
 import sk.grest.game.dialogs.GoalDialog;
-import sk.grest.game.dialogs.LeadershipDialog;
+import sk.grest.game.dialogs.LeaderboardDialog;
 import sk.grest.game.dialogs.ObservatoryDialog;
 import sk.grest.game.dialogs.factory.FactoryDialog;
 import sk.grest.game.dialogs.ResourceInventoryDialog;
@@ -66,6 +65,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
     private GoalDialog goalDialog;
     private FactoryDialog factoryDialog;
     private ObservatoryDialog observatoryDialog;
+    private GameOverDialog gameOverDialog;
 
     public GameScreen(final InterstellarMining game) {
 
@@ -123,8 +123,8 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                LeadershipDialog leadershipDialog = new LeadershipDialog("", game.getUISkin());
-                leadershipDialog.show(stage);
+                LeaderboardDialog leaderboardDialog = new LeaderboardDialog("", game.getUISkin());
+                leaderboardDialog.show(stage);
             }
 
             @Override
@@ -140,7 +140,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-        Button leftDown = new Button(game.getSpriteSkin(), "left_bottom_button", null);
+        Button leftDown = new Button(game.getSpriteSkin(), "left_bottom_button", "left_bottom_button_pressed");
         leftDown.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -163,7 +163,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
         });
 
-        Button rightDown = new Button(game.getSpriteSkin(), "right_bottom_button", null);
+        Button rightDown = new Button(game.getSpriteSkin(), "right_bottom_button", "right_bottom_button_pressed");
         rightDown.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -203,7 +203,7 @@ public class GameScreen implements Screen, OnStatsChangedListener {
             }
         });
 
-        Button achievementsButton = new Button(game.getSpriteSkin(), "achievement", "achievement_pressed");
+        Button achievementsButton = new Button(game.getSpriteSkin(), "observatory", "observatory_pressed");
         achievementsButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -417,8 +417,14 @@ public class GameScreen implements Screen, OnStatsChangedListener {
 
         if (game.isWholeDatabaseInitialized()){
 
-            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT))
-                game.getPlayer().increaseMoney(10000);
+            if(Gdx.input.isKeyPressed(Input.Keys.CAPS_LOCK) && gameOverDialog == null){
+                gameOverDialog = new GameOverDialog("", game.getSpriteSkin(), game.getUISkin());
+                gameOverDialog.show(stage);
+            }
+
+            if(Gdx.input.isKeyPressed(Input.Keys.CONTROL_RIGHT)){
+                game.getPlayer().increaseMoney(1000000);
+            }
 
             game.getPlayer().update(delta);
 

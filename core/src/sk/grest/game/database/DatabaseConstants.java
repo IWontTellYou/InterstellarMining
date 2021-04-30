@@ -97,6 +97,7 @@ public class DatabaseConstants {
         public static final String FUEL_CAPACITY = "fuel_capacity";
         public static final String FUEL_EFFICIENCY = "fuel_efficiency";
         public static final String PRICE = "price";
+        public static final String ASSET_ID = "asset_id";
     }
 
     public static final class UpgradeRecipeTable{

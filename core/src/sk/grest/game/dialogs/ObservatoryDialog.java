@@ -1,5 +1,6 @@
 package sk.grest.game.dialogs;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.ui.Image;
 import com.badlogic.gdx.scenes.scene2d.ui.Label;
@@ -59,10 +60,12 @@ public class ObservatoryDialog extends CustomDialog {
         planet = observatory.getPlanet();
 
         // TODO ADD NO PLANET
-        planetImage = new Image(game.getSpriteSkin(), (planet == null) ? "earth" : planet.getAssetId());
+        planetImage = new Image(game.getSpriteSkin(), (planet == null) ? "none" : planet.getAssetId());
         planetImage.addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
+
+                Gdx.app.log("PLANET", planet.toString());
 
                 if(planet != null) {
                     final Planet destination = planet;
@@ -135,7 +138,7 @@ public class ObservatoryDialog extends CustomDialog {
 
         // SEARCH BUTTON
 
-        Button searchButton = new Button(game.getSpriteSkin(), "search", null);
+        Button searchButton = new Button(game.getSpriteSkin(), "search", "search_pressed");
         searchButton.getButton().addListener(new ClickListener(){
             @Override
             public void clicked(InputEvent event, float x, float y) {
@@ -176,9 +179,9 @@ public class ObservatoryDialog extends CustomDialog {
 
 
         getContentTable().add(planetImage)
-                .padLeft(50)
-                .uniformY()
-                .size(DEFAULT_DIALOG_HEIGHT/2f);
+                .padLeft(50).padRight(20)
+                .uniformY().uniformX()
+                .size(DEFAULT_DIALOG_HEIGHT/2f+10);
 
         getContentTable().add(upgradeBars)
                 .uniformY()
@@ -187,8 +190,6 @@ public class ObservatoryDialog extends CustomDialog {
 
         getContentTable().add(searchBar)
                 .width(DEFAULT_DIALOG_HEIGHT/2f);
-
-        //getContentTable().debugCell();
 
         addCloseButton(this, 2);
 
@@ -199,32 +200,38 @@ public class ObservatoryDialog extends CustomDialog {
         ArrayList<Planet> planetsNotFound = game.getPlanetsNotFound();
 
         observatory.setPlanet(planetsNotFound.get(rn.nextInt(planetsNotFound.size())));
-        if(!observatory.getPlanet().getAssetId().equals(""))
-            planetImage.setDrawable(game.getSpriteSkin(), observatory.getPlanet().getAssetId());
+        planet = observatory.getPlanet();
+        Gdx.app.log("PLANET", observatory.getPlanet().getName());
+        planetImage.setDrawable(game.getSpriteSkin(), observatory.getPlanet().getAssetId());
+
     }
 
     public void resetPlanet(){
         observatory.setPlanet(null);
-        // TODO REPLACE WITH "NO PLANET" ASSET
-        planetImage.setDrawable(game.getSpriteSkin(), "moon");
+        planetImage.setDrawable(game.getSpriteSkin(), "none");
     }
 
     public void update(float delta) {
         if(observatory.isSearching()){
             if(lastState == NONE){
                 lastState = SEARCHING;
+                Gdx.app.log("SEARCHING", ScreenConstants.getTimeFormat(System.currentTimeMillis()));
             }
             timeLeft.setText(observatory.getTimeLeft());
         }else if(observatory.isWaiting()){
             if(lastState == SEARCHING){
                 lastState = WAITING;
+                Gdx.app.log("WAITING", ScreenConstants.getTimeFormat(System.currentTimeMillis()));
                 setPlanet();
             }
             timeLeft.setText(observatory.getTimeLeft());
         }else {
             if(lastState == WAITING){
+                Gdx.app.log("NONE", ScreenConstants.getTimeFormat(System.currentTimeMillis()));
+                lastState = NONE;
                 resetPlanet();
             }
+            timeLeft.setText("SEARCH");
         }
     }
 }

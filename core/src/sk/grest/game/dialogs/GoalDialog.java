@@ -2,6 +2,7 @@ package sk.grest.game.dialogs;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Screen;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.scenes.scene2d.InputEvent;
 import com.badlogic.gdx.scenes.scene2d.InputListener;
 import com.badlogic.gdx.scenes.scene2d.ui.Dialog;
@@ -17,6 +18,7 @@ import com.badlogic.gdx.scenes.scene2d.utils.ClickListener;
 import com.badlogic.gdx.utils.Align;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -24,6 +26,7 @@ import sk.grest.game.InterstellarMining;
 import sk.grest.game.constants.ScreenConstants;
 import sk.grest.game.entities.Player;
 import sk.grest.game.entities.resource.Resource;
+import sk.grest.game.entities.upgrade.UpgradeRecipe;
 import sk.grest.game.listeners.ItemOpenedListener;
 import sk.grest.game.listeners.ItemSelectedListener;
 import sk.grest.game.listeners.ItemSentListener;
@@ -60,6 +63,8 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
         // TODO REPLACE WITH GOAL RESOURCES
         resources = game.getPlayer().getGoalResources();
 
+        Collections.sort(resources);
+
         this.configResource = player.getResource(resources.get(0).getID());
         configBar = getConfigBar();
 
@@ -84,25 +89,19 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
 
         Table col0 = new Table();
         col0.add(scrollPane).height(200).width(600).row();
-        col0.add(configBar);
-
-        Image dysonSphere = new Image(spriteSkin, "earth");
-
+        col0.add(configBar).padTop(20).padBottom(50).row();
         overallProgress = new Label(getOverallProgress(), skin);
+        overallProgress.setColor(Color.RED);
 
-        Table col1 = new Table();
-        col1.add(dysonSphere).height(400).width(400).row();
-        col1.add(overallProgress).uniformX();
-
+        col0.add(overallProgress).uniformX();
         getContentTable().add(col0).expandY();
-        getContentTable().add(col1).expandY();
 
         addCloseButton(this, 2);
 
     }
 
     private Table getConfigBar(){
-        Table configBar = new Table(getSkin());
+        final Table configBar = new Table(getSkin());
         amount = new TextField(configResource.getAmount() + "", getSkin());
 
         TextButton increase = new TextButton("+", getSkin());
@@ -113,8 +112,10 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
                     amount.setText("0");
                     return;
                 }
+                Resource needed = player.getGoalResourceByID(configResource.getID());
+                int maxAmount = Math.min(configResource.getAmount(), needed.getLimit()-needed.getAmount());
                 int currentAmount = Integer.parseInt(amount.getText());
-                if (currentAmount + 1 < (int) configResource.getAmount()) {
+                if (currentAmount + 1 <= maxAmount) {
                     currentAmount++;
                     amount.setText(currentAmount + "");
                 }
@@ -147,14 +148,17 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
                     return true;
                 try {
                     long currentAmount = Long.parseLong(amount.getText());
-                    if (currentAmount > configResource.getAmount()) {
-                        amount.setText((int) configResource.getAmount() + "");
+                    Resource neededResource = player.getGoalResourceByID(configResource.getID());
+                    if (currentAmount > configResource.getAmount() ||
+                            currentAmount > neededResource.getLimit() - neededResource.getAmount() ) {
+                        Resource needed = player.getGoalResourceByID(configResource.getID());
+                        int maxAmount = Math.min(configResource.getAmount(), needed.getLimit()-needed.getAmount());
+                        amount.setText((int) maxAmount + "");
                         return false;
                     }
                 } catch (NumberFormatException e) {
                     return false;
                 }
-
                 return true;
             }
         });
@@ -162,11 +166,16 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
         amountTable.add(amount)
                 .align(Align.center)
                 .row();
-        amountOwned = new Label("max. " + (int) configResource.getAmount(), getSkin());
+
+        Resource needed = player.getGoalResourceByID(configResource.getID());
+        int maxAmount = Math.min(configResource.getAmount(), needed.getLimit()-needed.getAmount());
+        amountOwned = new Label("max. " + maxAmount, getSkin());
         amountOwned.addListener(new ClickListener() {
             @Override
             public void clicked(InputEvent event, float x, float y) {
-                amount.setText(String.valueOf(configResource.getAmount()));
+                Resource needed = player.getGoalResourceByID(configResource.getID());
+                int maxAmount = Math.min(configResource.getAmount(), needed.getLimit()-needed.getAmount());
+                amount.setText(String.valueOf(maxAmount));
             }
         });
         amountTable.add(amountOwned).align(Align.center);
@@ -242,8 +251,20 @@ public class GoalDialog extends CustomDialog implements ItemOpenedListener<Resou
     @Override
     public void onItemOpenedListener(Resource item) {
         configResource = player.getResource(item.getID());
-        amount.setText(configResource.getAmount()+"");
-        amountOwned.setText(player.getResource(item.getID()).getAmount()+"");
+        Resource needed = player.getGoalResourceByID(configResource.getID());
+        int maxAmount = Math.min(configResource.getAmount(), needed.getLimit()-needed.getAmount());
+        amountOwned.setText("max. " + maxAmount);
+        amount.setText(String.valueOf(maxAmount));
+
     }
 
+    @Override
+    public float getPrefWidth() {
+        return 800;
+    }
+
+    @Override
+    public float getPrefHeight() {
+        return 560;
+    }
 }

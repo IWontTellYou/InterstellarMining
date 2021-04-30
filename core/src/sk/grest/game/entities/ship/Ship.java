@@ -28,6 +28,8 @@ public class Ship implements Upgradable {
     private int price;
     private int upgradeLevel;
 
+    private String assetID;
+
     // TRAVELING
     private TravelPlan travelPlan;
 
@@ -35,10 +37,11 @@ public class Ship implements Upgradable {
 
     DatabaseChangeListener listener;
 
-    public Ship(DatabaseChangeListener listener, int id, String name, int miningSpeed, int travelSpeed, int resourceCapacity,
+    public Ship(DatabaseChangeListener listener, int id, String name, String assetID, int miningSpeed, int travelSpeed, int resourceCapacity,
                 int price, int upgradeLevel) {
         this.listener = listener;
         this.id = id;
+        this.assetID = assetID;
         this.name = name;
         this.miningSpeed = miningSpeed;
         this.travelSpeed = travelSpeed;
@@ -77,6 +80,10 @@ public class Ship implements Upgradable {
         if(travelPlan == null || travelPlan.getCurrentState() == AT_THE_BASE){
             listener.onAttributesChanged(this, attributes);
         }
+    }
+
+    public String getAssetID() {
+        return assetID;
     }
 
     public void setTravelPlan(TravelPlan travelPlan){

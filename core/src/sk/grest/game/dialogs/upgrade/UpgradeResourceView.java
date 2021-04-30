@@ -53,10 +53,10 @@ public class UpgradeResourceView extends Table {
 
         if(recipe == null && upgradable.getLevel(type) == upgradable.getMaxLevel(type)){
 
-            Image image = new Image(game.getSpriteSkin(), "max_level_sign");
-            add(image)
-                    .height(DEFAULT_ITEM_SIZE)
-                    .width(ScreenConstants.DEFAULT_DIALOG_WIDTH/1.8f);
+            Image image = new Image(game.getSpriteSkin(), "max_level");
+            image.setWidth(image.getImageWidth()/2);
+            image.setHeight(image.getImageHeight()/2);
+            add(image).width(300).height(55);
 
         }else {
 
@@ -86,7 +86,7 @@ public class UpgradeResourceView extends Table {
                 i++;
             }
 
-            upgrade = new Button(game.getSpriteSkin(), "upgrade", null);
+            upgrade = new Button(game.getSpriteSkin(), "upgrade", "upgrade_pressed");
             upgrade.getButton().addListener(new ClickListener() {
                 @Override
                 public void clicked(InputEvent event, float x, float y) {

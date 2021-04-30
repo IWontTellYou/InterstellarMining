@@ -64,6 +64,10 @@ public class DatabaseHandler {
         connection.getLeaderBoard(requestCode++, listener);
     }
 
+    public void getWinnersCount(ConnectorEvent listener){
+        connection.getFinishedGameData(requestCode++, listener);
+    }
+
     public void addPlayer(String name, String password, ConnectorEvent listener){
         Map<String, Object> data = new HashMap<>();
         data.put(NAME, name);
