@@ -30,20 +30,19 @@ public class DatabaseConnection {
     private Connection connection;
     private static DatabaseConnection instance;
 
+    /*
     private static final String DATABASE_NAME = "interstellar_mining";
     private static final String DATABASE_USERNAME = "root";
     private static final String DATABASE_PASSWORD = "";
     private static final String DATABASE_SERVER = "localhost";
     private static final String DATABASE_PORT = "3307";
+    */
 
-
-    /*
-    private static final String DATABASE_NAME = "sql11404959";
-    private static final String DATABASE_USERNAME = "sql11404959";
-    private static final String DATABASE_PASSWORD = "vdunS5kbch";
+    private static final String DATABASE_NAME = "sql11409978";
+    private static final String DATABASE_USERNAME = "sql11409978";
+    private static final String DATABASE_PASSWORD = "D8fTjQjFXQ";
     private static final String DATABASE_SERVER = "sql11.freemysqlhosting.net";
     private static final String DATABASE_PORT = "3306";
-    */
 
     public DatabaseConnection(){}
 
@@ -66,6 +65,7 @@ public class DatabaseConnection {
                     );
                     eventListener.onConnect();
                 } catch (SQLException | ClassNotFoundException e) {
+                    Gdx.app.log("DB ERROR", e.getMessage());
                     eventListener.onConnectionFailed();
                 }
             }

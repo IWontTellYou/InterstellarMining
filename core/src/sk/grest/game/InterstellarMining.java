@@ -84,8 +84,8 @@ public class InterstellarMining extends Game implements ConnectorEvent, Database
 		TextureAtlas area = new TextureAtlas(Gdx.files.internal("sprites\\sprites.atlas"));
 		spriteSkin = new Skin(area);
 
-		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiSkin.atlas"));
-		uiSkin = new Skin(Gdx.files.internal("skins\\uiSkin.json"), uiarea);
+		TextureAtlas uiarea = new TextureAtlas(Gdx.files.internal("skins\\uiskin.atlas"));
+		uiSkin = new Skin(Gdx.files.internal("skins\\uiskin.json"), uiarea);
 
 		back = spriteSkin.getDrawable("actor_background");
 
